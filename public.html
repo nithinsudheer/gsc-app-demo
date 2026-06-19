@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Priya Nair · Beauty &amp; Lifestyle Creator — GetSetCollab</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#5A3A86;--p2:#7B57AE;--p10:#EFEAF6;--p20:#DDD0EE;
+  --ink:#1B1611;--ink-soft:#4B443A;--muted:#938B7C;
+  --canvas:#F6F3EC;--canvas-2:#FBF9F4;--surface:#FFFFFF;
+  --line:#E9E2D5;--line-soft:#F1ECE2;
+  --gold:#A9802C;--gold-soft:#F6EFDD;
+  --green:#0F6B53;--green-soft:#E2F0EA;--amber:#9A6516;--amber-soft:#FBF0DC;
+  --hero:linear-gradient(152deg,#241A33 0%,#3C2659 52%,#553684 100%);
+  --shadow:0 1px 2px rgba(40,30,15,.05);
+  --shadow-md:0 1px 2px rgba(40,30,15,.05),0 20px 44px -26px rgba(60,40,90,.22);
+  --shadow-lg:0 1px 2px rgba(40,30,15,.05),0 34px 70px -30px rgba(55,40,85,.4);
+  --shadow-hero:0 26px 64px -26px rgba(45,25,70,.55);
+  --r:20px;--r-sm:13px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Hanken Grotesk',sans-serif;color:var(--ink);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  background:radial-gradient(1200px 480px at 50% -10%,#FBEFE0 0%,transparent 60%),var(--canvas);min-height:100vh;padding-bottom:90px}
+img{display:block;max-width:100%}
+.serif{font-family:'Fraunces',serif;letter-spacing:-.01em}
+.ic{width:1.1em;height:1.1em;stroke:currentColor;stroke-width:1.75;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.fill{fill:currentColor;stroke:none}
+
+/* top bar */
+.topwrap{position:sticky;top:0;z-index:40;background:rgba(246,243,236,.72);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:.2s}
+.topwrap.scrolled{border-bottom-color:var(--line);background:rgba(246,243,236,.9)}
+.top{max-width:1000px;margin:0 auto;height:58px;display:flex;align-items:center;gap:12px;padding:0 20px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:15px}
+.brand .logo{width:28px;height:28px;border-radius:8px;background:var(--hero);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 5px 14px -5px rgba(85,54,132,.7)}
+.brand .logo .ic{width:15px;height:15px;color:#fff}
+.brand small{font-size:10px;font-weight:700;color:var(--p);background:var(--p10);padding:2px 7px;border-radius:6px}
+.top .spacer{flex:1}
+.tbtn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);font:inherit;font-size:13px;font-weight:600;padding:8px 13px;border-radius:10px;cursor:pointer;transition:.15s}
+.tbtn:hover{border-color:var(--p);color:var(--p)}
+
+/* shell */
+.wrap{max-width:1000px;margin:0 auto;padding:18px 20px 40px}
+
+/* cover banner */
+.cover{position:relative;height:280px;border-radius:var(--r);overflow:hidden;background:var(--hero);box-shadow:var(--shadow-hero)}
+.cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.62}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,12,30,.18) 0%,rgba(20,12,30,.5) 100%)}
+.cover .cov-actions{position:absolute;top:16px;right:16px;z-index:2;display:flex;gap:9px}
+.cov-actions .cbtn{width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.3);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s}
+.cov-actions .cbtn:hover{background:rgba(255,255,255,.28)}
+.cov-tier{position:absolute;left:18px;bottom:18px;z-index:2;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px}
+
+/* profile header card */
+.phead{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);box-shadow:var(--shadow-md);padding:0 28px 26px;margin-top:-58px;position:relative;z-index:3}
+.phead-top{display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap}
+.avatar{width:128px;height:128px;border-radius:50%;margin-top:-44px;background:var(--p10);color:var(--p);font-family:'Fraunces',serif;font-weight:600;font-size:42px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:5px solid var(--surface);box-shadow:var(--shadow-md);flex:none}
+.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.avon{position:absolute;right:8px;bottom:8px;width:18px;height:18px;border-radius:50%;background:#26b277;border:3px solid var(--surface);z-index:2}
+.phead-id{flex:1;min-width:240px;padding-top:18px}
+.nrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.nrow h1{font-family:'Fraunces',serif;font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.05}
+.vbadge{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border-radius:50%;background:var(--p);color:#fff}
+.vbadge .ic{width:13px;height:13px;stroke-width:2.4}
+.handle{color:var(--muted);font-size:14px;margin-top:3px}
+.meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:11px;color:var(--ink-soft);font-size:13.5px}
+.meta span{display:inline-flex;align-items:center;gap:6px}
+.meta .ic{width:15px;height:15px;color:var(--muted)}
+.avail{display:inline-flex;align-items:center;gap:6px;background:var(--green-soft);color:var(--green);font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px}
+.avail .dot{width:7px;height:7px;border-radius:50%;background:#26b277}
+.phead-cta{display:flex;flex-direction:column;align-items:flex-end;gap:10px;padding-top:18px}
+.price-tag{text-align:right}
+.price-tag .lbl{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.price-tag .val{font-family:'Fraunces',serif;font-size:24px;font-weight:600}
+.cta-row{display:flex;gap:9px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;font:inherit;font-size:14px;font-weight:600;padding:12px 20px;border-radius:12px;cursor:pointer;transition:.16s;white-space:nowrap;line-height:1}
+.btn .ic{width:16px;height:16px}
+.btn-p{background:var(--p);color:#fff;box-shadow:0 10px 24px -12px rgba(90,58,134,.8)}
+.btn-p:hover{background:var(--p2);transform:translateY(-1px)}
+.btn-o{background:#fff;color:var(--p);border:1.5px solid var(--p)}
+.btn-o:hover{background:var(--p10)}
+.btn-g{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+.btn-g:hover{border-color:var(--ink-soft);color:var(--ink)}
+.btn-sm{padding:9px 14px;font-size:13px}
+.icon-btn{width:44px;height:44px;border-radius:12px;background:#fff;border:1px solid var(--line);color:var(--ink-soft);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;flex:none}
+.icon-btn:hover{border-color:var(--p);color:var(--p)}
+
+/* stat chips */
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.chip{display:flex;align-items:center;gap:10px;background:var(--canvas);border:1px solid var(--line-soft);border-radius:13px;padding:9px 14px}
+.chip .ci{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+.chip .ci.ig{background:var(--gold-soft);color:var(--gold)}
+.chip .ci.yt{background:#F8E6E1;color:#A6392B}
+.chip .ci.rt{background:var(--p10);color:var(--p)}
+.chip b{font-family:'Fraunces',serif;font-size:16px;font-weight:600;line-height:1}
+.chip small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.chip .ic{width:17px;height:17px}
+
+/* sections */
+.section{margin-top:26px}
+.sec-card{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);box-shadow:var(--shadow);padding:24px 26px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
+.sec-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:9px}
+.sec-title .ic{width:19px;height:19px;color:var(--p)}
+.about-txt{font-size:15px;line-height:1.75;color:var(--ink-soft)}
+.tagrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.tag{font-size:12.5px;font-weight:600;color:var(--p);background:var(--p10);padding:5px 12px;border-radius:20px}
+
+/* packages */
+.pkgs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pkg{border:1px solid var(--line);border-radius:var(--r-sm);padding:20px;background:var(--surface);display:flex;flex-direction:column;transition:.18s;position:relative}
+.pkg:hover{border-color:var(--p20);box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.pkg.feat{border-color:var(--gold);background:linear-gradient(180deg,var(--gold-soft),#fff 60%)}
+.pkg-flag{position:absolute;top:-11px;left:20px;background:var(--gold);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:20px}
+.pkg-plat{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--muted);margin-bottom:10px}
+.pkg-plat .ic{width:14px;height:14px}
+.pkg h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.pkg p{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:16px;flex:1}
+.pkg-feats{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.pkg-feats li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink-soft);list-style:none}
+.pkg-feats .ic{width:15px;height:15px;color:var(--green)}
+.pkg-price{display:flex;align-items:baseline;gap:6px;margin-bottom:14px}
+.pkg-price .amt{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--p)}
+.pkg-price .from{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+
+/* gallery */
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.gtile{position:relative;border-radius:var(--r-sm);overflow:hidden;aspect-ratio:1/1;background:var(--p10);cursor:pointer;box-shadow:var(--shadow)}
+.gtile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.gtile:hover img{transform:scale(1.07)}
+.gtile .gph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--p);opacity:.5}
+.gtile .gph .ic{width:34px;height:34px}
+.gtile .gbadge{position:absolute;left:9px;bottom:9px;z-index:2;display:inline-flex;align-items:center;gap:5px;background:rgba(20,12,30,.55);backdrop-filter:blur(6px);color:#fff;font-size:10.5px;font-weight:600;padding:4px 9px;border-radius:20px}
+.gtile .gbadge .ic{width:12px;height:12px}
+.gtile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(20,12,30,.35));opacity:0;transition:.25s}
+.gtile:hover::after{opacity:1}
+
+/* reviews */
+.rev-summary{display:flex;align-items:center;gap:18px;padding:6px 0 20px;border-bottom:1px solid var(--line-soft);margin-bottom:20px}
+.rev-big{font-family:'Fraunces',serif;font-size:46px;font-weight:600;line-height:1}
+.stars{color:var(--gold);font-size:17px;letter-spacing:2px}
+.stars .off{color:var(--line)}
+.rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.rev{background:var(--canvas);border:1px solid var(--line-soft);border-radius:var(--r-sm);padding:18px}
+.rev-top{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.rev-av{width:38px;height:38px;border-radius:10px;background:var(--p10);color:var(--p);font-family:'Fraunces',serif;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none}
+.rev-av img{width:100%;height:100%;object-fit:cover}
+.rev-name{font-size:14px;font-weight:600}
+.rev-date{font-size:11.5px;color:var(--muted)}
+.rev p{font-size:13.5px;line-height:1.6;color:var(--ink-soft)}
+
+/* trust strip */
+.trust{display:flex;flex-wrap:wrap;gap:10px}
+.tpill{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;padding:9px 14px;border-radius:11px;background:var(--canvas);border:1px solid var(--line-soft)}
+.tpill .ic{width:16px;height:16px}
+.tpill.ok{color:var(--green)}.tpill.ok .ic{color:var(--green)}
+.tpill.pl{color:var(--p)}.tpill.pl .ic{color:var(--p)}
+.tpill.gd{color:var(--gold)}.tpill.gd .ic{color:var(--gold)}
+
+/* footer */
+.foot{margin-top:34px;text-align:center;padding:30px 20px 10px}
+.foot .fcard{background:var(--hero);border-radius:var(--r);padding:32px 26px;color:#fff;box-shadow:var(--shadow-hero);position:relative;overflow:hidden}
+.foot .fcard::after{content:"";position:absolute;right:-50px;top:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%)}
+.foot h2{font-family:'Fraunces',serif;font-size:24px;font-weight:600;margin-bottom:8px;position:relative}
+.foot p{color:rgba(255,255,255,.8);font-size:14px;margin-bottom:20px;position:relative}
+.foot .btn-light{background:#fff;color:var(--p);position:relative}
+.foot .btn-light:hover{background:#f3eefb}
+.foot-base{margin-top:22px;font-size:12.5px;color:var(--muted)}
+.foot-base a{color:var(--p);font-weight:600;text-decoration:none}
+
+/* sticky mobile CTA */
+.sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:50;display:none;align-items:center;gap:12px;padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));background:rgba(251,249,244,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.sticky-cta .sp{flex:1}
+.sticky-cta .sp .l{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.sticky-cta .sp .v{font-family:'Fraunces',serif;font-size:20px;font-weight:600}
+.sticky-cta .btn{flex:none}
+
+/* toast */
+.toast-wrap{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:11px 18px;border-radius:11px;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(10px);transition:.26s cubic-bezier(.2,.7,.2,1)}
+.toast.show{opacity:1;transform:none}
+
+/* motion */
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.section,.phead,.cover{animation:up .6s cubic-bezier(.2,.7,.2,1) both}
+.phead{animation-delay:.05s}
+.section:nth-of-type(1){animation-delay:.1s}.section:nth-of-type(2){animation-delay:.16s}.section:nth-of-type(3){animation-delay:.22s}
+:focus-visible{outline:2.5px solid var(--p);outline-offset:2px;border-radius:6px}
+
+/* responsive */
+@media(max-width:760px){
+  body{padding-bottom:150px}
+  .wrap{padding:14px 14px 30px}
+  .cover{height:172px;border-radius:16px}
+  .cov-tier{display:none}
+  .phead{padding:0 18px 22px;border-radius:18px;margin-top:-46px}
+  .phead-top{flex-direction:column;align-items:center;text-align:center;gap:6px}
+  .avatar{margin-top:-58px;width:110px;height:110px;font-size:36px}
+  .phead-id{padding-top:4px;min-width:0;text-align:center}
+  .nrow{justify-content:center}.meta{justify-content:center;gap:10px}
+  .phead-cta{align-items:center;width:100%;padding-top:14px}
+  .price-tag{display:none}
+  .cta-row{width:100%}.cta-row .btn-p,.cta-row .btn-o{flex:1}
+  .chips{justify-content:center}
+  .pkgs{grid-template-columns:1fr}
+  .gallery{grid-template-columns:repeat(2,1fr)}
+  .rev-grid{grid-template-columns:1fr}
+  .sec-card{padding:20px 17px}
+  .nrow h1{font-size:25px}
+  .sticky-cta{display:flex}
+  .top .hide-sm{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
+
+/* ── BOOKING MODAL ── */
+.bk-overlay{position:fixed;inset:0;z-index:300;background:rgba(26,20,34,.5);backdrop-filter:blur(5px);display:none;align-items:flex-end;justify-content:center}
+.bk-overlay.open{display:flex}
+@media(min-width:600px){.bk-overlay{align-items:center;padding:24px}}
+.bk-modal{background:var(--surface);width:100%;max-width:544px;border-radius:22px 22px 0 0;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;max-height:94vh;animation:bkin .32s cubic-bezier(.2,.8,.2,1)}
+@media(min-width:600px){.bk-modal{border-radius:22px}}
+@keyframes bkin{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+.bk-head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 0}
+.bk-title{font-size:20px;font-weight:600}
+.bk-x{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:.15s}
+.bk-x:hover{border-color:var(--p);color:var(--p)}
+.bk-steps{display:flex;align-items:center;padding:18px 22px 6px}
+.bk-step{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;font-weight:600;white-space:nowrap}
+.bk-step:not(:last-child)::after{content:"";flex:1;height:2px;background:var(--line);margin:0 9px;min-width:18px}
+.bk-step.done:not(:last-child)::after{background:var(--green)}
+.bk-num{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);background:#fff;flex:none}
+.bk-step.active{color:var(--ink)}.bk-step.active .bk-num{border-color:var(--p);color:var(--p);background:var(--p10)}
+.bk-step.done{color:var(--ink)}.bk-step.done .bk-num{border-color:var(--green);background:var(--green);color:#fff}
+.bk-body{padding:14px 22px 4px;overflow-y:auto}
+.bk-foot{padding:16px 22px calc(18px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;border-top:1px solid var(--line-soft);margin-top:10px}
+.bk-foot .btn{flex:1}
+.bk-field{margin-bottom:14px}
+.bk-field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:6px}
+.bk-input,.bk-area,.bk-select{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 13px;font:inherit;font-size:14px;color:var(--ink);outline:none;background:#fff;transition:.15s}
+.bk-input:focus,.bk-area:focus,.bk-select:focus{border-color:var(--p)}
+.bk-area{resize:vertical;min-height:84px}
+.bk-opt{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:13px;padding:13px 14px;cursor:pointer;margin-bottom:10px;transition:.15s}
+.bk-opt:hover{border-color:var(--p20)}
+.bk-opt.sel{border-color:var(--p);background:var(--p10)}
+.bk-opt input{accent-color:var(--p);width:18px;height:18px;flex:none}
+.bk-opt .oi{flex:1;min-width:0}
+.bk-opt .on{font-weight:600;font-size:14px}
+.bk-opt .od{font-size:12px;color:var(--muted);margin-top:2px}
+.bk-opt .op{font-family:'Fraunces',serif;font-weight:600;color:var(--p);font-size:16px;flex:none}
+.bk-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:13.5px;color:var(--ink-soft)}
+.bk-row b{font-weight:600;color:var(--ink)}
+.bk-row.total{border-top:1px solid var(--line);margin-top:6px;padding-top:12px;font-size:15px;font-weight:700;color:var(--ink)}
+.bk-note{display:flex;gap:10px;background:var(--p10);border-radius:12px;padding:12px 14px;font-size:12.5px;color:var(--p);line-height:1.5;margin-top:14px}
+.bk-note .ic{width:16px;height:16px;flex:none;margin-top:1px}
+.bk-done{text-align:center;padding:18px 8px 8px}
+.bk-done .dchk{width:64px;height:64px;border-radius:50%;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.bk-done .dchk .ic{width:30px;height:30px;stroke-width:2.4}
+.bk-done h3{font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin-bottom:8px}
+.bk-done p{font-size:14px;color:var(--ink-soft);line-height:1.6;max-width:390px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<!-- sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-yt" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="3.5"/><path d="M10.5 9.2l4.5 2.8-4.5 2.8z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.15 1 5.85L12 17l-5.25 2.75 1-5.85L3.5 9.7l5.9-.9z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+<symbol id="i-check-c" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.2l2.8 2.8L16 9.5"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s6-5.3 6-10a6 6 0 0 0-12 0c0 4.7 6 10 6 10z"/><circle cx="12" cy="11" r="2.3"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.4"/><circle cx="17.5" cy="6" r="2.4"/><circle cx="17.5" cy="18" r="2.4"/><path d="M8.2 11l7.1-3.8M8.2 13l7.1 3.8"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20S4 15 4 9.2A4.2 4.2 0 0 1 12 7a4.2 4.2 0 0 1 8 2.2C20 15 12 20 12 20z"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="M4 7l8 6 8-6"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 13h6l-1 8 8-10h-6z"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></symbol>
+<symbol id="i-bag" viewBox="0 0 24 24"><rect x="4" y="7.5" width="16" height="12" rx="2"/><path d="M8.5 7.5V6a3.5 3.5 0 0 1 7 0v1.5"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 6.2L20 11l-6.2 1.8L12 19l-1.8-6.2L4 11l6.2-1.8z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.7"/><path d="M5 20c.8-3.8 3.6-6 7-6s6.2 2.2 7 6"/></symbol>
+</defs></svg>
+
+<!-- TOP BAR -->
+<div class="topwrap" id="topwrap">
+  <div class="top">
+    <a class="brand" href="#"><span class="logo"><svg class="ic"><use href="#i-check"/></svg></span>GetSetCollab <small>Creator</small></a>
+    <span class="spacer"></span>
+    <button class="tbtn hide-sm" onclick="shareProfile()"><svg class="ic"><use href="#i-share"/></svg> Share</button>
+    <button class="tbtn" onclick="toast('Sign in to save creators')"><svg class="ic"><use href="#i-heart"/></svg> Save</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- COVER -->
+  <div class="cover">
+    <img src="https://picsum.photos/seed/gsc-cover-beauty/1600/520" alt="" onerror="this.remove()">
+    <span class="cov-tier"><svg class="ic" style="width:13px;height:13px"><use href="#i-spark"/></svg> Micro Creator · 85K reach</span>
+    <div class="cov-actions">
+      <button class="cbtn" onclick="shareProfile()" aria-label="Share"><svg class="ic"><use href="#i-share"/></svg></button>
+      <button class="cbtn" onclick="toast('Sign in to save creators')" aria-label="Save"><svg class="ic"><use href="#i-heart"/></svg></button>
+    </div>
+  </div>
+
+  <!-- PROFILE HEADER -->
+  <div class="phead">
+    <div class="phead-top">
+      <div class="avatar">PN<img src="https://i.pravatar.cc/256?img=49" alt="Priya Nair" onerror="this.remove()"><span class="avon" title="Available"></span></div>
+      <div class="phead-id">
+        <div class="nrow"><h1 class="serif">Priya Nair</h1><span class="vbadge" title="KYC Verified"><svg class="ic"><use href="#i-check"/></svg></span><span class="avail"><span class="dot"></span> Available</span></div>
+        <div class="handle">@priya.beauty · Beauty &amp; Lifestyle Creator</div>
+        <div class="meta">
+          <span><svg class="ic"><use href="#i-pin"/></svg> Mumbai, India</span>
+          <span><svg class="ic"><use href="#i-star"/></svg> <b>4.8</b> (3 reviews)</span>
+          <span><svg class="ic"><use href="#i-bag"/></svg> 3 collabs · &lt;2h reply</span>
+        </div>
+      </div>
+      <div class="phead-cta">
+        <div class="price-tag"><div class="lbl">Starting from</div><div class="val serif">₹2,200</div></div>
+        <div class="cta-row">
+          <button class="btn btn-o btn-sm" onclick="toast('Opens a message thread')"><svg class="ic"><use href="#i-mail"/></svg> Message</button>
+          <button class="btn btn-p btn-sm" onclick="openBooking()"><svg class="ic"><use href="#i-bolt"/></svg> Book me</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chips">
+      <div class="chip"><span class="ci ig"><svg class="ic"><use href="#i-ig"/></svg></span><div><b>85K</b><small>Instagram · 3.8% eng</small></div></div>
+      <div class="chip"><span class="ci yt"><svg class="ic"><use href="#i-yt"/></svg></span><div><b>—</b><small>YouTube · link soon</small></div></div>
+      <div class="chip"><span class="ci rt"><svg class="ic"><use href="#i-star"/></svg></span><div><b>4.8</b><small>Avg rating</small></div></div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="section">
+    <div class="sec-card">
+      <div class="sec-head"><div class="sec-title"><svg class="ic"><use href="#i-user"/></svg> About</div></div>
+      <div class="about-txt">Beauty &amp; lifestyle creator from Mumbai making honest, aesthetic content for Gen&nbsp;Z and millennials. I specialise in skincare GRWM, makeup tutorials and haircare routines, with 15+ brand partnerships delivered on time. Natural lighting, authentic reviews, and a community that actually trusts what I recommend.</div>
+      <div class="tagrow">
+        <span class="tag">Skincare</span><span class="tag">Makeup</span><span class="tag">Haircare</span><span class="tag">GRWM</span><span class="tag">Product Reviews</span><span class="tag">English · Hindi</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PACKAGES -->
+  <div class="section" id="packages">
+    <div class="sec-card">
+      <div class="sec-head"><div class="sec-title"><svg class="ic"><use href="#i-bag"/></svg> Packages</div><span style="font-size:12.5px;color:var(--muted)">Book directly · escrow-protected</span></div>
+      <div class="pkgs" id="pkgGrid"></div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <div class="section">
+    <div class="sec-card">
+      <div class="sec-head"><div class="sec-title"><svg class="ic"><use href="#i-grid"/></svg> Portfolio</div><span style="font-size:12.5px;color:var(--muted)">Recent brand work</span></div>
+      <div class="gallery">
+        <div class="gtile"><img src="https://picsum.photos/seed/gsc-p1/600/600" alt="" onerror="this.remove()"><span class="gph"><svg class="ic"><use href="#i-ig"/></svg></span><span class="gbadge"><svg class="ic"><use href="#i-ig"/></svg> Mamaearth</span></div>
+        <div class="gtile"><img src="https://picsum.photos/seed/gsc-p2/600/600" alt="" onerror="this.remove()"><span class="gph"><svg class="ic"><use href="#i-yt"/></svg></span><span class="gbadge"><svg class="ic"><use href="#i-yt"/></svg> Nykaa</span></div>
+        <div class="gtile"><img src="https://picsum.photos/seed/gsc-p3/600/600" alt="" onerror="this.remove()"><span class="gph"><svg class="ic"><use href="#i-ig"/></svg></span><span class="gbadge"><svg class="ic"><use href="#i-ig"/></svg> WOW Skin</span></div>
+        <div class="gtile"><img src="https://picsum.photos/seed/gsc-p4/600/600" alt="" onerror="this.remove()"><span class="gph"><svg class="ic"><use href="#i-ig"/></svg></span><span class="gbadge"><svg class="ic"><use href="#i-ig"/></svg> Plum</span></div>
+        <div class="gtile"><img src="https://picsum.photos/seed/gsc-p5/600/600" alt="" onerror="this.remove()"><span class="gph"><svg class="ic"><use href="#i-ig"/></svg></span><span class="gbadge"><svg class="ic"><use href="#i-ig"/></svg> Khadi</span></div>
+        <div class="gtile"><img src="https://picsum.photos/seed/gsc-p6/600/600" alt="" onerror="this.remove()"><span class="gph"><svg class="ic"><use href="#i-yt"/></svg></span><span class="gbadge"><svg class="ic"><use href="#i-yt"/></svg> Sugar</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVIEWS -->
+  <div class="section">
+    <div class="sec-card">
+      <div class="sec-head"><div class="sec-title"><svg class="ic"><use href="#i-star"/></svg> Reviews from brands</div></div>
+      <div class="rev-summary">
+        <div class="rev-big serif">4.8</div>
+        <div><div class="stars">★★★★★</div><div style="font-size:13px;color:var(--muted);margin-top:4px">Based on 3 verified collaborations</div></div>
+      </div>
+      <div class="rev-grid">
+        <div class="rev">
+          <div class="rev-top"><div class="rev-av">NK<img src="https://i.pravatar.cc/80?img=32" alt="" onerror="this.remove()"></div><div><div class="rev-name">Nykaa</div><div class="rev-date">Mar 28, 2025</div></div><div class="stars" style="margin-left:auto;font-size:14px">★★★★★</div></div>
+          <p>Exceptional work. Priya delivered before deadline and understood the brief immediately. The reel performed well above our benchmark.</p>
+        </div>
+        <div class="rev">
+          <div class="rev-top"><div class="rev-av">WO<img src="https://i.pravatar.cc/80?img=15" alt="" onerror="this.remove()"></div><div><div class="rev-name">WOW Skin Science</div><div class="rev-date">Mar 10, 2025</div></div><div class="stars" style="margin-left:auto;font-size:14px">★★★★<span class="off">★</span></div></div>
+          <p>Great content quality and very professional communication. One minor revision request was addressed promptly.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRUST -->
+  <div class="section">
+    <div class="sec-card">
+      <div class="sec-head"><div class="sec-title"><svg class="ic"><use href="#i-check-c"/></svg> Verified &amp; trusted</div></div>
+      <div class="trust">
+        <span class="tpill ok"><svg class="ic"><use href="#i-check-c"/></svg> KYC Verified</span>
+        <span class="tpill pl"><svg class="ic"><use href="#i-spark"/></svg> Rising Star</span>
+        <span class="tpill pl"><svg class="ic"><use href="#i-clock"/></svg> On Time</span>
+        <span class="tpill gd"><svg class="ic"><use href="#i-bolt"/></svg> Escrow-protected payments</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="foot">
+    <div class="fcard">
+      <h2 class="serif">Work with Priya on GetSetCollab</h2>
+      <p>Escrow-protected bookings, clear deliverables, and on-time delivery — all in one place.</p>
+      <button class="btn btn-light" onclick="scrollTo2('packages')"><svg class="ic"><use href="#i-bolt"/></svg> View packages &amp; book</button>
+    </div>
+    <div class="foot-base">Powered by <strong>GetSetCollab</strong> · Are you a creator? <a href="#" onclick="toast('Create your free creator page')">Create your free page →</a></div>
+  </div>
+
+</div>
+
+<!-- STICKY MOBILE CTA -->
+<div class="sticky-cta">
+  <div class="sp"><div class="l">Starting from</div><div class="v serif">₹2,200</div></div>
+  <button class="btn btn-g btn-sm" onclick="toast('Opens a message thread')"><svg class="ic"><use href="#i-mail"/></svg></button>
+  <button class="btn btn-p" onclick="openBooking()"><svg class="ic"><use href="#i-bolt"/></svg> Book me</button>
+</div>
+
+<div class="bk-overlay" id="bkOverlay" onclick="if(event.target===this)closeBooking()">
+  <div class="bk-modal" role="dialog" aria-modal="true" aria-label="Book a package">
+    <div class="bk-head"><div class="bk-title serif">Book Priya Nair</div><button class="bk-x" onclick="closeBooking()" aria-label="Close">✕</button></div>
+    <div class="bk-steps" id="bkSteps">
+      <div class="bk-step active"><span class="bk-num">1</span><span>Package</span></div>
+      <div class="bk-step"><span class="bk-num">2</span><span>Brief</span></div>
+      <div class="bk-step"><span class="bk-num">3</span><span>Payment</span></div>
+    </div>
+    <div class="bk-body" id="bkBody"></div>
+    <div class="bk-foot" id="bkFoot"></div>
+  </div>
+</div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+function toast(msg){var w=document.getElementById('toastWrap');var t=document.createElement('div');t.className='toast';t.textContent=msg;w.appendChild(t);requestAnimationFrame(function(){t.classList.add('show')});setTimeout(function(){t.classList.remove('show');setTimeout(function(){t.remove()},320)},2200);}
+function scrollTo2(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
+function shareProfile(){var url=location.href;if(navigator.share){navigator.share({title:'Priya Nair on GetSetCollab',url:url}).catch(function(){});}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){toast('Profile link copied')},function(){toast('Share this page link')});}else{toast('Share this page link');}}
+window.addEventListener('scroll',function(){document.getElementById('topwrap').classList.toggle('scrolled',window.scrollY>8);},{passive:true});
+
+/* ===== packages (data-driven) ===== */
+var PACKAGES=[
+  {id:'reel', plat:'Instagram', name:'Instagram Reel', rec:false, price:5500,
+   desc:'A 60-second creative reel with hook, storytelling and a clear call-to-action.',
+   feats:['1 reel (up to 60s)','2 revisions','7-day delivery']},
+  {id:'bundle', plat:'Instagram', name:'Reel + Stories Bundle', rec:true, price:7000,
+   desc:'One feature reel plus a 5-frame story series to maximise reach across formats.',
+   feats:['1 reel + 5 story frames','3 revisions','7-day delivery']},
+  {id:'story', plat:'Instagram', name:'Story Series', rec:false, price:2200,
+   desc:'Up to 5 connected story frames with product tags and swipe-up links.',
+   feats:['5 story frames','1 revision','5-day delivery']},
+  {id:'ugc', plat:'Instagram', name:'UGC Video (no posting)', rec:false, price:4000,
+   desc:'Raw user-generated video for your own channels and paid ads — you post, not me.',
+   feats:['1 raw video','1 revision','Full usage rights']}
+];
+function fmt(n){return '\u20b9'+n.toLocaleString('en-IN');}
+function pkgCard(p){
+  var feats=p.feats.map(function(f){return '<li><svg class="ic"><use href="#i-check"/></svg> '+f+'</li>';}).join('');
+  return '<div class="pkg'+(p.rec?' feat':'')+'">'+
+    (p.rec?'<span class="pkg-flag" title="Highlighted by the creator">Recommended</span>':'')+
+    '<div class="pkg-plat"><svg class="ic"><use href="#i-ig"/></svg> '+p.plat+'</div>'+
+    '<h3>'+p.name+'</h3><p>'+p.desc+'</p>'+
+    '<ul class="pkg-feats">'+feats+'</ul>'+
+    '<div class="pkg-price"><span class="from">From</span><span class="amt">'+fmt(p.price)+'</span></div>'+
+    '<button class="btn '+(p.rec?'btn-p':'btn-o')+'" onclick="openBooking(\''+p.id+'\')">Book this package</button></div>';
+}
+function renderPackages(){var g=document.getElementById('pkgGrid');if(g)g.innerHTML=PACKAGES.map(pkgCard).join('');}
+
+/* ===== multi-step booking ===== */
+var bk={step:0,pkg:null};
+function val(id){var e=document.getElementById(id);return e?e.value:'';}
+function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+function selPkg(){return PACKAGES.find(function(p){return p.id===bk.pkg;})||PACKAGES[0];}
+function bookingBody(){
+  var opts=PACKAGES.map(function(p){
+    return '<label class="bk-opt"><input type="radio" name="bkpkg" value="'+p.id+'" onchange="bk.pkg=this.value;markOpt()">'+
+      '<span class="oi"><span class="on">'+p.name+'</span><span class="od">'+p.feats.join(' \u00b7 ')+'</span></span>'+
+      '<span class="op">'+fmt(p.price)+'</span></label>';
+  }).join('');
+  return ''+
+  '<div class="bk-panel" id="bkp0"><div style="font-size:13px;color:var(--muted);margin-bottom:13px">Choose the package you\u2019d like to book.</div>'+opts+'</div>'+
+  '<div class="bk-panel" id="bkp1" style="display:none">'+
+    '<div class="bk-field"><label>Campaign / brand name</label><input class="bk-input" id="bkCamp" placeholder="e.g. Summer Skincare Launch"></div>'+
+    '<div class="bk-field"><label>Brief \u2014 what do you need?</label><textarea class="bk-area" id="bkBrief" placeholder="Format, key message, must-have hashtags/tags, do and don\u2019t notes\u2026"></textarea></div>'+
+    '<div class="bk-field"><label>Preferred go-live date</label><input class="bk-input" id="bkDate" type="date"></div>'+
+    '<div class="bk-field"><label>Usage rights</label><select class="bk-select" id="bkUsage"><option>Organic only</option><option>Organic + paid ads (3 months)</option><option>Organic + paid ads (6 months)</option></select></div>'+
+  '</div>'+
+  '<div class="bk-panel" id="bkp2" style="display:none"><div id="bkSummary"></div></div>'+
+  '<div class="bk-panel" id="bkDone" style="display:none"><div class="bk-done"><div class="dchk"><svg class="ic"><use href="#i-check"/></svg></div><h3>Booking request sent</h3><p id="bkDoneMsg"></p></div></div>';
+}
+function markOpt(){document.querySelectorAll('#bkp0 .bk-opt').forEach(function(o){o.classList.toggle('sel',o.querySelector('input').checked);});}
+function buildSummary(){
+  var p=selPkg(),fee=Math.round(p.price*0.1),total=p.price+fee;
+  var camp=val('bkCamp')||'\u2014',date=val('bkDate')||'Not set',usage=val('bkUsage')||'Organic only';
+  document.getElementById('bkSummary').innerHTML=
+   '<div style="background:var(--canvas);border:1px solid var(--line-soft);border-radius:13px;padding:14px;margin-bottom:16px">'+
+     '<div style="font-weight:700;margin-bottom:4px">'+esc(p.name)+'</div>'+
+     '<div style="font-size:12.5px;color:var(--muted)">'+p.feats.join(' \u00b7 ')+'</div>'+
+     '<div style="font-size:12.5px;color:var(--muted);margin-top:8px">Campaign: <b style="color:var(--ink)">'+esc(camp)+'</b> \u00b7 Go-live: '+esc(date)+' \u00b7 '+esc(usage)+'</div>'+
+   '</div>'+
+   '<div class="bk-row"><span>Creator payment (held in escrow)</span><b>'+fmt(p.price)+'</b></div>'+
+   '<div class="bk-row"><span>Platform fee (10%)</span><b>'+fmt(fee)+'</b></div>'+
+   '<div class="bk-row total"><span>Total to fund now</span><b>'+fmt(total)+'</b></div>'+
+   '<div class="bk-field" style="margin-top:16px"><label>Payment method</label><select class="bk-select"><option>UPI</option><option>Card</option><option>Netbanking</option></select></div>'+
+   '<div class="bk-note"><svg class="ic"><use href="#i-check-c"/></svg><div>Funds are held safely in escrow and released to the creator only after go-live is validated and the buffer window passes.</div></div>';
+}
+function setStepper(n){document.querySelectorAll('#bkSteps .bk-step').forEach(function(st,i){st.classList.toggle('active',i===n);st.classList.toggle('done',i<n||n>=3);});}
+function bookingFoot(){
+  var f=document.getElementById('bkFoot'),s=bk.step;
+  if(s===0)f.innerHTML='<button class="btn btn-g" onclick="closeBooking()">Cancel</button><button class="btn btn-p" onclick="goStep(1)">Continue</button>';
+  else if(s===1)f.innerHTML='<button class="btn btn-g" onclick="goStep(0)">Back</button><button class="btn btn-p" onclick="goStep(2)">Review &amp; pay</button>';
+  else if(s===2)f.innerHTML='<button class="btn btn-g" onclick="goStep(1)">Back</button><button class="btn btn-p" onclick="submitBooking()"><svg class="ic"><use href="#i-bolt"/></svg> Fund escrow &amp; book</button>';
+  else f.innerHTML='<button class="btn btn-p" onclick="closeBooking()">Done</button>';
+}
+function goStep(n){
+  bk.step=n;
+  ['bkp0','bkp1','bkp2','bkDone'].forEach(function(id,i){var el=document.getElementById(id);if(el)el.style.display=(i===n)?'block':'none';});
+  if(n===2)buildSummary();
+  setStepper(n);bookingFoot();
+  var b=document.getElementById('bkBody');if(b)b.scrollTop=0;
+}
+function submitBooking(){
+  var p=selPkg(),total=p.price+Math.round(p.price*0.1);
+  bk.step=3;
+  ['bkp0','bkp1','bkp2'].forEach(function(id){var e=document.getElementById(id);if(e)e.style.display='none';});
+  document.getElementById('bkDone').style.display='block';
+  document.getElementById('bkDoneMsg').textContent='Priya has been notified about \u201c'+(val('bkCamp')||p.name)+'\u201d. Escrow of '+fmt(total)+' is ready to fund \u2014 you\u2019ll get a confirmation once she accepts.';
+  setStepper(3);bookingFoot();toast('Booking request sent to Priya');
+}
+function openBooking(id){
+  bk.pkg=id||(PACKAGES.find(function(p){return p.rec;})||PACKAGES[0]).id;
+  document.getElementById('bkBody').innerHTML=bookingBody();
+  var r=document.querySelector('input[name="bkpkg"][value="'+bk.pkg+'"]');if(r)r.checked=true;markOpt();
+  goStep(0);
+  document.getElementById('bkOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeBooking(){document.getElementById('bkOverlay').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBooking();});
+renderPackages();
+</script>
+</body>
+</html>

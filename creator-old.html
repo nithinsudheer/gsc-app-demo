@@ -314,13 +314,12 @@ textarea.fi{resize:vertical;min-height:80px}
   .sidebar{transform:translateX(-100%)}
   body.nav-open .sidebar{transform:translateX(0);box-shadow:var(--shadow-lg)}
   .main{margin-left:0}
+  .hamb{display:flex}
   .tb-search{display:none}
   .topbar{padding:0 16px;gap:10px}
   .g2,.g3{grid-template-columns:1fr}
   .sparks-chip span:last-child{display:none}
   .sparks-chip{padding:9px 11px}
-  .bottom-nav{display:flex}
-  .content{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 }
 @media(max-width:760px){
   .content{padding:22px 16px 60px}
@@ -342,88 +341,6 @@ textarea.fi{resize:vertical;min-height:80px}
   .page.active>*{animation:none;opacity:1}
   *{transition-duration:.01ms!important}
 }
-
-/* ── BOTTOM TAB BAR (mobile app shell) ── */
-.bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:80;background:rgba(251,249,244,.92);backdrop-filter:blur(14px);border-top:1px solid var(--border);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));justify-content:space-around;align-items:stretch}
-@media(min-width:901px){.bottom-nav{display:none}}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 2px;border-radius:12px;color:var(--muted);cursor:pointer;font-size:10.5px;font-weight:600;letter-spacing:.01em;transition:.15s;position:relative;-webkit-tap-highlight-color:transparent}
-.bn-item svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.bn-item.active{color:var(--p)}
-.bn-item.active svg{stroke-width:2}
-.bn-dot{position:absolute;top:5px;right:calc(50% - 16px);width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--canvas-2)}
-
-/* ── SEGMENTED CONTROL (Edit / Preview) ── */
-.seg{display:inline-flex;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:3px;gap:2px}
-.seg button{border:0;background:transparent;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--muted);padding:7px 15px;border-radius:8px;cursor:pointer;transition:.15s}
-.seg button.on{background:#fff;color:var(--p);box-shadow:var(--shadow)}
-
-/* ── PUBLIC PROFILE ── */
-.pub-banner{display:flex;align-items:center;gap:12px;background:var(--p10);border:1px solid var(--p20);border-radius:var(--radius-sm);padding:13px 16px;margin-bottom:20px;font-size:13px;color:var(--p);line-height:1.5}
-.pub-banner .ic{flex:none;width:18px;height:18px}
-.pub-hero{background:var(--hero);border-radius:var(--radius);padding:26px;color:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow-hero);margin-bottom:20px}
-.pub-hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%)}
-.pub-av{width:84px;height:84px;border-radius:20px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);color:#fff;font-family:'Fraunces',serif;font-weight:600;font-size:30px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.pub-name{font-family:'Fraunces',serif;font-size:28px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
-.metb{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.18);color:#fff;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:20px}
-.pub-cta .btn-light{background:#fff;color:var(--p);border:0}
-.pub-cta .btn-light:hover{background:#f3eefb}
-.pub-cta .btn-line{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.32)}
-.pub-cta .btn-line:hover{background:rgba(255,255,255,.2)}
-
-/* ── TOAST ── */
-.toast-wrap{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);z-index:400;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
-.toast{background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:11px 18px;border-radius:11px;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(10px);transition:.26s cubic-bezier(.2,.7,.2,1)}
-.toast.show{opacity:1;transform:none}
-
-/* ── RESPONSIVE TABLES → labelled cards ── */
-@media(max-width:760px){
-  .tw{overflow:visible}
-  .tw table,.tw thead,.tw tbody,.tw th,.tw td,.tw tr{display:block;width:auto}
-  .tw thead{position:absolute;left:-9999px;height:0;overflow:hidden}
-  .tw tbody tr{background:#fff;border:1px solid var(--line-soft);border-radius:var(--radius-sm);box-shadow:var(--shadow);margin-bottom:12px;padding:4px 2px}
-  .tw tbody tr:hover{background:#fff}
-  .tw tbody tr:last-child{border:1px solid var(--line-soft)}
-  .tw td{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:9px 14px;border:0;border-bottom:1px solid var(--line-soft);text-align:right;font-size:13px;white-space:normal}
-  .tw td:last-child{border-bottom:0}
-  .tw td::before{content:attr(data-label);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:left;margin-right:auto;flex:none}
-  .tw td[data-label=""]::before{content:"";margin:0}
-  .tw td[data-label=""]{justify-content:flex-end}
-}
-
-/* ── SERVICES EDITOR (drives public page) ── */
-.svc-status{font-size:12.5px;color:var(--ink-soft);margin:2px 0 16px;line-height:1.5}
-.svc-status b{color:var(--ink)}
-.svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(282px,1fr));gap:16px;align-items:start}
-.svc-card{position:relative;background:var(--white);border:1px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;cursor:grab;transition:box-shadow .15s,border-color .15s,opacity .15s}
-.svc-card:hover{box-shadow:var(--shadow-md)}
-.svc-card.dragging{opacity:.45;cursor:grabbing}
-.svc-card.drop-target{border-color:var(--p);box-shadow:0 0 0 3px var(--p10)}
-.svc-card.rec{border-color:var(--gold);background:linear-gradient(180deg,var(--gold-soft),#fff 55%)}
-.svc-card.paused{opacity:.6}
-.svc-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.svc-grip{color:var(--muted);display:flex}.svc-grip svg{width:17px;height:17px;fill:none;stroke:currentColor}
-.svc-name{font-size:15.5px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.svc-recbadge{font-size:10px;font-weight:700;color:var(--gold);background:#fff;border:1px solid var(--gold);padding:2px 8px;border-radius:20px}
-.svc-desc{font-size:12.5px;color:var(--muted);line-height:1.5;margin-bottom:12px}
-.svc-meta{display:flex;gap:16px;background:var(--surface);border-radius:9px;padding:9px 12px;margin-bottom:12px}
-.svc-meta span{color:var(--muted);font-weight:700;text-transform:uppercase;font-size:9px;display:block;letter-spacing:.04em}
-.svc-meta b{font-family:'Fraunces',serif;font-size:15px;font-weight:600}
-.svc-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.svc-star{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:12px;font-weight:600;padding:9px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;transition:.15s}
-.svc-star:hover{border-color:var(--gold);color:var(--gold)}
-.svc-star.on{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
-.svc-star svg{width:14px;height:14px}
-.svc-mv{display:flex;gap:4px}
-.svc-mv button{width:32px;height:34px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;transition:.15s}
-.svc-mv button:hover{border-color:var(--p);color:var(--p)}
-.svc-edit{display:flex;gap:8px}.svc-edit .btn{flex:1;justify-content:center}
-.svc-add{border:2px dashed var(--border);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:210px;color:var(--muted);cursor:pointer;background:transparent;font:inherit;gap:4px;transition:.15s}
-.svc-add:hover{border-color:var(--p);color:var(--p)}
-.svc-add span{font-size:30px;line-height:1;font-weight:300}
-.svc-divider{grid-column:1/-1;display:flex;align-items:center;gap:12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:2px 0}
-.svc-divider::before,.svc-divider::after{content:"";flex:1;height:1px;background:var(--line)}
-.cc2.svc-feat{border-color:var(--gold);background:linear-gradient(180deg,var(--gold-soft),#fff 60%)}
-@media(max-width:760px){.svc-grid{grid-template-columns:1fr}}
 
 </style>
 </head>
@@ -510,9 +427,6 @@ textarea.fi{resize:vertical;min-height:80px}
     <div class="nav-label">Profile</div>
     <a class="nav-item" onclick="showPage('profile')">
       <div class="nav-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 17c0-3.59 2.91-6.5 6.5-6.5s6.5 2.91 6.5 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>My Profile
-    </a>
-    <a class="nav-item" onclick="showPage('public')">
-      <div class="nav-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c2.2 2 3.2 4.7 3.2 7.5S12.2 15.5 10 17.5C7.8 15.5 6.8 12.8 6.8 10S7.8 4.5 10 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div>Public Page<span class="nav-badge nb-g">Live</span>
     </a>
     <a class="nav-item" onclick="showPage('services')">
       <div class="nav-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="3" y="5" width="9" height="2" rx="1" fill="currentColor"/><rect x="3" y="9" width="12" height="2" rx="1" fill="currentColor"/><rect x="3" y="13" width="7" height="2" rx="1" fill="currentColor"/></svg></div>Services
@@ -638,9 +552,9 @@ textarea.fi{resize:vertical;min-height:80px}
   <div class="cb"><div class="tw"><table>
     <thead><tr><th>Brand</th><th>Campaign</th><th>Deliverable</th><th>Budget</th><th>Creators</th><th>Proposals</th><th>Bids</th><th>Cost</th><th></th></tr></thead>
     <tbody>
-      <tr><td data-label="Brand"><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--gold-soft);color:var(--gold)">MG</div>Mamaearth</div></td><td data-label="Campaign"><strong>Summer Skincare Glow</strong></td><td data-label="Deliverable"><span class="badge bgr">Instagram Reel</span></td><td data-label="Budget" style="font-weight:700;color:var(--p)">₹6K–₹10K</td><td data-label="Creators">3</td><td data-label="Proposals" style="color:var(--muted)">10–20</td><td data-label="Bids" style="color:var(--muted);font-size:12px">5✦–12✦</td><td data-label="Cost"><span style="font-size:12px;font-weight:600;color:var(--p)">8 ✦</span></td><td data-label=""><button class="btn btn-p sm" onclick="openPanel('campDetail','summer')">View &amp; Apply</button></td></tr>
-      <tr><td data-label="Brand"><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--p10);color:var(--p)">NK</div>Nykaa</div></td><td data-label="Campaign"><strong>Festive Makeup</strong></td><td data-label="Deliverable"><span class="badge bgr">YouTube Video</span></td><td data-label="Budget" style="font-weight:700;color:var(--p)">₹4K–₹8K</td><td data-label="Creators">2</td><td data-label="Proposals" style="color:var(--muted)">5–10</td><td data-label="Bids" style="color:var(--muted);font-size:12px">3✦–8✦</td><td data-label="Cost"><span style="font-size:12px;font-weight:600;color:var(--p)">6 ✦</span></td><td data-label=""><button class="btn btn-p sm" onclick="openPanel('campDetail','nykaa')">View &amp; Apply</button></td></tr>
-      <tr><td data-label="Brand"><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--green-bg);color:var(--green)">WO</div>WOW Skin</div></td><td data-label="Campaign"><strong>Haircare Routine</strong></td><td data-label="Deliverable"><span class="badge bgr">Instagram Reel</span></td><td data-label="Budget" style="font-weight:700;color:var(--p)">₹8K–₹15K</td><td data-label="Creators">5</td><td data-label="Proposals" style="color:var(--muted)">20–30</td><td data-label="Bids" style="color:var(--muted);font-size:12px">8✦–15✦</td><td data-label="Cost"><span style="font-size:12px;font-weight:600;color:var(--p)">10 ✦</span></td><td data-label=""><button class="btn btn-p sm" onclick="openPanel('campDetail','wow')">View &amp; Apply</button></td></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--gold-soft);color:var(--gold)">MG</div>Mamaearth</div></td><td><strong>Summer Skincare Glow</strong></td><td><span class="badge bgr">Instagram Reel</span></td><td style="font-weight:700;color:var(--p)">₹6K–₹10K</td><td>3</td><td style="color:var(--muted)">10–20</td><td style="color:var(--muted);font-size:12px">5✦–12✦</td><td><span style="font-size:12px;font-weight:600;color:var(--p)">8 ✦</span></td><td><button class="btn btn-p sm" onclick="openPanel('campDetail','summer')">View &amp; Apply</button></td></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--p10);color:var(--p)">NK</div>Nykaa</div></td><td><strong>Festive Makeup</strong></td><td><span class="badge bgr">YouTube Video</span></td><td style="font-weight:700;color:var(--p)">₹4K–₹8K</td><td>2</td><td style="color:var(--muted)">5–10</td><td style="color:var(--muted);font-size:12px">3✦–8✦</td><td><span style="font-size:12px;font-weight:600;color:var(--p)">6 ✦</span></td><td><button class="btn btn-p sm" onclick="openPanel('campDetail','nykaa')">View &amp; Apply</button></td></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--green-bg);color:var(--green)">WO</div>WOW Skin</div></td><td><strong>Haircare Routine</strong></td><td><span class="badge bgr">Instagram Reel</span></td><td style="font-weight:700;color:var(--p)">₹8K–₹15K</td><td>5</td><td style="color:var(--muted)">20–30</td><td style="color:var(--muted);font-size:12px">8✦–15✦</td><td><span style="font-size:12px;font-weight:600;color:var(--p)">10 ✦</span></td><td><button class="btn btn-p sm" onclick="openPanel('campDetail','wow')">View &amp; Apply</button></td></tr>
     </tbody>
   </table></div></div>
 </div>
@@ -740,47 +654,47 @@ textarea.fi{resize:vertical;min-height:80px}
 <div class="card"><div class="tw"><table>
   <thead><tr><th>Brand / Campaign</th><th>Type</th><th>Quoted</th><th>Sparks (floor+bid)</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
   <tbody>
-    <tr><td data-label="Brand / Campaign"><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--gold-soft);color:var(--gold)">MG</div><div><div style="font-weight:600">Summer Skincare Glow</div><div style="font-size:11px;color:var(--muted)">Mamaearth</div></div></div></td><td data-label="Type"><span class="badge bb">Invited</span></td><td data-label="Quoted" style="font-weight:700;color:var(--p)">₹8,500</td><td data-label="Sparks (floor+bid)">6✦+2✦ = <strong>8✦</strong></td><td data-label="Submitted" style="color:var(--muted)">Apr 10</td><td data-label="Status"><span class="badge bg">Hired</span></td><td data-label="Action"><button class="btn btn-g sm" onclick="showPage('collaborations')">View Collab →</button></td></tr>
-    <tr><td data-label="Brand / Campaign"><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--p10);color:var(--p)">NK</div><div><div style="font-weight:600">Festive Makeup</div><div style="font-size:11px;color:var(--muted)">Nykaa</div></div></div></td><td data-label="Type"><span class="badge bgr">Applied</span></td><td data-label="Quoted" style="font-weight:700;color:var(--p)">₹6,200</td><td data-label="Sparks (floor+bid)">5✦+1✦ = <strong>6✦</strong></td><td data-label="Submitted" style="color:var(--muted)">Apr 12</td><td data-label="Status"><div style="display:flex;align-items:center;gap:5px"><span class="badge bb">Viewed ✓</span><span style="font-size:10px;color:var(--muted)">Locked</span></div></td><td data-label="Action"><button class="btn btn-g sm" onclick="openPanel('propDetail')">View</button></td></tr>
-    <tr><td data-label="Brand / Campaign"><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--green-bg);color:var(--green)">WO</div><div><div style="font-weight:600">Haircare Routine</div><div style="font-size:11px;color:var(--muted)">WOW Skin</div></div></div></td><td data-label="Type"><span class="badge bgr">Applied</span></td><td data-label="Quoted" style="font-weight:700;color:var(--p)">₹9,000</td><td data-label="Sparks (floor+bid)">8✦+2✦ = <strong>10✦</strong></td><td data-label="Submitted" style="color:var(--muted)">Apr 14</td><td data-label="Status"><span class="badge bp">Submitted</span></td><td data-label="Action"><div style="display:flex;gap:5px"><button class="btn btn-g sm" onclick="openPanel('propDetail')">Edit</button><button class="btn btn-r sm" onclick="openModal('withdrawProposal')">Withdraw</button></div></td></tr>
-    <tr><td data-label="Brand / Campaign"><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px">PL</div><div><div style="font-weight:600">Glow Serum</div><div style="font-size:11px;color:var(--muted)">Plum Goodness</div></div></div></td><td data-label="Type"><span class="badge bgr">Applied</span></td><td data-label="Quoted" style="color:var(--muted)">₹5,500</td><td data-label="Sparks (floor+bid)" style="color:var(--muted)">—</td><td data-label="Submitted" style="color:var(--muted)">Not submitted</td><td data-label="Status"><span class="badge bgr">Draft</span></td><td data-label="Action"><button class="btn btn-p sm" onclick="openPanel('propForm','plum')">Submit Now</button></td></tr>
-    <tr><td data-label="Brand / Campaign"><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--green-bg);color:var(--green)">MN</div><div><div style="font-weight:600">Acne Care Routine</div><div style="font-size:11px;color:var(--muted)">Minimalist</div></div></div></td><td data-label="Type"><span class="badge bgr">Applied</span></td><td data-label="Quoted" style="color:var(--muted)">₹7,200</td><td data-label="Sparks (floor+bid)" style="color:var(--muted)">8✦</td><td data-label="Submitted" style="color:var(--muted)">Mar 20</td><td data-label="Status"><span class="badge bgr">Rejected</span></td><td data-label="Action"><span style="font-size:12px;color:var(--muted)">Campaign closed</span></td></tr>
+    <tr><td><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--gold-soft);color:var(--gold)">MG</div><div><div style="font-weight:600">Summer Skincare Glow</div><div style="font-size:11px;color:var(--muted)">Mamaearth</div></div></div></td><td><span class="badge bb">Invited</span></td><td style="font-weight:700;color:var(--p)">₹8,500</td><td>6✦+2✦ = <strong>8✦</strong></td><td style="color:var(--muted)">Apr 10</td><td><span class="badge bg">Hired</span></td><td><button class="btn btn-g sm" onclick="showPage('collaborations')">View Collab →</button></td></tr>
+    <tr><td><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--p10);color:var(--p)">NK</div><div><div style="font-weight:600">Festive Makeup</div><div style="font-size:11px;color:var(--muted)">Nykaa</div></div></div></td><td><span class="badge bgr">Applied</span></td><td style="font-weight:700;color:var(--p)">₹6,200</td><td>5✦+1✦ = <strong>6✦</strong></td><td style="color:var(--muted)">Apr 12</td><td><div style="display:flex;align-items:center;gap:5px"><span class="badge bb">Viewed ✓</span><span style="font-size:10px;color:var(--muted)">Locked</span></div></td><td><button class="btn btn-g sm" onclick="openPanel('propDetail')">View</button></td></tr>
+    <tr><td><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--green-bg);color:var(--green)">WO</div><div><div style="font-weight:600">Haircare Routine</div><div style="font-size:11px;color:var(--muted)">WOW Skin</div></div></div></td><td><span class="badge bgr">Applied</span></td><td style="font-weight:700;color:var(--p)">₹9,000</td><td>8✦+2✦ = <strong>10✦</strong></td><td style="color:var(--muted)">Apr 14</td><td><span class="badge bp">Submitted</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-g sm" onclick="openPanel('propDetail')">Edit</button><button class="btn btn-r sm" onclick="openModal('withdrawProposal')">Withdraw</button></div></td></tr>
+    <tr><td><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px">PL</div><div><div style="font-weight:600">Glow Serum</div><div style="font-size:11px;color:var(--muted)">Plum Goodness</div></div></div></td><td><span class="badge bgr">Applied</span></td><td style="color:var(--muted)">₹5,500</td><td style="color:var(--muted)">—</td><td style="color:var(--muted)">Not submitted</td><td><span class="badge bgr">Draft</span></td><td><button class="btn btn-p sm" onclick="openPanel('propForm','plum')">Submit Now</button></td></tr>
+    <tr><td><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--green-bg);color:var(--green)">MN</div><div><div style="font-weight:600">Acne Care Routine</div><div style="font-size:11px;color:var(--muted)">Minimalist</div></div></div></td><td><span class="badge bgr">Applied</span></td><td style="color:var(--muted)">₹7,200</td><td style="color:var(--muted)">8✦</td><td style="color:var(--muted)">Mar 20</td><td><span class="badge bgr">Rejected</span></td><td><span style="font-size:12px;color:var(--muted)">Campaign closed</span></td></tr>
     <tr style="background:var(--amber-bg)">
-      <td data-label="Brand / Campaign"><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--green-bg);color:var(--green)">WO</div><div><div style="font-weight:600">Haircare Routine Challenge</div><div style="font-size:11px;color:var(--muted)">WOW Skin Science</div></div></div></td>
-      <td data-label="Type"><span class="badge bgr">Applied</span></td>
-      <td data-label="Quoted" style="font-weight:700;color:var(--p)">₹9,000</td>
-      <td data-label="Sparks (floor+bid)">8✦+2✦ = <strong>10✦</strong></td>
-      <td data-label="Submitted" style="color:var(--muted)">Apr 8</td>
-      <td data-label="Status">
+      <td><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--green-bg);color:var(--green)">WO</div><div><div style="font-weight:600">Haircare Routine Challenge</div><div style="font-size:11px;color:var(--muted)">WOW Skin Science</div></div></div></td>
+      <td><span class="badge bgr">Applied</span></td>
+      <td style="font-weight:700;color:var(--p)">₹9,000</td>
+      <td>8✦+2✦ = <strong>10✦</strong></td>
+      <td style="color:var(--muted)">Apr 8</td>
+      <td>
         <div style="display:flex;flex-direction:column;gap:4px">
           <span class="badge ba">Offer Accepted</span>
           <span style="font-size:11px;color:var(--amber)"><svg class="ic"><use href="#ic-clock"/></svg> Brand payment deadline: Apr 19</span>
         </div>
       </td>
-      <td data-label="Action"><span style="font-size:12px;color:var(--amber);font-weight:600">Awaiting brand escrow</span></td>
+      <td><span style="font-size:12px;color:var(--amber);font-weight:600">Awaiting brand escrow</span></td>
     </tr>
     <tr>
-      <td data-label="Brand / Campaign"><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--surface);color:var(--muted)">KH</div><div><div style="font-weight:600">Khadi Natural Campaign</div><div style="font-size:11px;color:var(--muted)">Khadi Herbals</div></div></div></td>
-      <td data-label="Type"><span class="badge bgr">Applied</span></td>
-      <td data-label="Quoted" style="color:var(--muted)">₹4,800</td>
-      <td data-label="Sparks (floor+bid)" style="color:var(--muted)">6✦</td>
-      <td data-label="Submitted" style="color:var(--muted)">Mar 15</td>
-      <td data-label="Status"><span class="badge bgr">Offer Expired</span></td>
-      <td data-label="Action"><span style="font-size:12px;color:var(--muted)">No response in 7 days</span></td>
+      <td><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--surface);color:var(--muted)">KH</div><div><div style="font-weight:600">Khadi Natural Campaign</div><div style="font-size:11px;color:var(--muted)">Khadi Herbals</div></div></div></td>
+      <td><span class="badge bgr">Applied</span></td>
+      <td style="color:var(--muted)">₹4,800</td>
+      <td style="color:var(--muted)">6✦</td>
+      <td style="color:var(--muted)">Mar 15</td>
+      <td><span class="badge bgr">Offer Expired</span></td>
+      <td><span style="font-size:12px;color:var(--muted)">No response in 7 days</span></td>
     </tr>
     <tr style="background:var(--red-bg)">
-      <td data-label="Brand / Campaign"><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--red-bg);color:var(--red)">LS</div><div><div style="font-weight:600">Laneige Summer Series</div><div style="font-size:11px;color:var(--muted)">Laneige India</div></div></div></td>
-      <td data-label="Type"><span class="badge bgr">Applied</span></td>
-      <td data-label="Quoted" style="color:var(--muted)">₹8,000</td>
-      <td data-label="Sparks (floor+bid)" style="color:var(--muted)">8✦</td>
-      <td data-label="Submitted" style="color:var(--muted)">Feb 28</td>
-      <td data-label="Status">
+      <td><div style="display:flex;align-items:center;gap:10px"><div class="av" style="width:30px;height:30px;font-size:10px;background:var(--red-bg);color:var(--red)">LS</div><div><div style="font-weight:600">Laneige Summer Series</div><div style="font-size:11px;color:var(--muted)">Laneige India</div></div></div></td>
+      <td><span class="badge bgr">Applied</span></td>
+      <td style="color:var(--muted)">₹8,000</td>
+      <td style="color:var(--muted)">8✦</td>
+      <td style="color:var(--muted)">Feb 28</td>
+      <td>
         <div style="display:flex;flex-direction:column;gap:4px">
           <span class="badge br">Payment Failed</span>
           <span style="font-size:11px;color:var(--red)">Brand missed your payment deadline</span>
         </div>
       </td>
-      <td data-label="Action"><span style="font-size:12px;color:var(--muted)">Slot reopened automatically</span></td>
+      <td><span style="font-size:12px;color:var(--muted)">Slot reopened automatically</span></td>
     </tr>
   </tbody>
 </table></div></div>
@@ -789,7 +703,7 @@ textarea.fi{resize:vertical;min-height:80px}
 <!-- ══ COLLABORATIONS ══ -->
 <div class="page" id="page-collaborations">
 <div class="sh"><div><div class="st">My Collaborations</div></div></div>
-<div class="sgrid" style="margin-bottom:20px">
+<div class="sgrid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
   <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800;font-family:'Fraunces',sans-serif;color:var(--p)">1</div><div style="font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:3px">Active</div></div>
   <div style="background:var(--amber-bg);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800;font-family:'Fraunces',sans-serif;color:var(--amber)">1</div><div style="font-size:11px;color:var(--amber);font-weight:600;text-transform:uppercase;margin-top:3px">Awaiting Review</div></div>
   <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800;font-family:'Fraunces',sans-serif;color:var(--muted)">0</div><div style="font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:3px">Go-Live Pending</div></div>
@@ -947,9 +861,9 @@ textarea.fi{resize:vertical;min-height:80px}
   <div class="card"><div class="tw"><table>
     <thead><tr><th>Brand</th><th>Campaign</th><th>Deliverable</th><th>Status</th><th>Earned</th><th>Completed</th><th>Review</th><th>Actions</th></tr></thead>
     <tbody>
-      <tr><td data-label="Brand"><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--p10);color:var(--p)">NK</div>Nykaa</div></td><td data-label="Campaign">Festive Makeup</td><td data-label="Deliverable"><span class="badge bgr">YouTube</span></td><td data-label="Status"><span class="badge bg">Completed</span></td><td data-label="Earned" style="font-weight:700;color:var(--green)">₹6,200</td><td data-label="Completed" style="color:var(--muted)">Mar 28</td><td data-label="Review"><span class="badge bg">Reviewed ✓</span></td><td data-label="Actions"><div style="display:flex;gap:5px"><button class="btn btn-g xs" onclick="openPanel('invoiceView')">Invoice</button><button class="btn btn-g xs" onclick="openPanel('portAdd')">+ Portfolio</button></div></td></tr>
-      <tr><td data-label="Brand"><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--green-bg);color:var(--green)">WO</div>WOW Skin</div></td><td data-label="Campaign">Haircare Routine</td><td data-label="Deliverable"><span class="badge bgr">Instagram Reel</span></td><td data-label="Status"><span class="badge bg">Completed</span></td><td data-label="Earned" style="font-weight:700;color:var(--green)">₹5,000</td><td data-label="Completed" style="color:var(--muted)">Mar 10</td><td data-label="Review"><button class="btn btn-p xs" onclick="openPanel('leaveReview')">Leave Review</button></td><td data-label="Actions"><div style="display:flex;gap:5px"><button class="btn btn-g xs" onclick="openPanel('invoiceView')">Invoice</button><button class="btn btn-g xs" onclick="openPanel('portAdd')">+ Portfolio</button></div></td></tr>
-      <tr><td data-label="Brand"><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px">PL</div>Plum</div></td><td data-label="Campaign" style="color:var(--muted)">Direct Booking</td><td data-label="Deliverable"><span class="badge bgr">Story Series</span></td><td data-label="Status"><span class="badge bg">Completed</span></td><td data-label="Earned" style="font-weight:700;color:var(--green)">₹2,500</td><td data-label="Completed" style="color:var(--muted)">Feb 15</td><td data-label="Review"><span class="badge bg">Reviewed ✓</span></td><td data-label="Actions"><button class="btn btn-g xs" onclick="openPanel('invoiceView')">Invoice</button></td></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--p10);color:var(--p)">NK</div>Nykaa</div></td><td>Festive Makeup</td><td><span class="badge bgr">YouTube</span></td><td><span class="badge bg">Completed</span></td><td style="font-weight:700;color:var(--green)">₹6,200</td><td style="color:var(--muted)">Mar 28</td><td><span class="badge bg">Reviewed ✓</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-g xs" onclick="openPanel('invoiceView')">Invoice</button><button class="btn btn-g xs" onclick="openPanel('portAdd')">+ Portfolio</button></div></td></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--green-bg);color:var(--green)">WO</div>WOW Skin</div></td><td>Haircare Routine</td><td><span class="badge bgr">Instagram Reel</span></td><td><span class="badge bg">Completed</span></td><td style="font-weight:700;color:var(--green)">₹5,000</td><td style="color:var(--muted)">Mar 10</td><td><button class="btn btn-p xs" onclick="openPanel('leaveReview')">Leave Review</button></td><td><div style="display:flex;gap:5px"><button class="btn btn-g xs" onclick="openPanel('invoiceView')">Invoice</button><button class="btn btn-g xs" onclick="openPanel('portAdd')">+ Portfolio</button></div></td></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px">PL</div>Plum</div></td><td style="color:var(--muted)">Direct Booking</td><td><span class="badge bgr">Story Series</span></td><td><span class="badge bg">Completed</span></td><td style="font-weight:700;color:var(--green)">₹2,500</td><td style="color:var(--muted)">Feb 15</td><td><span class="badge bg">Reviewed ✓</span></td><td><button class="btn btn-g xs" onclick="openPanel('invoiceView')">Invoice</button></td></tr>
     </tbody>
   </table></div></div>
 </div>
@@ -1063,37 +977,37 @@ textarea.fi{resize:vertical;min-height:80px}
   <div class="tw"><table>
     <thead><tr><th>Brand</th><th>Campaign</th><th>Deliverable</th><th>Gross</th><th>TDS (5%)</th><th>Net Received</th><th>Date</th><th>Payout Status</th><th>Invoice</th></tr></thead>
     <tbody>
-      <tr><td data-label="Brand"><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--gold-soft);color:var(--gold)">MG</div>Mamaearth</div></td><td data-label="Campaign">Summer Skincare Glow</td><td data-label="Deliverable">Instagram Reel</td><td data-label="Gross">₹8,500</td><td data-label="TDS (5%)" style="color:var(--muted)">—</td><td data-label="Net Received" style="font-weight:700;color:var(--amber)">₹8,500</td><td data-label="Date" style="color:var(--muted)">In escrow</td><td data-label="Payout Status"><span class="badge ba">Buffer Period</span></td><td data-label="Invoice"><button class="btn btn-g xs">View</button></td></tr>
-      <tr><td data-label="Brand"><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--p10);color:var(--p)">NK</div>Nykaa</div></td><td data-label="Campaign">Festive Makeup</td><td data-label="Deliverable">YouTube Video</td><td data-label="Gross">₹6,515</td><td data-label="TDS (5%)" style="color:var(--red)">−₹315</td><td data-label="Net Received" style="font-weight:700;color:var(--green)">₹6,200</td><td data-label="Date" style="color:var(--muted)">Mar 28</td><td data-label="Payout Status"><span class="badge bg">Paid</span></td><td data-label="Invoice"><button class="btn btn-g xs">↓ PDF</button></td></tr>
-      <tr><td data-label="Brand"><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--green-bg);color:var(--green)">WO</div>WOW Skin</div></td><td data-label="Campaign">Haircare Routine</td><td data-label="Deliverable">Instagram Reel</td><td data-label="Gross">₹5,263</td><td data-label="TDS (5%)" style="color:var(--red)">−₹263</td><td data-label="Net Received" style="font-weight:700;color:var(--green)">₹5,000</td><td data-label="Date" style="color:var(--muted)">Mar 10</td><td data-label="Payout Status"><span class="badge bg">Paid</span></td><td data-label="Invoice"><button class="btn btn-g xs">↓ PDF</button></td></tr>
-      <tr><td data-label="Brand"><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px">PL</div>Plum</div></td><td data-label="Campaign" style="color:var(--muted)">Direct Booking</td><td data-label="Deliverable">Story Series</td><td data-label="Gross">₹2,631</td><td data-label="TDS (5%)" style="color:var(--red)">−₹131</td><td data-label="Net Received" style="font-weight:700;color:var(--red)">₹2,500</td><td data-label="Date" style="color:var(--muted)">Feb 15</td><td data-label="Payout Status"><span class="badge br">Failed</span></td><td data-label="Invoice"><button class="btn btn-r xs" onclick="openModal('payRetry')">Retry</button></td></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--gold-soft);color:var(--gold)">MG</div>Mamaearth</div></td><td>Summer Skincare Glow</td><td>Instagram Reel</td><td>₹8,500</td><td style="color:var(--muted)">—</td><td style="font-weight:700;color:var(--amber)">₹8,500</td><td style="color:var(--muted)">In escrow</td><td><span class="badge ba">Buffer Period</span></td><td><button class="btn btn-g xs">View</button></td></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--p10);color:var(--p)">NK</div>Nykaa</div></td><td>Festive Makeup</td><td>YouTube Video</td><td>₹6,515</td><td style="color:var(--red)">−₹315</td><td style="font-weight:700;color:var(--green)">₹6,200</td><td style="color:var(--muted)">Mar 28</td><td><span class="badge bg">Paid</span></td><td><button class="btn btn-g xs">↓ PDF</button></td></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--green-bg);color:var(--green)">WO</div>WOW Skin</div></td><td>Haircare Routine</td><td>Instagram Reel</td><td>₹5,263</td><td style="color:var(--red)">−₹263</td><td style="font-weight:700;color:var(--green)">₹5,000</td><td style="color:var(--muted)">Mar 10</td><td><span class="badge bg">Paid</span></td><td><button class="btn btn-g xs">↓ PDF</button></td></tr>
+      <tr><td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px">PL</div>Plum</div></td><td style="color:var(--muted)">Direct Booking</td><td>Story Series</td><td>₹2,631</td><td style="color:var(--red)">−₹131</td><td style="font-weight:700;color:var(--red)">₹2,500</td><td style="color:var(--muted)">Feb 15</td><td><span class="badge br">Failed</span></td><td><button class="btn btn-r xs" onclick="openModal('payRetry')">Retry</button></td></tr>
       <tr style="background:var(--amber-bg)">
-        <td data-label="Brand"><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--green-bg);color:var(--green)">WO</div>WOW Skin</div></td>
-        <td data-label="Campaign">Haircare Routine</td><td data-label="Deliverable">Instagram Reel</td>
-        <td data-label="Gross">₹5,263</td><td data-label="TDS (5%)" style="color:var(--red)">−₹263</td>
-        <td data-label="Net Received" style="font-weight:700;color:var(--amber)">₹5,000</td>
-        <td data-label="Date" style="color:var(--muted)">Today</td>
-        <td data-label="Payout Status">
+        <td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--green-bg);color:var(--green)">WO</div>WOW Skin</div></td>
+        <td>Haircare Routine</td><td>Instagram Reel</td>
+        <td>₹5,263</td><td style="color:var(--red)">−₹263</td>
+        <td style="font-weight:700;color:var(--amber)">₹5,000</td>
+        <td style="color:var(--muted)">Today</td>
+        <td>
           <div style="display:flex;flex-direction:column;gap:3px">
             <span class="badge ba">Processing</span>
             <span style="font-size:10px;color:var(--muted)">Transfer sent to UPI</span>
           </div>
         </td>
-        <td data-label="Invoice"><span style="font-size:11px;color:var(--muted)">1–3 hrs</span></td>
+        <td><span style="font-size:11px;color:var(--muted)">1–3 hrs</span></td>
       </tr>
       <tr style="background:var(--surface)">
-        <td data-label="Brand"><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--surface);color:var(--muted)">KH</div>Khadi</div></td>
-        <td data-label="Campaign">GRWM Challenge</td><td data-label="Deliverable">Reel</td>
-        <td data-label="Gross">₹3,157</td><td data-label="TDS (5%)" style="color:var(--red)">−₹157</td>
-        <td data-label="Net Received" style="font-weight:700;color:var(--muted)">₹3,000</td>
-        <td data-label="Date" style="color:var(--muted)">Today</td>
-        <td data-label="Payout Status">
+        <td><div style="display:flex;align-items:center;gap:8px"><div class="av" style="width:26px;height:26px;font-size:9px;background:var(--surface);color:var(--muted)">KH</div>Khadi</div></td>
+        <td>GRWM Challenge</td><td>Reel</td>
+        <td>₹3,157</td><td style="color:var(--red)">−₹157</td>
+        <td style="font-weight:700;color:var(--muted)">₹3,000</td>
+        <td style="color:var(--muted)">Today</td>
+        <td>
           <div style="display:flex;flex-direction:column;gap:3px">
             <span class="badge bp">Initiated</span>
             <span style="font-size:10px;color:var(--muted)">Request queued</span>
           </div>
         </td>
-        <td data-label="Invoice"><span style="font-size:11px;color:var(--muted)">Pending</span></td>
+        <td><span style="font-size:11px;color:var(--muted)">Pending</span></td>
       </tr>
     </tbody>
   </table></div>
@@ -1147,9 +1061,8 @@ textarea.fi{resize:vertical;min-height:80px}
 
 <!-- ══ PROFILE ══ -->
 <div class="page" id="page-profile">
-<div class="sh"><div><div class="st">My Profile</div><div class="ss">Build your public marketplace listing — the personal page brands see</div></div>
-<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div class="seg"><button class="on" id="pfSegEdit" onclick="pftab('edit')">Edit</button><button id="pfSegPrev" onclick="pftab('preview')">Public preview</button></div><button class="btn btn-p" onclick="showPage('public')">View public page ↗</button></div></div>
-<div id="pf-edit">
+<div class="sh"><div><div class="st">My Profile</div><div class="ss">Your public marketplace listing</div></div>
+<div style="display:flex;gap:8px"><button class="btn btn-g sm">Preview as brand ↗</button><button class="btn btn-p">Save Changes</button></div></div>
 <div class="al al-a">
   <div class="al-i"><svg class="ic"><use href="#ic-chart"/></svg></div>
   <div class="al-c"><div class="al-t">Instagram stats need updating (34 days ago)</div>
@@ -1229,175 +1142,40 @@ textarea.fi{resize:vertical;min-height:80px}
     </div>
   </div>
 </div>
-</div><div id="pf-preview" style="display:none"><div class="pub-banner"><svg class="ic"><use href="#ic-bulb"/></svg><div style="flex:1">Preview — how brands see your public profile. Switch to <strong>Edit</strong> to change any of this.</div></div>
-<div class="pub-hero">
-  <div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;position:relative;z-index:1">
-    <div class="pub-av">PN</div>
-    <div style="flex:1;min-width:200px">
-      <div class="pub-name">Priya Nair</div>
-      <div style="font-size:13.5px;color:rgba(255,255,255,.82);margin-top:6px">Beauty &amp; Lifestyle · Mumbai, Maharashtra · English, Hindi</div>
-      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:13px">
-        <span class="metb"><svg class="ic" style="width:13px;height:13px"><use href="#ic-check-circle"/></svg> KYC Verified</span>
-        <span class="metb">Micro Tier</span>
-        <span class="metb"><span style="color:#f0c674">★</span> 4.8 (3)</span>
-        <span class="metb">Rising Star</span>
-        <span class="metb">On Time</span>
-        <span class="metb"><svg class="ic" style="width:10px;height:10px;color:#7ee0b8"><use href="#ic-dot"/></svg> Available</span>
-      </div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.65);font-weight:700">Starting from</div>
-      <div style="font-family:'Fraunces',serif;font-size:27px;font-weight:600;margin-top:3px">₹2,200</div>
-    </div>
-  </div>
-  <div class="pub-cta" style="display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;position:relative;z-index:1">
-    <button class="btn btn-light" onclick="toast('This is how brands save you')">♥ Save</button>
-    <button class="btn btn-line" onclick="toast('Brands message you here')">Message</button>
-    <button class="btn btn-light" onclick="toast('Brands book your services directly')">Book directly →</button>
-  </div>
-</div>
-<div class="g75">
-  <div style="display:flex;flex-direction:column;gap:20px">
-    <div class="card"><div class="ch"><span class="ct">About</span></div><div class="cb"><div style="font-size:14px;line-height:1.75;color:var(--ink-soft)">Beauty &amp; lifestyle creator from Mumbai. Authentic content for Gen Z &amp; millennials. 15+ brand partnerships across skincare, makeup and haircare.</div></div></div>
-    <div class="card"><div class="ch"><span class="ct">Services &amp; Rate Card</span><span class="badge bgr">Book directly</span></div>
-      <div class="cb"><div class="g2 pubSvc" style="margin-bottom:0">
-        <div class="cc2" style="cursor:default">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span class="badge bgr"><svg class="ic"><use href="#ic-camera"/></svg> Instagram</span></div>
-          <div style="font-size:15px;font-weight:700;margin-bottom:4px">Instagram Reel (60s)</div>
-          <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.5">Full creative reel with hook, storytelling &amp; CTA. Natural lighting preferred.</div>
-          <div style="display:flex;align-items:flex-end;justify-content:space-between"><div><div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase">From</div><div style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--p)">₹5,500</div></div><div style="text-align:right;font-size:11px;color:var(--muted)">2 revisions<br>7-day delivery</div></div>
-          <button class="btn btn-o sm" style="width:100%;justify-content:center;margin-top:14px" onclick="toast('Brands book this service directly')">Book this service</button>
-        </div>
-        <div class="cc2" style="cursor:default">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span class="badge bgr"><svg class="ic"><use href="#ic-camera"/></svg> Instagram</span></div>
-          <div style="font-size:15px;font-weight:700;margin-bottom:4px">Story Series (5 frames)</div>
-          <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.5">Up to 5 connected story frames with swipe-ups and product tags.</div>
-          <div style="display:flex;align-items:flex-end;justify-content:space-between"><div><div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase">From</div><div style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--p)">₹2,200</div></div><div style="text-align:right;font-size:11px;color:var(--muted)">1 revision<br>5-day delivery</div></div>
-          <button class="btn btn-o sm" style="width:100%;justify-content:center;margin-top:14px" onclick="toast('Brands book this service directly')">Book this service</button>
-        </div>
-      </div></div>
-    </div>
-    <div class="card"><div class="ch"><span class="ct">Portfolio</span></div><div class="cb"><div class="pgrid">
-      <div class="pi" style="cursor:default"><div class="pt" style="background:var(--gold-soft);color:var(--gold)"><svg class="ic" style="width:30px;height:30px"><use href="#ic-camera"/></svg></div><div class="pm"><div style="font-size:13px;font-weight:600;margin-bottom:6px">Mamaearth — Vitamin C Reel</div><span class="badge bgr">Instagram Reel</span></div></div>
-      <div class="pi" style="cursor:default"><div class="pt" style="background:var(--p10);color:var(--p)"><svg class="ic" style="width:30px;height:30px"><use href="#ic-play"/></svg></div><div class="pm"><div style="font-size:13px;font-weight:600;margin-bottom:6px">Nykaa — Festive Makeup</div><span class="badge bgr">YouTube Video</span></div></div>
-      <div class="pi" style="cursor:default"><div class="pt" style="background:var(--green-bg);color:var(--green)"><svg class="ic" style="width:30px;height:30px"><use href="#ic-camera"/></svg></div><div class="pm"><div style="font-size:13px;font-weight:600;margin-bottom:6px">WOW Skin — Haircare Reel</div><span class="badge bgr">Instagram Reel</span></div></div>
-    </div></div></div>
-    <div class="card"><div class="ch"><span class="ct">Reviews from Brands</span><div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Fraunces',serif;font-size:22px;font-weight:600">4.8</span><span class="star">★★★★★</span><span style="font-size:13px;color:var(--muted)">(3)</span></div></div>
-      <div class="cb">
-        <div class="rv"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="av" style="width:28px;height:28px;font-size:10px;background:var(--p10);color:var(--p)">NK</div><div><div style="font-size:13px;font-weight:600">Nykaa</div><div style="font-size:11px;color:var(--muted)">Mar 28, 2025</div></div><div class="star" style="margin-left:auto">★★★★★</div></div><div style="font-size:13px;line-height:1.55;color:var(--ink-soft)">Exceptional work. Priya delivered before deadline and understood the brief immediately.</div></div>
-        <div class="rv"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="av" style="width:28px;height:28px;font-size:10px;background:var(--green-bg);color:var(--green)">WO</div><div><div style="font-size:13px;font-weight:600">WOW Skin Science</div><div style="font-size:11px;color:var(--muted)">Mar 10, 2025</div></div><div class="star" style="margin-left:auto">★★★★<span style="opacity:.3">★</span></div></div><div style="font-size:13px;line-height:1.55;color:var(--ink-soft)">Great content quality. Minor revision request was addressed promptly.</div></div>
-      </div></div>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:20px">
-    <div class="card"><div class="ch"><span class="ct">Platforms &amp; Stats</span></div><div class="cb">
-      <div style="border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:10px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><svg class="ic"><use href="#ic-camera"/></svg><span style="font-weight:600;font-size:13px">Instagram</span><span class="badge ba" style="margin-left:auto;font-size:10px">Self-reported</span></div>
-        <div style="display:flex;gap:22px"><div><div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600">85K</div><div style="font-size:11px;color:var(--muted)">Followers</div></div><div><div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600">3.8%</div><div style="font-size:11px;color:var(--muted)">Engagement</div></div></div>
-        <div style="font-size:11px;color:var(--muted);margin-top:10px">Stats self-reported by creator.</div>
-      </div>
-      <div style="border:1px dashed var(--border);border-radius:11px;padding:14px;display:flex;align-items:center;gap:10px;color:var(--muted)"><svg class="ic"><use href="#ic-play"/></svg><div style="font-size:12.5px">YouTube not linked yet</div></div>
-    </div></div>
-    <div class="card"><div class="ch"><span class="ct">Activity</span></div><div class="cb">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:var(--surface);border-radius:10px;padding:13px;text-align:center"><div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600">3</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Completed collabs</div></div>
-        <div style="background:var(--surface);border-radius:10px;padding:13px;text-align:center"><div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600">&lt;2h</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Avg response</div></div>
-      </div>
-    </div></div>
-    <div class="card"><div class="ch"><span class="ct">Verification &amp; Badges</span></div><div class="cb">
-      <div style="display:flex;flex-wrap:wrap;gap:7px"><span class="badge bg">KYC Verified</span><span class="badge bp">Rising Star</span><span class="badge bp">On Time</span><span class="badge bgr" style="opacity:.55">Reliable · need 5</span><span class="badge bgr" style="opacity:.55">Top Rated · need 4.9</span></div>
-    </div></div>
-  </div>
-</div></div></div>
-
-<!-- ══ PUBLIC PROFILE ══ -->
-<div class="page" id="page-public">
-<div class="pub-banner"><svg class="ic"><use href="#ic-bulb"/></svg><div style="flex:1">This is your <strong>public profile</strong> — exactly what brands and visitors see, no login needed. It reflects your profile, services, portfolio and reviews.</div><button class="btn btn-p sm" onclick="showPage('profile')">Edit profile</button></div>
-<div class="pub-hero">
-  <div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;position:relative;z-index:1">
-    <div class="pub-av">PN</div>
-    <div style="flex:1;min-width:200px">
-      <div class="pub-name">Priya Nair</div>
-      <div style="font-size:13.5px;color:rgba(255,255,255,.82);margin-top:6px">Beauty &amp; Lifestyle · Mumbai, Maharashtra · English, Hindi</div>
-      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:13px">
-        <span class="metb"><svg class="ic" style="width:13px;height:13px"><use href="#ic-check-circle"/></svg> KYC Verified</span>
-        <span class="metb">Micro Tier</span>
-        <span class="metb"><span style="color:#f0c674">★</span> 4.8 (3)</span>
-        <span class="metb">Rising Star</span>
-        <span class="metb">On Time</span>
-        <span class="metb"><svg class="ic" style="width:10px;height:10px;color:#7ee0b8"><use href="#ic-dot"/></svg> Available</span>
-      </div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.65);font-weight:700">Starting from</div>
-      <div style="font-family:'Fraunces',serif;font-size:27px;font-weight:600;margin-top:3px">₹2,200</div>
-    </div>
-  </div>
-  <div class="pub-cta" style="display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;position:relative;z-index:1">
-    <button class="btn btn-light" onclick="toast('This is how brands save you')">♥ Save</button>
-    <button class="btn btn-line" onclick="toast('Brands message you here')">Message</button>
-    <button class="btn btn-light" onclick="toast('Brands book your services directly')">Book directly →</button>
-  </div>
-</div>
-<div class="g75">
-  <div style="display:flex;flex-direction:column;gap:20px">
-    <div class="card"><div class="ch"><span class="ct">About</span></div><div class="cb"><div style="font-size:14px;line-height:1.75;color:var(--ink-soft)">Beauty &amp; lifestyle creator from Mumbai. Authentic content for Gen Z &amp; millennials. 15+ brand partnerships across skincare, makeup and haircare.</div></div></div>
-    <div class="card"><div class="ch"><span class="ct">Services &amp; Rate Card</span><span class="badge bgr">Book directly</span></div>
-      <div class="cb"><div class="g2 pubSvc" style="margin-bottom:0">
-        <div class="cc2" style="cursor:default">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span class="badge bgr"><svg class="ic"><use href="#ic-camera"/></svg> Instagram</span></div>
-          <div style="font-size:15px;font-weight:700;margin-bottom:4px">Instagram Reel (60s)</div>
-          <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.5">Full creative reel with hook, storytelling &amp; CTA. Natural lighting preferred.</div>
-          <div style="display:flex;align-items:flex-end;justify-content:space-between"><div><div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase">From</div><div style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--p)">₹5,500</div></div><div style="text-align:right;font-size:11px;color:var(--muted)">2 revisions<br>7-day delivery</div></div>
-          <button class="btn btn-o sm" style="width:100%;justify-content:center;margin-top:14px" onclick="toast('Brands book this service directly')">Book this service</button>
-        </div>
-        <div class="cc2" style="cursor:default">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span class="badge bgr"><svg class="ic"><use href="#ic-camera"/></svg> Instagram</span></div>
-          <div style="font-size:15px;font-weight:700;margin-bottom:4px">Story Series (5 frames)</div>
-          <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.5">Up to 5 connected story frames with swipe-ups and product tags.</div>
-          <div style="display:flex;align-items:flex-end;justify-content:space-between"><div><div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase">From</div><div style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--p)">₹2,200</div></div><div style="text-align:right;font-size:11px;color:var(--muted)">1 revision<br>5-day delivery</div></div>
-          <button class="btn btn-o sm" style="width:100%;justify-content:center;margin-top:14px" onclick="toast('Brands book this service directly')">Book this service</button>
-        </div>
-      </div></div>
-    </div>
-    <div class="card"><div class="ch"><span class="ct">Portfolio</span></div><div class="cb"><div class="pgrid">
-      <div class="pi" style="cursor:default"><div class="pt" style="background:var(--gold-soft);color:var(--gold)"><svg class="ic" style="width:30px;height:30px"><use href="#ic-camera"/></svg></div><div class="pm"><div style="font-size:13px;font-weight:600;margin-bottom:6px">Mamaearth — Vitamin C Reel</div><span class="badge bgr">Instagram Reel</span></div></div>
-      <div class="pi" style="cursor:default"><div class="pt" style="background:var(--p10);color:var(--p)"><svg class="ic" style="width:30px;height:30px"><use href="#ic-play"/></svg></div><div class="pm"><div style="font-size:13px;font-weight:600;margin-bottom:6px">Nykaa — Festive Makeup</div><span class="badge bgr">YouTube Video</span></div></div>
-      <div class="pi" style="cursor:default"><div class="pt" style="background:var(--green-bg);color:var(--green)"><svg class="ic" style="width:30px;height:30px"><use href="#ic-camera"/></svg></div><div class="pm"><div style="font-size:13px;font-weight:600;margin-bottom:6px">WOW Skin — Haircare Reel</div><span class="badge bgr">Instagram Reel</span></div></div>
-    </div></div></div>
-    <div class="card"><div class="ch"><span class="ct">Reviews from Brands</span><div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Fraunces',serif;font-size:22px;font-weight:600">4.8</span><span class="star">★★★★★</span><span style="font-size:13px;color:var(--muted)">(3)</span></div></div>
-      <div class="cb">
-        <div class="rv"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="av" style="width:28px;height:28px;font-size:10px;background:var(--p10);color:var(--p)">NK</div><div><div style="font-size:13px;font-weight:600">Nykaa</div><div style="font-size:11px;color:var(--muted)">Mar 28, 2025</div></div><div class="star" style="margin-left:auto">★★★★★</div></div><div style="font-size:13px;line-height:1.55;color:var(--ink-soft)">Exceptional work. Priya delivered before deadline and understood the brief immediately.</div></div>
-        <div class="rv"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><div class="av" style="width:28px;height:28px;font-size:10px;background:var(--green-bg);color:var(--green)">WO</div><div><div style="font-size:13px;font-weight:600">WOW Skin Science</div><div style="font-size:11px;color:var(--muted)">Mar 10, 2025</div></div><div class="star" style="margin-left:auto">★★★★<span style="opacity:.3">★</span></div></div><div style="font-size:13px;line-height:1.55;color:var(--ink-soft)">Great content quality. Minor revision request was addressed promptly.</div></div>
-      </div></div>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:20px">
-    <div class="card"><div class="ch"><span class="ct">Platforms &amp; Stats</span></div><div class="cb">
-      <div style="border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:10px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><svg class="ic"><use href="#ic-camera"/></svg><span style="font-weight:600;font-size:13px">Instagram</span><span class="badge ba" style="margin-left:auto;font-size:10px">Self-reported</span></div>
-        <div style="display:flex;gap:22px"><div><div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600">85K</div><div style="font-size:11px;color:var(--muted)">Followers</div></div><div><div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600">3.8%</div><div style="font-size:11px;color:var(--muted)">Engagement</div></div></div>
-        <div style="font-size:11px;color:var(--muted);margin-top:10px">Stats self-reported by creator.</div>
-      </div>
-      <div style="border:1px dashed var(--border);border-radius:11px;padding:14px;display:flex;align-items:center;gap:10px;color:var(--muted)"><svg class="ic"><use href="#ic-play"/></svg><div style="font-size:12.5px">YouTube not linked yet</div></div>
-    </div></div>
-    <div class="card"><div class="ch"><span class="ct">Activity</span></div><div class="cb">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:var(--surface);border-radius:10px;padding:13px;text-align:center"><div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600">3</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Completed collabs</div></div>
-        <div style="background:var(--surface);border-radius:10px;padding:13px;text-align:center"><div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600">&lt;2h</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Avg response</div></div>
-      </div>
-    </div></div>
-    <div class="card"><div class="ch"><span class="ct">Verification &amp; Badges</span></div><div class="cb">
-      <div style="display:flex;flex-wrap:wrap;gap:7px"><span class="badge bg">KYC Verified</span><span class="badge bp">Rising Star</span><span class="badge bp">On Time</span><span class="badge bgr" style="opacity:.55">Reliable · need 5</span><span class="badge bgr" style="opacity:.55">Top Rated · need 4.9</span></div>
-    </div></div>
-  </div>
-</div>
 </div>
 
 <!-- ══ SERVICES ══ -->
 <div class="page" id="page-services">
-<div class="sh"><div><div class="st">My Services</div><div class="ss">Your public rate card — brands book these directly from your profile</div></div><button class="btn btn-p" onclick="openPanel('addService')">+ Add New Service</button></div>
-<div class="pub-banner"><svg class="ic"><use href="#ic-bulb"/></svg><div style="flex:1">These listings appear on your <strong>public profile</strong> as your rate card. Active services are bookable by brands; paused ones stay hidden.</div><button class="btn btn-o sm" onclick="showPage('public')">View public page ↗</button></div>
-<div class="svc-status" id="svcStatus"></div>
-<div class="svc-grid" id="svcGrid"></div>
+<div class="sh"><div><div class="st">My Services</div><div class="ss">Define what you offer and at what price</div></div><button class="btn btn-p" onclick="openPanel('addService')">+ Add New Service</button></div>
+<div class="g3">
+  <div class="cc2">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><span class="badge bgr"><svg class="ic"><use href="#ic-camera"/></svg> Instagram</span><span class="badge bg">Active</span></div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:4px">Instagram Reel (60s)</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5">Full creative reel with hook, storytelling &amp; CTA. Natural lighting preferred.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;background:var(--surface);border-radius:8px;padding:10px">
+      <div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase">Price</div><div style="font-size:18px;font-weight:800;color:var(--p)">₹5,500</div></div>
+      <div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase">Revisions</div><div style="font-size:18px;font-weight:800">2</div></div>
+      <div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase">Quantity</div><div style="font-size:13px;font-weight:600">1 reel</div></div>
+      <div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase">Delivery</div><div style="font-size:13px;font-weight:600">7 days</div></div>
+    </div>
+    <div style="display:flex;gap:8px"><button class="btn btn-g sm" style="flex:1;justify-content:center" onclick="openPanel('editService')">Edit</button><button class="btn btn-g sm" style="flex:1;justify-content:center;color:var(--amber)" onclick="openModal('pauseConfirm')">Pause</button><button class="btn btn-r sm" onclick="openModal('deleteSvc')">✕</button></div>
+  </div>
+  <div class="cc2">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><span class="badge bgr"><svg class="ic"><use href="#ic-camera"/></svg> Instagram</span><span class="badge ba">Paused</span></div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:4px;opacity:.6">Story Series (5 frames)</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:14px;opacity:.6">Up to 5 connected story frames.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;background:var(--surface);border-radius:8px;padding:10px;opacity:.6">
+      <div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase">Price</div><div style="font-size:18px;font-weight:800;color:var(--p)">₹2,200</div></div>
+      <div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase">Revisions</div><div style="font-size:18px;font-weight:800">1</div></div>
+    </div>
+    <div style="display:flex;gap:8px"><button class="btn btn-g sm" style="flex:1;justify-content:center">Edit</button><button class="btn btn-p sm" style="flex:1;justify-content:center" onclick="openModal('reactivateSvc')">Reactivate</button></div>
+  </div>
+  <div class="cc2" style="border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:220px" onclick="openPanel('addService')">
+    <div style="font-size:32px;margin-bottom:8px;opacity:.4">＋</div>
+    <div style="font-size:14px;font-weight:600;color:var(--muted)">Add New Service</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px">Instagram or YouTube</div>
+  </div>
+</div>
 </div>
 
 <!-- ══ PORTFOLIO ══ -->
@@ -1607,15 +1385,6 @@ textarea.fi{resize:vertical;min-height:80px}
 
   </div><!-- end .content -->
 </div><!-- end .main -->
-<nav class="bottom-nav" id="bottomNav" aria-label="Primary">
-  <a class="bn-item active" id="bn-home" onclick="showPage('dashboard')"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg><span>Home</span></a>
-  <a class="bn-item" id="bn-discover" onclick="showPage('campaigns')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><span>Discover</span></a>
-  <a class="bn-item" id="bn-collabs" onclick="showPage('collaborations')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><span>Collabs</span></a>
-  <a class="bn-item" id="bn-inbox" onclick="showPage('messages')"><svg viewBox="0 0 24 24"><path d="M4 5.5h16a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5H9l-4 3.5V16.5H4A1.5 1.5 0 0 1 2.5 15V7A1.5 1.5 0 0 1 4 5.5z"/></svg><span>Inbox</span><span class="bn-dot"></span></a>
-  <a class="bn-item" id="bn-more" onclick="openNav()"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg><span>More</span></a>
-</nav>
-<div class="toast-wrap" id="toastWrap"></div>
-
 
 <!-- MODAL OVERLAY -->
 <div class="modal-overlay" id="modalOverlay" onclick="handleModalOverlayClick(event)">
@@ -1632,7 +1401,7 @@ textarea.fi{resize:vertical;min-height:80px}
 </div>
 
 <script>
-const TITLES={dashboard:'Dashboard',campaigns:'Campaign Discovery',proposals:'My Proposals',collaborations:'Collaborations',messages:'Messages',earnings:'Earnings & Payouts',sparks:'Sparks Wallet',profile:'My Profile',services:'My Services',portfolio:'Portfolio',payouts:'Payout Settings',kyc:'KYC Status',settings:'Account Settings',notifications:'Notifications',public:'Public Profile'};
+const TITLES={dashboard:'Dashboard',campaigns:'Campaign Discovery',proposals:'My Proposals',collaborations:'Collaborations',messages:'Messages',earnings:'Earnings & Payouts',sparks:'Sparks Wallet',profile:'My Profile',services:'My Services',portfolio:'Portfolio',payouts:'Payout Settings',kyc:'KYC Status',settings:'Account Settings',notifications:'Notifications'};
 
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -1645,13 +1414,9 @@ function showPage(id){
   document.querySelector('.content').scrollTop=0;
   closePanel();
   closeNav();
-  syncBottom(id);
 }
 function openNav(){document.body.classList.add('nav-open');}
 function closeNav(){document.body.classList.remove('nav-open');}
-function syncBottom(id){var m={dashboard:'home',campaigns:'discover',collaborations:'collabs',messages:'inbox'};document.querySelectorAll('.bn-item').forEach(function(b){b.classList.remove('active')});var k=m[id];var el=k&&document.getElementById('bn-'+k);if(el)el.classList.add('active');}
-function pftab(t){var e=document.getElementById('pf-edit'),p=document.getElementById('pf-preview');if(e)e.style.display=(t==='edit')?'block':'none';if(p)p.style.display=(t==='preview')?'block':'none';var be=document.getElementById('pfSegEdit'),bp=document.getElementById('pfSegPrev');if(be)be.classList.toggle('on',t==='edit');if(bp)bp.classList.toggle('on',t==='preview');}
-function toast(msg){var w=document.getElementById('toastWrap');if(!w)return;var t=document.createElement('div');t.className='toast';t.textContent=msg;w.appendChild(t);requestAnimationFrame(function(){t.classList.add('show')});setTimeout(function(){t.classList.remove('show');setTimeout(function(){t.remove()},320)},2200);}
 
 // ── PANEL CONTENT BUILDERS ──
 const PANELS={
@@ -2181,60 +1946,6 @@ function closeModal() {
 function handleModalOverlayClick(e) {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
 }
-
-(function(){
-var SERVICES=[
- {id:'reel',name:'Instagram Reel',plat:'Instagram',price:5500,revisions:2,delivery:'7-day',desc:'Full creative reel with hook, storytelling & CTA. Natural lighting preferred.',active:true,rec:false},
- {id:'bundle',name:'Reel + Stories Bundle',plat:'Instagram',price:7000,revisions:3,delivery:'7-day',desc:'One feature reel plus a 5-frame story series to maximise reach.',active:true,rec:true},
- {id:'story',name:'Story Series',plat:'Instagram',price:2200,revisions:1,delivery:'5-day',desc:'Up to 5 connected story frames with product tags and swipe-up links.',active:true,rec:false},
- {id:'ugc',name:'UGC Video (no posting)',plat:'Instagram',price:4000,revisions:1,delivery:'6-day',desc:'Raw user-generated video for your own channels and paid ads.',active:true,rec:false}
-];
-window.SERVICES=SERVICES;
-function fmt(n){return '\u20b9'+n.toLocaleString('en-IN');}
-function cam(){return '<svg class="ic"><use href="#ic-camera"/></svg>';}
-function svcCard(s){
- return '<div class="svc-card'+(s.rec?' rec':'')+(s.active?'':' paused')+'" draggable="true" data-id="'+s.id+'" ondragstart="svcDS(event)" ondragend="svcDE(event)" ondragover="svcDO(event)" ondragleave="svcDL(event)" ondrop="svcDrop(event)">'+
-  '<div class="svc-top"><span class="svc-grip" title="Drag to reorder"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="6" r="1.1"/><circle cx="9" cy="12" r="1.1"/><circle cx="9" cy="18" r="1.1"/><circle cx="15" cy="6" r="1.1"/><circle cx="15" cy="12" r="1.1"/><circle cx="15" cy="18" r="1.1"/></svg></span>'+
-   '<span class="badge bgr">'+cam()+' '+s.plat+'</span>'+
-   (s.active?'<span class="badge bg" style="margin-left:auto">Active</span>':'<span class="badge ba" style="margin-left:auto">Paused</span>')+'</div>'+
-  '<div class="svc-name">'+s.name+(s.rec?'<span class="svc-recbadge">\u2605 Recommended</span>':'')+'</div>'+
-  '<div class="svc-desc">'+s.desc+'</div>'+
-  '<div class="svc-meta"><div><span>Price</span><b style="color:var(--p)">'+fmt(s.price)+'</b></div><div><span>Revisions</span><b>'+s.revisions+'</b></div><div><span>Delivery</span><b style="font-size:13px">'+s.delivery+'</b></div></div>'+
-  '<div class="svc-row"><button class="svc-star'+(s.rec?' on':'')+'" onclick="toggleRec(\''+s.id+'\')" title="Feature as Recommended on your public page"><svg class="ic"><use href="#ic-star"/></svg>'+(s.rec?'Recommended':'Set recommended')+'</button>'+
-   '<span class="svc-mv"><button onclick="moveSvc(\''+s.id+'\',-1)" aria-label="Move up">\u25b2</button><button onclick="moveSvc(\''+s.id+'\',1)" aria-label="Move down">\u25bc</button></span></div>'+
-  '<div class="svc-edit"><button class="btn btn-g sm" onclick="openPanel(\'editService\')">Edit</button><button class="btn btn-g sm" onclick="toggleActive(\''+s.id+'\')">'+(s.active?'Pause':'Activate')+'</button></div>'+
- '</div>';
-}
-function renderServices(){
- var g=document.getElementById('svcGrid'); if(!g)return;
- var html='',ac=0;
- SERVICES.forEach(function(s){ if(s.active){ac++; if(ac===4)html+='<div class="svc-divider">Listed lower on your public page</div>';} html+=svcCard(s); });
- html+='<button class="svc-add" onclick="openPanel(\'addService\')"><span>+</span> Add service</button>';
- g.innerHTML=html;
- var st=document.getElementById('svcStatus'),rec=SERVICES.find(function(s){return s.rec&&s.active;}),na=SERVICES.filter(function(s){return s.active;}).length;
- if(st)st.innerHTML='<svg class="ic" style="width:15px;height:15px;vertical-align:-2px;color:var(--p)"><use href="#ic-bulb"/></svg> <b>'+na+'</b> active service'+(na===1?'':'s')+' show on your public page in this order \u00b7 the top 3 are featured'+(rec?' \u00b7 Recommended: <b>'+rec.name+'</b>':' \u00b7 none set as Recommended');
-}
-function pubTile(s){
- return '<div class="cc2'+(s.rec?' svc-feat':'')+'" style="cursor:default">'+
-  '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span class="badge bgr">'+cam()+' '+s.plat+'</span>'+(s.rec?'<span class="badge" style="background:var(--gold-soft);color:var(--gold)">\u2605 Recommended</span>':'')+'</div>'+
-  '<div style="font-size:15px;font-weight:700;margin-bottom:4px">'+s.name+'</div>'+
-  '<div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.5">'+s.desc+'</div>'+
-  '<div style="display:flex;align-items:flex-end;justify-content:space-between"><div><div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase">From</div><div style="font-family:\'Fraunces\',serif;font-size:22px;font-weight:600;color:var(--p)">'+fmt(s.price)+'</div></div><div style="text-align:right;font-size:11px;color:var(--muted)">'+s.revisions+' revisions<br>'+s.delivery+' delivery</div></div>'+
-  '<button class="btn btn-o sm" style="width:100%;justify-content:center;margin-top:14px" onclick="toast(\'Brands book this service directly\')">Book this service</button></div>';
-}
-function renderPub(){ document.querySelectorAll('.pubSvc').forEach(function(c){ c.innerHTML=SERVICES.filter(function(s){return s.active;}).map(pubTile).join(''); }); }
-window.toggleRec=function(id){var t=SERVICES.find(function(s){return s.id===id;});var was=t.rec;SERVICES.forEach(function(s){s.rec=false;});if(!was){t.rec=true;t.active=true;}renderServices();renderPub();toast(was?'Recommended cleared':t.name+' is now Recommended');};
-window.toggleActive=function(id){var s=SERVICES.find(function(x){return x.id===id;});s.active=!s.active;if(!s.active)s.rec=false;renderServices();renderPub();toast(s.active?s.name+' is live on your page':s.name+' paused \u2014 hidden from page');};
-window.moveSvc=function(id,d){var i=SERVICES.findIndex(function(s){return s.id===id;});var j=i+d;if(j<0||j>=SERVICES.length)return;var t=SERVICES[i];SERVICES[i]=SERVICES[j];SERVICES[j]=t;renderServices();renderPub();};
-var dragId=null;
-window.svcDS=function(e){dragId=e.currentTarget.getAttribute('data-id');e.currentTarget.classList.add('dragging');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',dragId);}catch(x){}};
-window.svcDE=function(e){e.currentTarget.classList.remove('dragging');document.querySelectorAll('.svc-card').forEach(function(c){c.classList.remove('drop-target');});dragId=null;};
-window.svcDO=function(e){e.preventDefault();var c=e.currentTarget;if(c.getAttribute('data-id')!==dragId)c.classList.add('drop-target');};
-window.svcDL=function(e){e.currentTarget.classList.remove('drop-target');};
-window.svcDrop=function(e){e.preventDefault();var tid=e.currentTarget.getAttribute('data-id');e.currentTarget.classList.remove('drop-target');if(!dragId||dragId===tid)return;var item=SERVICES.splice(SERVICES.findIndex(function(s){return s.id===dragId;}),1)[0];SERVICES.splice(SERVICES.findIndex(function(s){return s.id===tid;}),0,item);renderServices();renderPub();};
-window.renderServices=renderServices;window.renderPub=renderPub;
-renderServices();renderPub();
-})();
 </script>
 </body>
 </html>
