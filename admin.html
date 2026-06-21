@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GetSetCollab — Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* ── premium tokens (NAMES kept from admin file, VALUES remapped) ── */
+  --p:#241A33;                  /* deep hero stop / any dark use */
+  --pa:#5A3A86;                 /* primary accent — plum */
+  --pa10:#EFEAF6;               /* accent soft tint */
+  --pa20:#DDD0EE;               /* lighter plum step */
+  --pa-rgb:90,58,134;
+  --ink:#1B1611;--ink-soft:#4B443A;--muted:#938B7C;
+  --border:#E9E2D5;--line-soft:#F1ECE2;
+  --surface:#F6F3EC;            /* inset wells, table head, hover fills */
+  --bg:#F6F3EC;                 /* page canvas */
+  --canvas-2:#FBF9F4;           /* sidebar / lighter surface */
+  --white:#FFFFFF;              /* cards, inputs, raised panels */
+  --gold:#A9802C;--gold-soft:#F6EFDD;
+  --green:#0F6B53;--green-bg:#E2F0EA;
+  --amber:#9A6516;--amber-bg:#FBF0DC;
+  --red:#A6392B;--red-bg:#F8E6E1;
+  --blue:#5A3A86;--blue-bg:#EFEAF6;     /* info reads as accent (no blue in system) */
+  --orange:#9A6516;--orange-bg:#FBF0DC; /* orange folds into amber */
+  --sidebar-w:248px;--header-h:64px;--radius:15px;--radius-sm:11px;
+  --shadow:0 1px 2px rgba(40,30,15,.04);
+  --shadow-md:0 1px 2px rgba(40,30,15,.04),0 18px 40px -22px rgba(60,40,90,.16);
+  --shadow-lg:0 1px 2px rgba(40,30,15,.05),0 30px 60px -28px rgba(55,40,85,.32);
+  --shadow-hero:0 24px 60px -24px rgba(45,25,70,.55);
+  --hero:linear-gradient(152deg,#241A33 0%,#3C2659 52%,#553684 100%);
+}
+body{font-family:'Hanken Grotesk',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+::selection{background:var(--pa10);color:var(--pa)}
+a{color:inherit;text-decoration:none}
+/* universal inline icon — scales with font-size, inherits colour */
+.ic{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.18em;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.fill{fill:currentColor;stroke:none}
+/* ── SIDEBAR (light, premium) ── */
+.sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--canvas-2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;z-index:100;overflow-y:auto;transition:transform .25s cubic-bezier(.2,.7,.2,1)}
+.logo-bar{padding:0 18px;height:var(--header-h);display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--border);flex-shrink:0}
+.logo-mark{width:34px;height:34px;background:var(--hero);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;box-shadow:0 6px 16px -6px rgba(85,54,132,.7)}
+.logo-text{font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+.logo-tag{font-size:10.5px;font-weight:700;background:var(--pa10);color:var(--pa);padding:2px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em}
+.s-nav{flex:1;padding:14px 12px;display:flex;flex-direction:column;gap:2px}
+.s-lbl{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;padding:14px 10px 6px}
+.s-item{display:flex;align-items:center;gap:11px;padding:8.5px 10px;border-radius:10px;cursor:pointer;color:var(--ink-soft);font-size:13.5px;font-weight:500;transition:.16s;text-decoration:none;position:relative}
+.s-item:hover{background:#fff;color:var(--ink)}
+.s-item.active{background:var(--pa10);color:var(--pa);font-weight:600;border:1px solid rgba(90,58,134,.12)}
+.s-item.active::before{content:"";position:absolute;left:-12px;top:9px;bottom:9px;width:3px;background:var(--pa);border-radius:0 3px 3px 0}
+.s-icon{width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--muted);transition:.16s;font-size:14px}
+.s-item:hover .s-icon{color:var(--ink-soft)}
+.s-item.active .s-icon{color:var(--pa)}
+.s-icon .ic{width:18px;height:18px}
+.s-badge{margin-left:auto;font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:20px;line-height:1.5;background:var(--red-bg);color:var(--red)}
+.s-badge.amber{background:var(--amber-bg);color:var(--amber)}
+.s-badge.green{background:var(--green-bg);color:var(--green)}
+.s-footer{padding:12px 14px;border-top:1px solid var(--border);flex-shrink:0}
+.admin-pill{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:#fff;border:1px solid var(--border);cursor:pointer;transition:.16s}
+.admin-pill:hover{border-color:var(--pa20)}
+.admin-av{width:34px;height:34px;border-radius:9px;background:var(--gold-soft);color:var(--gold);font-family:'Fraunces',serif;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+/* ── SHELL ── */
+.main{margin-left:var(--sidebar-w);flex:1;min-width:0;min-height:100vh;display:flex;flex-direction:column}
+.topbar{height:var(--header-h);background:rgba(246,243,236,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px 0 28px;gap:16px;position:sticky;top:0;z-index:50}
+.tb-title{font-family:'Fraunces',serif;font-size:19px;font-weight:600;letter-spacing:-.01em;color:var(--ink);flex:1}
+.tb-search{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 13px;width:280px;color:var(--muted)}
+.tb-search input{border:none;background:transparent;font-size:13px;font-family:inherit;color:var(--ink);outline:none;width:100%}
+.tb-search input::placeholder{color:var(--muted)}
+.tb-actions{display:flex;align-items:center;gap:9px}
+.ibt{width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;color:var(--ink-soft);transition:.16s}
+.ibt:hover{border-color:var(--pa);color:var(--pa)}
+.ndot{position:absolute;top:9px;right:10px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid #fff}
+.hamb{display:none;width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff;color:var(--ink);align-items:center;justify-content:center;cursor:pointer;flex:none}
+.nav-scrim{position:fixed;inset:0;background:rgba(26,20,15,.4);z-index:90;opacity:0;pointer-events:none;transition:.25s}
+body.nav-open .nav-scrim{opacity:1;pointer-events:auto}
+.content{padding:30px 28px 70px;flex:1;min-width:0}
+.page{display:none}.page.active{display:block}
+/* ── PANELS ── */
+.pov{position:fixed;inset:0;background:rgba(26,20,34,.46);z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.pov.open{opacity:1;pointer-events:all}
+.spanel{position:fixed;right:0;top:0;bottom:0;width:min(720px,calc(100vw - 40px));background:var(--canvas-2);z-index:201;transform:translateX(102%);transition:transform .34s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;box-shadow:-30px 0 70px -30px rgba(35,20,55,.5)}
+.spanel.open{transform:translateX(0)}
+.ph{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;background:rgba(251,249,244,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.ph h2{font-family:'Fraunces',serif;font-size:19px;font-weight:600;letter-spacing:-.01em;color:var(--ink);flex:1;min-width:0;line-height:1.2}
+.pclose{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-soft);flex-shrink:0;transition:.15s}
+.pclose:hover{border-color:var(--pa);color:var(--pa)}
+.pbody{flex:1;overflow-y:auto;padding:22px}
+/* ── MODALS ── */
+.mov{position:fixed;inset:0;background:rgba(26,20,34,.5);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:20px}
+.mov.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);border-radius:18px;width:100%;max-width:460px;box-shadow:0 30px 70px -18px rgba(30,18,48,.5);transform:scale(.96) translateY(8px);transition:transform .22s cubic-bezier(.34,1.56,.64,1),opacity .2s;opacity:0}
+.mov.open .modal{transform:scale(1) translateY(0);opacity:1}
+.mh2{padding:22px 22px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.mico2{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;color:var(--pa);background:var(--pa10)}
+.mico2 .ic{width:21px;height:21px}
+.mico2.warn{background:var(--amber-bg);color:var(--amber)}.mico2.danger{background:var(--red-bg);color:var(--red)}.mico2.ok{background:var(--green-bg);color:var(--green)}.mico2.info{background:var(--pa10);color:var(--pa)}
+.mx2{width:30px;height:30px;border-radius:9px;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-soft);flex-shrink:0;transition:.15s}
+.mx2:hover{border-color:var(--pa);color:var(--pa)}
+.mbody2{padding:16px 22px 22px}
+.mtitle2{font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:-.01em;color:var(--ink);margin-bottom:5px;line-height:1.25}
+.msub2{font-size:13px;color:var(--ink-soft);line-height:1.6}
+.macts{display:flex;gap:10px;margin-top:18px}
+.macts .btn{flex:1;justify-content:center}
+/* ── LAYOUT ── */
+.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:24px;flex-wrap:wrap}
+.st{font-family:'Fraunces',serif;font-size:27px;font-weight:600;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+.ss{font-size:13.5px;color:var(--muted);margin-top:6px}
+.sgrid{display:grid;gap:16px;margin-bottom:20px}
+.sgrid.c4{grid-template-columns:1.2fr 1fr 1fr 1fr}.sgrid.c3{grid-template-columns:repeat(3,1fr)}.sgrid.c2{grid-template-columns:repeat(2,1fr)}.sgrid.c5{grid-template-columns:repeat(5,1fr)}
+.scard{background:var(--white);border:1px solid var(--line-soft);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.scard.acc{background:var(--hero);border:none;box-shadow:var(--shadow-hero);position:relative;overflow:hidden}
+.scard.acc::after{content:"";position:absolute;right:-50px;top:-50px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.13),transparent 70%)}
+.slbl{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.11em;margin-bottom:10px}
+.scard.acc .slbl{color:rgba(255,255,255,.7)}
+.sval{font-family:'Fraunces',serif;font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1;color:var(--ink)}
+.scard.acc .sval{color:#fff}
+.sdelta{font-size:12px;font-weight:600;margin-top:8px}
+.sdelta.up{color:var(--green)}.sdelta.n{color:var(--muted)}.sdelta.am{color:var(--amber)}.sdelta.dn{color:var(--red)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:20px}
+.g75{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-bottom:20px;align-items:start}
+.card{background:var(--white);border:1px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-md)}
+.ch{padding:18px 20px 0;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ct{font-family:'Fraunces',serif;font-size:16px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+.cb{padding:16px 20px 20px}
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.bp{background:var(--pa10);color:var(--pa)}.bg{background:var(--green-bg);color:var(--green)}
+.ba{background:var(--amber-bg);color:var(--amber)}.br{background:var(--red-bg);color:var(--red)}
+.bb{background:var(--pa10);color:var(--pa)}.bor{background:var(--amber-bg);color:var(--amber)}
+.bgr{background:var(--surface);color:var(--muted);border:1px solid var(--border)}
+.badge .ic{width:13px;height:13px}
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:.16s;line-height:1;white-space:nowrap}
+.btn-p{background:var(--pa);color:#fff}.btn-p:hover{background:#7B57AE;transform:translateY(-1px)}
+.btn-g{background:#fff;color:var(--ink-soft);border:1px solid var(--border)}.btn-g:hover{border-color:var(--ink-soft);color:var(--ink)}
+.btn-r{background:var(--red-bg);color:var(--red);border:1px solid transparent}.btn-r:hover{background:#f3d6cf}
+.btn-green{background:var(--green);color:#fff;border:none}.btn-green:hover{background:#0b5240}
+.btn-amber{background:var(--amber-bg);color:var(--amber);border:1px solid transparent}.btn-amber:hover{background:#f6e2bf}
+.sm{padding:7px 13px;font-size:12.5px}.xs{padding:4px 9px;font-size:11px;border-radius:8px}
+.btn .ic{width:15px;height:15px}
+/* ── TABLE ── */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{padding:11px 16px;text-align:left;font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border);background:var(--surface);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--line-soft);transition:background .12s}
+tbody tr:hover{background:var(--surface)}
+tbody tr:last-child{border:none}
+td{padding:13px 16px;font-size:13px;color:var(--ink-soft);vertical-align:middle}
+td strong,td b{color:var(--ink)}
+/* ── FORM ── */
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.fr.s1{grid-template-columns:1fr}.fr.s3{grid-template-columns:1fr 1fr 1fr}
+.fg{display:flex;flex-direction:column;gap:6px}
+.fg label{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.fi{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;font-family:inherit;color:var(--ink);outline:none;transition:border .16s;width:100%}
+.fi:focus{border-color:var(--pa)}
+select.fi{cursor:pointer}
+textarea.fi{resize:vertical;min-height:80px}
+/* ── TABS ── */
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--border);margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:9px 4px;margin-right:18px;font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.15s}
+.tab:hover{color:var(--ink-soft)}.tab.active{color:var(--pa);border-bottom-color:var(--pa)}
+/* ── ALERT ── */
+.al{border-radius:var(--radius-sm);padding:13px 15px;display:flex;align-items:flex-start;gap:11px;margin-bottom:16px;border-left:3px solid transparent}
+.al-p{background:var(--pa10);border-left-color:var(--pa)}
+.al-a{background:var(--amber-bg);border-left-color:var(--amber)}
+.al-g{background:var(--green-bg);border-left-color:var(--green)}
+.al-r{background:var(--red-bg);border-left-color:var(--red)}
+.al-i{flex-shrink:0;font-size:16px;line-height:1.2;margin-top:1px;display:flex}
+.al-i .ic{width:18px;height:18px}
+.al-p .al-i{color:var(--pa)}.al-a .al-i{color:var(--amber)}.al-g .al-i{color:var(--green)}.al-r .al-i{color:var(--red)}
+.al-c{flex:1;min-width:0;font-size:12.5px;line-height:1.55;color:var(--ink-soft)}
+.al-t{font-weight:700;margin-bottom:3px;font-size:13px}
+.al-p .al-t{color:var(--pa)}.al-a .al-t{color:var(--amber)}.al-g .al-t{color:var(--green)}.al-r .al-t{color:var(--red)}
+/* ── SLA INDICATOR ── */
+.sla-ok{color:var(--green);font-weight:600}.sla-warn{color:var(--amber);font-weight:600}.sla-breach{color:var(--red);font-weight:700}
+/* ── STATUS DOTS ── */
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;flex-shrink:0}
+.dot-g{background:var(--green)}.dot-a{background:var(--amber)}.dot-r{background:var(--red)}.dot-gr{background:var(--muted)}
+/* ── QUEUE ITEM ── */
+.qi{border:1px solid var(--line-soft);border-radius:var(--radius);padding:16px;background:var(--white);margin-bottom:12px;box-shadow:var(--shadow);transition:.16s}
+.qi:hover{border-color:var(--pa20);box-shadow:var(--shadow-md)}
+.qi.urgent{border-left:3px solid var(--red)}
+.qi.warning{border-left:3px solid var(--amber)}
+/* ── CONFIG ROW ── */
+.cfg-row{display:flex;align-items:center;padding:14px 0;border-bottom:1px solid var(--line-soft);gap:12px}
+.cfg-row:last-child{border:none}
+.cfg-name{font-size:13.5px;font-weight:600;flex:1;color:var(--ink)}
+.cfg-desc{font-size:12px;color:var(--muted);margin-top:2px}
+.cfg-val{display:flex;align-items:center;gap:8px}
+/* ── TOGGLE ── */
+.tog{width:38px;height:22px;border-radius:11px;background:#D9D2C5;position:relative;cursor:pointer;flex-shrink:0;transition:background .15s;display:inline-block}
+.tog::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:.15s;box-shadow:0 1px 3px rgba(40,30,15,.2)}
+.tog.on{background:var(--pa)}.tog.on::after{left:19px}
+/* ── AUDIT ROW ── */
+.alog-row{display:flex;align-items:flex-start;gap:11px;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.alog-row:last-child{border:none}
+.alog-dot{width:8px;height:8px;border-radius:50%;background:var(--pa);margin-top:5px;flex-shrink:0}
+/* ── PROGRESS ── */
+.pb{height:7px;background:var(--border);border-radius:7px;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--pa),#7B57AE);border-radius:7px}
+/* ── BCHART ── */
+.bchart{display:flex;align-items:flex-end;gap:7px;height:84px;padding-bottom:20px;position:relative;margin-top:8px}
+.bchart::after{content:"";position:absolute;bottom:20px;left:0;right:0;height:1px;background:var(--border)}
+.bw{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.bar{width:100%;background:var(--pa10);border-radius:5px 5px 0 0;transition:.3s;cursor:pointer}.bar:hover{background:var(--pa)}
+.blbl{font-size:9px;color:var(--muted);font-weight:600;white-space:nowrap}
+/* ── DOC VIEWER ── */
+.doc-panel{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius-sm);padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px}
+/* ── MOTION ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page.active>*{opacity:0;animation:fadeUp .5s cubic-bezier(.2,.7,.2,1) forwards}
+.page.active>*:nth-child(1){animation-delay:.02s}.page.active>*:nth-child(2){animation-delay:.07s}.page.active>*:nth-child(3){animation-delay:.13s}.page.active>*:nth-child(4){animation-delay:.19s}.page.active>*:nth-child(5){animation-delay:.25s}.page.active>*:nth-child(6){animation-delay:.3s}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
+:focus-visible{outline:2.5px solid var(--pa);outline-offset:2px;border-radius:6px}
+/* ── RESPONSIVE ── */
+@media(max-width:1180px){
+  .sgrid.c4{grid-template-columns:repeat(2,1fr)}
+  .sgrid.c5{grid-template-columns:repeat(3,1fr)}
+  .g75{grid-template-columns:1fr}
+}
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  body.nav-open .sidebar{transform:translateX(0);box-shadow:var(--shadow-lg)}
+  .main{margin-left:0}
+  .hamb{display:flex}
+  .tb-search{display:none}
+  .topbar{padding:0 16px;gap:10px}
+  .g2,.g3{grid-template-columns:1fr}
+  .spanel{width:min(720px,calc(100vw - 24px))}
+}
+@media(max-width:760px){
+  .content{padding:22px 16px 60px}
+  .st{font-size:23px}
+  .sgrid.c2,.sgrid.c3,.sgrid.c4,.sgrid.c5{grid-template-columns:1fr 1fr}
+  .fr,.fr.s3{grid-template-columns:1fr}
+  .sh{align-items:flex-start}
+}
+@media(max-width:520px){
+  .sgrid.c2,.sgrid.c3,.sgrid.c4,.sgrid.c5{grid-template-columns:1fr}
+}
+@media(min-width:901px){.nav-scrim{display:none}}
+@media(prefers-reduced-motion:reduce){
+  .page.active>*{animation:none;opacity:1}
+  *{transition-duration:.01ms!important}
+}
+/* ── RESPONSIVE TABLES → labelled cards ── */
+@media(max-width:760px){
+  .tw{overflow:visible}
+  .tw table,.tw thead,.tw tbody,.tw th,.tw td,.tw tr{display:block;width:auto}
+  .tw thead{position:absolute;left:-9999px;height:0;overflow:hidden}
+  .tw tbody tr{background:#fff;border:1px solid var(--line-soft);border-radius:var(--radius-sm);box-shadow:var(--shadow);margin-bottom:12px;padding:4px 2px}
+  .tw tbody tr:hover{background:#fff}
+  .tw tbody tr:last-child{border:1px solid var(--line-soft)}
+  .tw td{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:9px 14px;border:0;border-bottom:1px solid var(--line-soft);text-align:right;font-size:13px;white-space:normal}
+  .tw td:last-child{border-bottom:0}
+  .tw td::before{content:attr(data-label);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:left;margin-right:auto;flex:none}
+  .tw td[data-label=""]::before{content:"";margin:0}
+  .tw td[data-label=""]{justify-content:flex-end}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="ic-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+<symbol id="ic-chart" viewBox="0 0 24 24"><path d="M4 20V4"/><path d="M4 20h16"/><rect x="7" y="11" width="3" height="6"/><rect x="12" y="7" width="3" height="10"/><rect x="17" y="13" width="3" height="4"/></symbol>
+<symbol id="ic-doc" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 12h5M9.5 15.5h5"/></symbol>
+<symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.5 2.3 3.8 5.4 3.8 8.5s-1.3 6.2-3.8 8.5c-2.5-2.3-3.8-5.4-3.8-8.5S9.5 5.8 12 3.5z"/></symbol>
+<symbol id="ic-scale" viewBox="0 0 24 24"><path d="M12 4v15"/><path d="M5 6.5l14-1.5"/><path d="M8.5 20h7"/><path d="M5 6.5l-2.6 6.2a3 3 0 0 0 6 0z"/><path d="M19 5l2.6 6.2a3 3 0 0 1-6 0z"/></symbol>
+<symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+<symbol id="ic-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 5.2a3.2 3.2 0 0 1 0 5.6"/><path d="M17.6 19a5.5 5.5 0 0 0-3-4.95"/></symbol>
+<symbol id="ic-building" viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="1.5"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2"/><path d="M10 20.5v-3.5h4v3.5"/></symbol>
+<symbol id="ic-card" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></symbol>
+<symbol id="ic-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.2M12 18.8V21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M3 12h2.2M18.8 12H21M5.6 18.4l1.6-1.6M16.8 7.2l1.6-1.6"/></symbol>
+<symbol id="ic-clipboard" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="16" rx="2"/><path d="M9 5V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M9 11h6M9 14.5h4"/></symbol>
+<symbol id="ic-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.2l2.8 2.8L16 9.5"/></symbol>
+<symbol id="ic-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+<symbol id="ic-lock" viewBox="0 0 24 24"><rect x="5.5" y="10.5" width="13" height="9" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="ic-camera" viewBox="0 0 24 24"><path d="M3 8.5A1.5 1.5 0 0 1 4.5 7h2L8 5h8l1.5 2h2A1.5 1.5 0 0 1 21 8.5v9A1.5 1.5 0 0 1 19.5 19h-15A1.5 1.5 0 0 1 3 17.5z"/><circle cx="12" cy="12.5" r="3.2"/></symbol>
+<symbol id="ic-edit" viewBox="0 0 24 24"><path d="M14.5 5.5l4 4L8 20H4v-4z"/><path d="M13 7l4 4"/></symbol>
+<symbol id="ic-flag" viewBox="0 0 24 24"><path d="M6 21V4"/><path d="M6 5h11l-2.2 3.5L17 12H6"/></symbol>
+<symbol id="ic-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+<symbol id="ic-trash" viewBox="0 0 24 24"><path d="M5 7h14"/><path d="M9 7V5h6v2"/><path d="M7 7l1 13h8l1-13"/></symbol>
+<symbol id="ic-alert" viewBox="0 0 24 24"><path d="M12 4.5l8.5 14.5h-17z"/><path d="M12 10v4M12 16.5v.5"/></symbol>
+<symbol id="ic-play" viewBox="0 0 24 24"><path d="M8 5.5l10 6.5-10 6.5z"/></symbol>
+<symbol id="ic-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><path d="M12 8v.4"/></symbol>
+<symbol id="ic-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.25 4.15 1 5.85L12 17l-5.25 2.75 1-5.85L3.5 9.7l5.9-.9z"/></symbol>
+<symbol id="ic-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></symbol>
+<symbol id="ic-bell" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-6 6v3l-1.5 2.5h15L18 12V9a6 6 0 0 0-6-6z"/><path d="M9.5 19a2.5 2.5 0 0 0 5 0"/></symbol>
+</defs></svg>
+<div class="nav-scrim" id="navScrim" onclick="closeNav()"></div>
+
+
+<div class="pov" id="pov" onclick="closePanel()"></div>
+<div class="spanel" id="spanel">
+  <div class="ph"><button class="pclose" onclick="closePanel()"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><h2 id="ptitle"></h2><div id="pactions"></div></div>
+  <div class="pbody" id="pbody"></div>
+</div>
+<div class="mov" id="mov" onclick="handleMov(event)">
+  <div class="modal" id="modal">
+    <div class="mh2"><div style="display:flex;align-items:center;gap:10px;flex:1"><div class="mico2" id="mico2"></div><div><div class="mtitle2" id="mtitle2"></div><div class="msub2" id="msub2"></div></div></div><button class="mx2" onclick="closeModal()"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
+    <div class="mbody2" id="mbody2"></div>
+  </div>
+</div>
+<aside class="sidebar">
+  <div class="logo-bar">
+    <div class="logo-mark"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="logo-text">GetSetCollab</span>
+    <span class="logo-tag">Admin</span>
+  </div>
+  <nav class="s-nav">
+    <div class="s-lbl">Overview</div>
+    <a class="s-item active" onclick="showPage('dashboard')"><div class="s-icon"><svg class='ic'><use href='#ic-grid'/></svg></div>Dashboard</a>
+    <a class="s-item" onclick="showPage('analytics')"><div class="s-icon"><svg class='ic'><use href='#ic-chart'/></svg></div>Analytics</a>
+    <div class="s-lbl">Queues</div>
+    <a class="s-item" onclick="showPage('campaigns-q')"><div class="s-icon"><svg class='ic'><use href='#ic-doc'/></svg></div>Campaign Review<span class="s-badge amber">3</span></a>
+    <a class="s-item" onclick="showPage('kyc-q')"><div class="s-icon"><svg class='ic'><use href='#ic-globe'/></svg></div>KYC Review<span class="s-badge">5</span></a>
+    <a class="s-item" onclick="showPage('disputes-q')"><div class="s-icon"><svg class='ic'><use href='#ic-scale'/></svg></div>Disputes<span class="s-badge">2</span></a>
+    <a class="s-item" onclick="showPage('moderation-q')"><div class="s-icon"><svg class='ic'><use href='#ic-shield'/></svg></div>Moderation<span class="s-badge amber">4</span></a>
+    <a class="s-item" onclick="showPage('gst-q')"><div class="s-icon"><svg class='ic'><use href='#ic-doc'/></svg></div>GST Verification<span class="s-badge">3</span></a>
+    <div class="s-lbl">Users</div>
+    <a class="s-item" onclick="showPage('users')"><div class="s-icon"><svg class='ic'><use href='#ic-users'/></svg></div>Users</a>
+    <a class="s-item" onclick="showPage('creators')"><div class="s-icon"><svg class='ic'><use href='#ic-star'/></svg></div>Creators</a>
+    <a class="s-item" onclick="showPage('brands')"><div class="s-icon"><svg class='ic'><use href='#ic-building'/></svg></div>Brands</a>
+    <div class="s-lbl">Finance</div>
+    <a class="s-item" onclick="showPage('transactions')"><div class="s-icon"><svg class='ic'><use href='#ic-card'/></svg></div>Transactions</a>
+    <a class="s-item" onclick="showPage('sparks')"><div class="s-icon">&#10022;</div>Sparks Admin</a>
+    <div class="s-lbl">System</div>
+    <a class="s-item" onclick="showPage('config')"><div class="s-icon"><svg class='ic'><use href='#ic-gear'/></svg></div>Platform Config</a>
+    <a class="s-item" onclick="showPage('audit')"><div class="s-icon"><svg class='ic'><use href='#ic-clipboard'/></svg></div>Audit Log</a>
+  </nav>
+  <div class="s-footer">
+    <div class="admin-pill">
+      <div class="admin-av">RK</div>
+      <div><div style="font-size:12px;font-weight:600;color:var(--ink)">Rahul Kapoor</div><div style="font-size:10px;color:var(--muted)">Admin</div></div>
+    </div>
+  </div>
+</aside>
+<div class="main">
+<header class="topbar">
+  <button class="hamb" id="hambBtn" aria-label="Open menu" onclick="openNav()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <h1 class="tb-title" id="topbar-title">Dashboard</h1>
+  <div class="tb-search"><svg width="12" height="12" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="#938B7C" stroke-width="1.5"/><path d="m15 15 3 3" stroke="#938B7C" stroke-width="1.5" stroke-linecap="round"/></svg><input placeholder="Search users, campaigns, IDs..."></div>
+  <div class="tb-actions">
+    <div class="ibt" onclick="showPage('notifications-admin')"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 2a6 6 0 00-6 6v3l-1.5 2.5h15L16 11V8a6 6 0 00-6-6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 16a2 2 0 004 0" stroke="currentColor" stroke-width="1.5"/></svg><span class="ndot"></span></div>
+    <div class="admin-av" style="width:30px;height:30px;font-size:10px;cursor:pointer">RK</div>
+  </div>
+</header>
+<div class="content">
+<div class="page active" id="page-dashboard">
+<div class="sh" style="margin-bottom:16px">
+  <div><div class="st">Admin Dashboard</div><div class="ss">Platform overview &#183; Today, Mar 15 2026</div></div>
+</div>
+
+<!-- ── ACTIONS REQUIRED — single card, compact rows ── -->
+<div class="card" style="margin-bottom:18px">
+  <div class="ch" style="padding-bottom:14px">
+    <span class="ct">Actions Required</span>
+    <span style="font-size:11px;color:var(--muted)">8 items need attention</span>
+  </div>
+  <div style="padding:0 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:0">
+    <!-- Left column -->
+    <div style="border-right:1px solid var(--border)">
+      <a onclick="showPage('campaigns-q')" style="display:flex;align-items:center;gap:12px;padding:10px 16px 10px 0;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none">
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--red-bg);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:16px;font-weight:800;color:var(--red);flex-shrink:0">3</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:700;color:var(--ink)">Campaigns to Review</div>
+          <div style="font-size:11px;color:var(--red);margin-top:1px">1 approaching 24hr SLA</div>
+        </div>
+        <span style="font-size:10px;color:var(--muted)">&#8594;</span>
+      </a>
+      <a onclick="showPage('disputes-q')" style="display:flex;align-items:center;gap:12px;padding:10px 16px 10px 0;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none">
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--red-bg);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:16px;font-weight:800;color:var(--red);flex-shrink:0">2</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:700;color:var(--ink)">Open Disputes</div>
+          <div style="font-size:11px;color:var(--red);margin-top:1px">1 breaching 5-day SLA</div>
+        </div>
+        <span style="font-size:10px;color:var(--muted)">&#8594;</span>
+      </a>
+      <a onclick="showPage('kyc-q')" style="display:flex;align-items:center;gap:12px;padding:10px 16px 10px 0;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none">
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--amber-bg);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:16px;font-weight:800;color:var(--amber);flex-shrink:0">5</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:700;color:var(--ink)">KYC Pending Review</div>
+          <div style="font-size:11px;color:var(--amber);margin-top:1px">2 nearing 48hr SLA</div>
+        </div>
+        <span style="font-size:10px;color:var(--muted)">&#8594;</span>
+      </a>
+      <a onclick="openPanel('overdueCollabs')" style="display:flex;align-items:center;gap:12px;padding:10px 16px 10px 0;cursor:pointer;text-decoration:none">
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--orange-bg);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:16px;font-weight:800;color:var(--orange);flex-shrink:0">3</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:700;color:var(--ink)">Overdue Collaborations</div>
+          <div style="font-size:11px;color:var(--orange);margin-top:1px">Deadline passed &#183; 2 in grace period</div>
+        </div>
+        <span style="font-size:10px;color:var(--muted)">&#8594;</span>
+      </a>
+    </div>
+    <!-- Right column -->
+    <div>
+      <a onclick="showPage('moderation-q')" style="display:flex;align-items:center;gap:12px;padding:10px 0 10px 16px;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none">
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--amber-bg);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:16px;font-weight:800;color:var(--amber);flex-shrink:0">4</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:700;color:var(--ink)">Reports in Queue</div>
+          <div style="font-size:11px;color:var(--amber);margin-top:1px">User reports to review</div>
+        </div>
+        <span style="font-size:10px;color:var(--muted)">&#8594;</span>
+      </a>
+      <a onclick="showPage('gst-q')" style="display:flex;align-items:center;gap:12px;padding:10px 0 10px 16px;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none">
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:16px;font-weight:800;color:var(--blue);flex-shrink:0">3</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:700;color:var(--ink)">GST Verifications</div>
+          <div style="font-size:11px;color:var(--blue);margin-top:1px">Brand GST pending</div>
+        </div>
+        <span style="font-size:10px;color:var(--muted)">&#8594;</span>
+      </a>
+      <a onclick="openPanel('overdueCollabs')" style="display:flex;align-items:center;gap:12px;padding:10px 0 10px 16px;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none">
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--red-bg);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:16px;font-weight:800;color:var(--red);flex-shrink:0">1</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:700;color:var(--ink)">Grace Period Expired</div>
+          <div style="font-size:11px;color:var(--red);margin-top:1px">Brand prompted to raise dispute</div>
+        </div>
+        <span style="font-size:10px;color:var(--muted)">&#8594;</span>
+      </a>
+      <a onclick="openPanel('creatorStrikes')" style="display:flex;align-items:center;gap:12px;padding:10px 0 10px 16px;cursor:pointer;text-decoration:none">
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--amber-bg);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:16px;font-weight:800;color:var(--amber);flex-shrink:0">2</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:700;color:var(--ink)">Creator Strike Flags</div>
+          <div style="font-size:11px;color:var(--amber);margin-top:1px">1 creator at 3 strikes &#8212; review required</div>
+        </div>
+        <span style="font-size:10px;color:var(--muted)">&#8594;</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ── 4 STAT CARDS ── -->
+<div class="sgrid c4" style="margin-bottom:18px">
+  <div class="scard acc"><div class="slbl">GMV (all time)</div><div class="sval">&#8377;24.8L</div><div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:3px">Total platform transacted</div></div>
+  <div class="scard"><div class="slbl">Active Campaigns</div><div class="sval">38</div><div class="sdelta up">&#8593; 4 this week</div></div>
+  <div class="scard"><div class="slbl">Active Collaborations</div><div class="sval">82</div><div class="sdelta n">Across all campaigns</div></div>
+  <div class="scard"><div class="slbl">Funds in Escrow</div><div class="sval">&#8377;3.2L</div><div class="sdelta am">&#8377;14K under dispute</div></div>
+</div>
+
+<!-- ── ROW: GMV CHART + QUALITY METRICS ── -->
+<div style="display:grid;grid-template-columns:1.6fr 1fr;gap:18px;margin-bottom:18px">
+  <div class="card">
+    <div class="ch"><span class="ct">Platform GMV &#8212; Last 12 months</span><span style="font-size:11px;color:var(--muted)">&#8377; Lakhs</span></div>
+    <div class="cb" style="padding-top:10px">
+      <svg viewBox="0 0 560 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+        <!-- Gridlines at 1L 2L 3L 4L -->
+        <line x1="36" y1="10"  x2="556" y2="10"  stroke="#E9E2D5" stroke-width="1"/>
+        <line x1="36" y1="52"  x2="556" y2="52"  stroke="#E9E2D5" stroke-width="1"/>
+        <line x1="36" y1="94"  x2="556" y2="94"  stroke="#E9E2D5" stroke-width="1"/>
+        <line x1="36" y1="136" x2="556" y2="136" stroke="#E9E2D5" stroke-width="1"/>
+        <line x1="36" y1="160" x2="556" y2="160" stroke="#E9E2D5" stroke-dasharray="3,3" stroke-width="1" opacity="0.5"/>
+        <!-- Y labels -->
+        <text x="30" y="13"  font-size="9" fill="#938B7C" text-anchor="end" font-family="Hanken Grotesk,sans-serif">4L</text>
+        <text x="30" y="55"  font-size="9" fill="#938B7C" text-anchor="end" font-family="Hanken Grotesk,sans-serif">3L</text>
+        <text x="30" y="97"  font-size="9" fill="#938B7C" text-anchor="end" font-family="Hanken Grotesk,sans-serif">2L</text>
+        <text x="30" y="139" font-size="9" fill="#938B7C" text-anchor="end" font-family="Hanken Grotesk,sans-serif">1L</text>
+        <!-- Bars — baseline 160, max height 150px for 4L scale -->
+        <!-- Values: May=0.7(26) Jun=1.1(41) Jul=0.9(34) Aug=1.6(60) Sep=1.4(53) Oct=2.1(79) Nov=2.7(101) Dec=2.3(86) Jan=1.8(68) Feb=2.9(109) Mar=3.4(128) Apr=3.6(135) -->
+        <rect x="40"  y="134" width="30" height="26"  rx="4" fill="#DDD0EE"/>
+        <rect x="80"  y="119" width="30" height="41"  rx="4" fill="#DDD0EE"/>
+        <rect x="120" y="126" width="30" height="34"  rx="4" fill="#DDD0EE"/>
+        <rect x="160" y="100" width="30" height="60"  rx="4" fill="#DDD0EE"/>
+        <rect x="200" y="107" width="30" height="53"  rx="4" fill="#DDD0EE"/>
+        <rect x="240" y="81"  width="30" height="79"  rx="4" fill="#DDD0EE"/>
+        <rect x="280" y="59"  width="30" height="101" rx="4" fill="#DDD0EE"/>
+        <rect x="320" y="74"  width="30" height="86"  rx="4" fill="#DDD0EE"/>
+        <rect x="360" y="92"  width="30" height="68"  rx="4" fill="#DDD0EE"/>
+        <rect x="400" y="51"  width="30" height="109" rx="4" fill="#A98FCF"/>
+        <rect x="440" y="32"  width="30" height="128" rx="4" fill="#7B57AE"/>
+        <rect x="480" y="25"  width="30" height="135" rx="4" fill="#5A3A86"/>
+        <!-- Value labels on top 3 -->
+        <text x="415" y="47"  font-size="9" fill="#7B57AE" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">2.9L</text>
+        <text x="455" y="28"  font-size="9" fill="#7B57AE" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">3.4L</text>
+        <text x="495" y="21"  font-size="9" fill="#5A3A86" text-anchor="middle" font-weight="700" font-family="Hanken Grotesk,sans-serif">3.6L</text>
+        <!-- X labels -->
+        <text x="55"  y="175" font-size="9" fill="#938B7C" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">May</text>
+        <text x="95"  y="175" font-size="9" fill="#938B7C" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">Jun</text>
+        <text x="135" y="175" font-size="9" fill="#938B7C" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">Jul</text>
+        <text x="175" y="175" font-size="9" fill="#938B7C" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">Aug</text>
+        <text x="215" y="175" font-size="9" fill="#938B7C" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">Sep</text>
+        <text x="255" y="175" font-size="9" fill="#938B7C" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">Oct</text>
+        <text x="295" y="175" font-size="9" fill="#938B7C" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">Nov</text>
+        <text x="335" y="175" font-size="9" fill="#938B7C" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">Dec</text>
+        <text x="375" y="175" font-size="9" fill="#938B7C" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">Jan</text>
+        <text x="415" y="175" font-size="9" fill="#938B7C" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">Feb</text>
+        <text x="455" y="175" font-size="9" fill="#7B57AE" text-anchor="middle" font-family="Hanken Grotesk,sans-serif">Mar</text>
+        <text x="495" y="175" font-size="9" fill="#5A3A86" text-anchor="middle" font-weight="700" font-family="Hanken Grotesk,sans-serif">Apr</text>
+      </svg>
+      <div style="display:flex;align-items:center;gap:14px;margin-top:8px;padding-top:10px;border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:#5A3A86"></div><span style="font-size:11px;font-weight:600">Apr &#8377;3.6L</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:#7B57AE"></div><span style="font-size:11px;color:var(--muted)">Mar &#8377;3.4L</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:2px;background:#DDD0EE"></div><span style="font-size:11px;color:var(--muted)">Prior months</span></div>
+        <div style="margin-left:auto;font-size:11px;color:var(--green);font-weight:600">&#8593; 6% MoM</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ct">Quality Metrics</span></div>
+    <div class="cb">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px">
+        <div style="background:var(--surface);border-radius:8px;padding:18px 10px;text-align:center"><div style="font-size:26px;font-weight:800;color:var(--green);font-family:'Fraunces',serif">2.1%</div><div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:6px">Dispute Rate</div></div>
+        <div style="background:var(--surface);border-radius:8px;padding:18px 10px;text-align:center"><div style="font-size:26px;font-weight:800;color:var(--green);font-family:'Fraunces',serif">3.2d</div><div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:6px">Avg Dispute Resolution</div></div>
+        <div style="background:var(--surface);border-radius:8px;padding:18px 10px;text-align:center"><div style="font-size:26px;font-weight:800;color:var(--pa);font-family:'Fraunces',serif">18h</div><div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:6px">Avg Campaign Approval</div></div>
+        <div style="background:var(--surface);border-radius:8px;padding:18px 10px;text-align:center"><div style="font-size:26px;font-weight:800;color:var(--pa);font-family:'Fraunces',serif">31h</div><div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:6px">Avg KYC Turnaround</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ROW: RECENT ACTIONS + USER GROWTH ── -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+  <div class="card">
+    <div class="ch"><span class="ct">Recent Admin Actions</span><button class="btn btn-g sm" onclick="showPage('audit')">Full log &#8594;</button></div>
+    <div class="cb" style="padding-top:8px">
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div class="alog-row"><div class="alog-dot"></div><div style="flex:1"><div style="font-size:12px;font-weight:500">Campaign approved &#8212; <span style="color:var(--pa)">Mamaearth Summer Glow</span></div><div style="font-size:11px;color:var(--muted)">Rahul &#183; 14 mins ago</div></div></div>
+        <div class="alog-row"><div class="alog-dot" style="background:var(--green)"></div><div style="flex:1"><div style="font-size:12px;font-weight:500">KYC approved &#8212; <span style="color:var(--pa)">Priya Nair</span></div><div style="font-size:11px;color:var(--muted)">Rahul &#183; 1 hour ago</div></div></div>
+        <div class="alog-row"><div class="alog-dot" style="background:var(--red)"></div><div style="flex:1"><div style="font-size:12px;font-weight:500">Account suspended &#8212; <span style="color:var(--pa)">FakeCreator99</span></div><div style="font-size:11px;color:var(--muted)">Rahul &#183; 2 hours ago</div></div></div>
+        <div class="alog-row"><div class="alog-dot" style="background:var(--amber)"></div><div style="flex:1"><div style="font-size:12px;font-weight:500">Campaign rejected &#8212; <span style="color:var(--pa)">QuickLoans Promo</span></div><div style="font-size:11px;color:var(--muted)">Priya A. &#183; 3 hours ago</div></div></div>
+        <div class="alog-row" style="border:none"><div class="alog-dot" style="background:var(--green)"></div><div style="flex:1"><div style="font-size:12px;font-weight:500">Dispute resolved &#8212; Creator favour &#183; <span style="color:var(--pa)">Collab #8841</span></div><div style="font-size:11px;color:var(--muted)">Rahul &#183; Yesterday</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ct">User Growth</span><span style="font-size:11px;color:var(--muted)">Cumulative totals</span></div>
+    <div class="cb" style="padding-top:4px">
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:34px;height:34px;border-radius:8px;background:var(--pa10);display:flex;align-items:center;justify-content:center;font-size:15px"><svg class='ic'><use href='#ic-building'/></svg></div>
+            <div><div style="font-size:12px;font-weight:600">Registered Brands</div><div style="font-size:11px;color:var(--green);margin-top:1px">&#8593; 11 this month</div></div>
+          </div>
+          <div style="font-family:'Fraunces',serif;font-size:24px;font-weight:800;color:var(--pa)">312</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:34px;height:34px;border-radius:8px;background:var(--pa10);display:flex;align-items:center;justify-content:center;font-size:15px"><svg class='ic'><use href='#ic-star'/></svg></div>
+            <div><div style="font-size:12px;font-weight:600">Registered Creators</div><div style="font-size:11px;color:var(--green);margin-top:1px">&#8593; 42 this month</div></div>
+          </div>
+          <div style="font-family:'Fraunces',serif;font-size:24px;font-weight:800;color:var(--pa)">1,247</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:34px;height:34px;border-radius:8px;background:var(--green-bg);display:flex;align-items:center;justify-content:center;font-size:15px"><svg class='ic'><use href='#ic-check-circle'/></svg></div>
+            <div><div style="font-size:12px;font-weight:600">Complete Profiles</div><div style="font-size:11px;color:var(--muted);margin-top:1px">71% of registered creators</div></div>
+          </div>
+          <div style="font-family:'Fraunces',serif;font-size:24px;font-weight:800;color:var(--green)">886</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:34px;height:34px;border-radius:8px;background:var(--green-bg);display:flex;align-items:center;justify-content:center;font-size:15px"><svg class='ic'><use href='#ic-globe'/></svg></div>
+            <div><div style="font-size:12px;font-weight:600">KYC Approved</div><div style="font-size:11px;color:var(--muted);margin-top:1px">34% of registered &#183; &#8593; 18 this week</div></div>
+          </div>
+          <div style="font-family:'Fraunces',serif;font-size:24px;font-weight:800;color:var(--green)">421</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="page" id="page-campaigns-q">
+<div class="sh"><div><div class="st">Campaign Review Queue</div><div class="ss">3 pending &#183; Sorted oldest first &#183; SLA: 24 hours</div></div><button class="btn btn-g sm" onclick="openPanel('allCampaigns')">All Active Campaigns &#8599;</button></div>
+
+<div class="al al-p" style="margin-bottom:16px"><div class="al-i"><svg class='ic'><use href='#ic-lock'/></svg></div><div class="al-c"><div class="al-t">2 auto-approved campaigns in silent 24hr review window</div><div class="al-c">Payment-verified first-campaign submissions are already live. Admin can take them down within 24hrs if needed. <button class="btn btn-p xs" onclick="openPanel('silentReview')" style="margin-left:6px">View &#8594;</button></div></div></div>
+
+<div class="qi urgent">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+    <div><div style="font-size:14px;font-weight:700">Summer Skincare Glow &#8212; Mamaearth</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Instagram Reel &#183; Micro &#183; &#8377;6K&#8211;&#8377;10K &#183; Submitted 22h ago</div></div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="badge br">New Account <svg class='ic'><use href='#ic-alert'/></svg></span><span class="sla-breach">22h / 24h &#8212; URGENT</span></div>
+  </div>
+  <div style="display:flex;gap:8px"><button class="btn btn-p sm" onclick="openPanel('campReview','summer')">Review Brief</button><button class="btn btn-green sm" onclick="openModal('approveCamp','summer')">&#10003; Approve</button><button class="btn btn-r sm" onclick="openPanel('rejectCamp','summer')">&#215; Reject</button></div>
+</div>
+
+<div class="qi warning">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+    <div><div style="font-size:14px;font-weight:700">Festive Makeup Campaign &#8212; Nykaa</div><div style="font-size:11px;color:var(--muted);margin-top:2px">YouTube Video &#183; Micro &#183; &#8377;4K&#8211;&#8377;8K &#183; Submitted 14h ago</div></div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="sla-warn">14h / 24h</span></div>
+  </div>
+  <div style="display:flex;gap:8px"><button class="btn btn-p sm" onclick="openPanel('campReview','festive')">Review Brief</button><button class="btn btn-green sm" onclick="openModal('approveCamp','festive')">&#10003; Approve</button><button class="btn btn-r sm" onclick="openPanel('rejectCamp','festive')">&#215; Reject</button></div>
+</div>
+
+<div class="qi">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+    <div><div style="font-size:14px;font-weight:700">Monsoon Haircare Resubmission &#8212; Mamaearth</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Instagram Reel &#183; Micro &#183; &#8377;4K&#8211;&#8377;8K &#183; Resubmitted 6h ago &#183; Rejection: prohibited claims</div></div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="badge ba">Resubmission</span><span class="sla-ok">6h / 24h</span></div>
+  </div>
+  <div style="display:flex;gap:8px"><button class="btn btn-p sm" onclick="openPanel('campReview','monsoon')">Review Brief</button><button class="btn btn-green sm" onclick="openModal('approveCamp','monsoon')">&#10003; Approve</button><button class="btn btn-r sm" onclick="openPanel('rejectCamp','monsoon')">&#215; Reject</button></div>
+</div>
+</div>
+<div class="page" id="page-kyc-q">
+<div class="sh"><div><div class="st">KYC Review Queue</div><div class="ss">5 pending &#183; Sorted oldest first &#183; SLA: 48 hours</div></div></div>
+
+<div class="qi urgent">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+    <div><div style="font-size:14px;font-weight:700">Priya Nair &#8212; Creator #4821</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Aadhaar + PAN submitted &#183; 46h ago &#183; Mumbai</div></div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="badge br">First submission</span><span class="sla-breach">46h / 48h &#8212; URGENT</span></div>
+  </div>
+  <div style="display:flex;gap:8px"><button class="btn btn-p sm" onclick="openPanel('kycReview','priya')">Review Documents</button></div>
+</div>
+
+<div class="qi warning">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+    <div><div style="font-size:14px;font-weight:700">Rohit Kumar &#8212; Creator #5033</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Aadhaar + PAN submitted &#183; 39h ago &#183; Chennai</div></div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="badge bgr">First submission</span><span class="sla-warn">39h / 48h</span></div>
+  </div>
+  <div style="display:flex;gap:8px"><button class="btn btn-p sm" onclick="openPanel('kycReview','rohit')">Review Documents</button></div>
+</div>
+
+<div class="qi">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+    <div><div style="font-size:14px;font-weight:700">Divya Sharma &#8212; Creator #5211</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Resubmission &#183; 18h ago &#183; Reason: Document unreadable</div></div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="badge ba">Resubmission</span><span class="sla-ok">18h / 48h</span></div>
+  </div>
+  <div style="display:flex;gap:8px"><button class="btn btn-p sm" onclick="openPanel('kycReview','divya')">Review Documents</button></div>
+</div>
+
+<div class="qi">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+    <div><div style="font-size:14px;font-weight:700">Ananya Singh &#8212; Creator #4999</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Aadhaar + PAN submitted &#183; 9h ago &#183; Delhi</div></div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="badge bgr">First submission</span><span class="sla-ok">9h / 48h</span></div>
+  </div>
+  <div style="display:flex;gap:8px"><button class="btn btn-p sm" onclick="openPanel('kycReview','ananya')">Review Documents</button></div>
+</div>
+</div>
+<div class="page" id="page-disputes-q">
+<div class="sh"><div><div class="st">Dispute Queue</div><div class="ss">2 open &#183; Sorted oldest first &#183; SLA: 5 business days</div></div></div>
+
+<div class="qi urgent">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+    <div>
+      <div style="font-size:14px;font-weight:700">Collab #8512 &#8212; WOW Skin Science vs Rohit Kumar</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">Raised by brand &#183; Reason: Content does not match approved draft &#183; Escrow held: &#8377;6,500</div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="badge br">6 days &#8212; SLA BREACHED</span></div>
+  </div>
+  <div style="background:var(--surface);border-radius:7px;padding:10px;margin-bottom:10px;font-size:11px;color:var(--muted)">"Creator submitted a reel that does not use the product at all &#8212; it appears to be repurposed content from a previous collab."</div>
+  <div style="display:flex;gap:8px"><button class="btn btn-p sm" onclick="openPanel('disputeDetail','8512')">Full Dispute View</button></div>
+</div>
+
+<div class="qi warning">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+    <div>
+      <div style="font-size:14px;font-weight:700">Collab #8841 &#8212; Nykaa vs Priya Nair</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">Raised by creator &#183; Reason: Brand is unresponsive &#183; Escrow held: &#8377;8,500</div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="badge ba">3 days / 5 days SLA</span></div>
+  </div>
+  <div style="background:var(--surface);border-radius:7px;padding:10px;margin-bottom:10px;font-size:11px;color:var(--muted)">"Brand has not responded to my draft submission for 5 days and the auto-approval window has passed. I need the escrow released."</div>
+  <div style="display:flex;gap:8px"><button class="btn btn-p sm" onclick="openPanel('disputeDetail','8841')">Full Dispute View</button></div>
+</div>
+</div>
+<div class="page" id="page-moderation-q">
+<div class="sh"><div><div class="st">Moderation Queue</div><div class="ss">4 reports pending &#183; All types</div></div>
+<div style="display:flex;gap:8px"><select class="fi sm" style="width:auto"><option>All report types</option><option>Abusive messages</option><option>Fake profile</option><option>Fraudulent campaign</option><option>Inappropriate content</option><option>Abusive review</option></select></div>
+</div>
+<div class="tw"><table>
+  <thead><tr><th>Report ID</th><th>Reported</th><th>Reported by</th><th>Type</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr><td style="font-weight:600">#RPT-0441</td><td><span class="badge br">Account</span> <strong>FakeCreator99</strong></td><td>Brand: Nykaa</td><td>Fake or misleading profile</td><td style="color:var(--muted)">Apr 16</td><td><span class="badge ba">Pending</span></td><td><button class="btn btn-p xs" onclick="openPanel('modReview','441')">Review</button></td></tr>
+    <tr><td style="font-weight:600">#RPT-0440</td><td><span class="badge ba">Message</span> in Collab #8512</td><td>Creator: Rohit Kumar</td><td>Abusive behaviour in messages</td><td style="color:var(--muted)">Apr 15</td><td><span class="badge ba">Pending</span></td><td><button class="btn btn-p xs" onclick="openPanel('modReview','440')">Review</button></td></tr>
+    <tr><td style="font-weight:600">#RPT-0438</td><td><span class="badge br">Campaign</span> <strong>QuickLoans Promo</strong></td><td>Creator: Priya Nair</td><td>Fraudulent campaign brief</td><td style="color:var(--muted)">Apr 14</td><td><span class="badge ba">Pending</span></td><td><button class="btn btn-p xs" onclick="openPanel('modReview','438')">Review</button></td></tr>
+    <tr><td style="font-weight:600">#RPT-0435</td><td><span class="badge bgr">Review</span> on Creator #4821</td><td>Creator: Priya Nair</td><td>Abusive public review</td><td style="color:var(--muted)">Apr 13</td><td><span class="badge ba">Pending</span></td><td><button class="btn btn-p xs" onclick="openPanel('modReview','435')">Review</button></td></tr>
+  </tbody>
+</table></div>
+</div>
+<div class="page" id="page-gst-q">
+<div class="sh"><div><div class="st">GST Verification Queue</div><div class="ss">3 pending &#183; Manual verification &#183; Sorted oldest first</div></div></div>
+
+<div class="al al-p" style="margin-bottom:20px"><div class="al-i"><svg class='ic'><use href='#ic-info'/></svg></div><div class="al-c"><div class="al-t">Manual verification process</div><div class="al-c">Click the pre-filled GST portal link for each submission to verify the GSTIN is valid, active, and the business name matches. API-based automation is post-MVP.</div></div></div>
+
+<div class="tw"><table>
+  <thead><tr><th>Brand</th><th>GSTIN Submitted</th><th>Declared Business Name</th><th>Submitted</th><th>Portal Link</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Mamaearth</strong><br><span style="font-size:11px;color:var(--muted)">Brand #1021</span></td><td style="font-family:monospace;font-size:12px">27AABCM1234P1ZA</td><td>Honasa Consumer Limited</td><td style="color:var(--muted)">Apr 16 &#183; 2 days ago</td><td><a href="#" style="color:var(--blue);font-size:11px" onclick="return false">GST Portal &#8599;</a></td><td><div style="display:flex;gap:5px"><button class="btn btn-green xs" onclick="openModal('approveGST','mamaearth')">Verify</button><button class="btn btn-r xs" onclick="openPanel('rejectGST','mamaearth')">Reject</button></div></td></tr>
+    <tr><td><strong>Nykaa</strong><br><span style="font-size:11px;color:var(--muted)">Brand #1089</span></td><td style="font-family:monospace;font-size:12px">07AABCN9876Q1ZB</td><td>FSN E-Commerce Ventures Ltd</td><td style="color:var(--muted)">Apr 15 &#183; 3 days ago</td><td><a href="#" style="color:var(--blue);font-size:11px" onclick="return false">GST Portal &#8599;</a></td><td><div style="display:flex;gap:5px"><button class="btn btn-green xs" onclick="openModal('approveGST','nykaa')">Verify</button><button class="btn btn-r xs" onclick="openPanel('rejectGST','nykaa')">Reject</button></div></td></tr>
+    <tr><td><strong>QuickFit India</strong><br><span style="font-size:11px;color:var(--muted)">Brand #1102</span></td><td style="font-family:monospace;font-size:12px">29AABCQ5544R1ZC</td><td>QuickFit Wellness Pvt Ltd</td><td style="color:var(--muted)">Apr 14 &#183; 4 days ago</td><td><a href="#" style="color:var(--blue);font-size:11px" onclick="return false">GST Portal &#8599;</a></td><td><div style="display:flex;gap:5px"><button class="btn btn-green xs" onclick="openModal('approveGST','quickfit')">Verify</button><button class="btn btn-r xs" onclick="openPanel('rejectGST','quickfit')">Reject</button></div></td></tr>
+  </tbody>
+</table></div>
+</div>
+<div class="page" id="page-users">
+<div class="sh"><div><div class="st">Users</div><div class="ss">All accounts &#183; 1,559 total</div></div></div>
+<div style="display:flex;gap:8px;margin-bottom:16px">
+  <div style="flex:1;position:relative"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#888"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/><path d="m15 15 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><input class="fi" placeholder="Search by name, email, phone or user ID..." style="padding-left:30px"></div>
+  <select class="fi sm" style="width:auto"><option>All roles</option><option>Creator</option><option>Brand</option><option>Admin</option></select>
+  <select class="fi sm" style="width:auto"><option>All statuses</option><option>Active</option><option>Suspended</option><option>Pending Verification</option><option>Deleted</option></select>
+  <select class="fi sm" style="width:auto"><option>All KYC</option><option>Approved</option><option>Under Review</option><option>Rejected</option><option>Not Submitted</option></select>
+</div>
+<div class="card"><div class="tw"><table>
+  <thead><tr><th>User ID</th><th>Name</th><th>Role</th><th>Email</th><th>Status</th><th>KYC</th><th>Created</th><th>Actions</th></tr></thead>
+  <tbody>
+    <tr><td style="font-family:monospace;font-size:11px;color:var(--muted)">#4821</td><td><div style="font-weight:600">Priya Nair</div><div style="font-size:11px;color:var(--muted)">Mumbai &#183; Beauty</div></td><td><span class="badge bp">Creator</span></td><td style="color:var(--muted)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a1d1d3c8d8c0e1c6ccc0c8cd8fc2cecc">[email&#160;protected]</a></td><td><span class="dot dot-g"></span><span class="badge bg">Active</span></td><td><span class="badge bg">Approved</span></td><td style="color:var(--muted)">Jan 12</td><td><button class="btn btn-p xs" onclick="openPanel('userDetail','priya')">View</button></td></tr>
+    <tr><td style="font-family:monospace;font-size:11px;color:var(--muted)">#4999</td><td><div style="font-weight:600">Ananya Singh</div><div style="font-size:11px;color:var(--muted)">Delhi &#183; Beauty</div></td><td><span class="badge bp">Creator</span></td><td style="color:var(--muted)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bbdad5dad5c2dafbdcd6dad2d795d8d4d6">[email&#160;protected]</a></td><td><span class="dot dot-g"></span><span class="badge bg">Active</span></td><td><span class="badge ba">Under Review</span></td><td style="color:var(--muted)">Feb 3</td><td><button class="btn btn-p xs" onclick="openPanel('userDetail','ananya')">View</button></td></tr>
+    <tr><td style="font-family:monospace;font-size:11px;color:var(--muted)">#5033</td><td><div style="font-weight:600">Rohit Kumar</div><div style="font-size:11px;color:var(--muted)">Chennai &#183; Lifestyle</div></td><td><span class="badge bp">Creator</span></td><td style="color:var(--muted)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="85f7eaedecf1c5e2e8e4ece9abe6eae8">[email&#160;protected]</a></td><td><span class="dot dot-g"></span><span class="badge bg">Active</span></td><td><span class="badge bgr">Not submitted</span></td><td style="color:var(--muted)">Feb 18</td><td><button class="btn btn-p xs" onclick="openPanel('userDetail','rohit')">View</button></td></tr>
+    <tr style="background:#F8E6E1"><td style="font-family:monospace;font-size:11px;color:var(--muted)">#5190</td><td><div style="font-weight:600">FakeCreator99</div><div style="font-size:11px;color:var(--muted)">Unknown</div></td><td><span class="badge bp">Creator</span></td><td style="color:var(--muted)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8ee8efe5ebceebe3efe7e2a0fcfb">[email&#160;protected]</a></td><td><span class="dot dot-r"></span><span class="badge br">Suspended</span></td><td><span class="badge bgr">Not submitted</span></td><td style="color:var(--muted)">Apr 10</td><td><button class="btn btn-p xs" onclick="openPanel('userDetail','fake')">View</button></td></tr>
+    <tr><td style="font-family:monospace;font-size:11px;color:var(--muted)">#1021</td><td><div style="font-weight:600">Mamaearth</div><div style="font-size:11px;color:var(--muted)">Brand &#183; Beauty</div></td><td><span class="badge bb">Brand</span></td><td style="color:var(--muted)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a9c8dbc3dcc7e9c4c8c4c8ccc8dbddc187cac6c4">[email&#160;protected]</a></td><td><span class="dot dot-g"></span><span class="badge bg">Active</span></td><td style="color:var(--muted)">&#8212;</td><td style="color:var(--muted)">Dec 1</td><td><button class="btn btn-p xs" onclick="openPanel('userDetail','mamaearth')">View</button></td></tr>
+  </tbody>
+</table></div></div>
+</div>
+<div class="page" id="page-creators">
+<div class="sh"><div><div class="st">Creators</div><div class="ss">1,247 registered &#183; 886 complete profiles &#183; 421 KYC approved</div></div><button class="btn btn-p sm" onclick="openPanel('featureCreator')">&#10022; Manage Featured</button></div>
+<div class="sgrid c4" style="margin-bottom:16px">
+  <div class="scard"><div class="slbl">Total Registered</div><div class="sval">1,247</div><div class="sdelta up">&#8593; 42 this month</div></div>
+  <div class="scard"><div class="slbl">Complete Profiles</div><div class="sval">886</div><div class="sdelta n">71% of registered</div></div>
+  <div class="scard"><div class="slbl">KYC Approved</div><div class="sval">421</div><div class="sdelta up">&#8593; 18 this week</div></div>
+  <div class="scard"><div class="slbl">Active (collab this month)</div><div class="sval">143</div><div class="sdelta up">&#8593; 8% MoM</div></div>
+</div>
+<div class="card"><div class="tw"><table>
+  <thead><tr><th>Creator</th><th>Tier</th><th>Platform</th><th>Followers</th><th>KYC</th><th>Collabs</th><th>Rating</th><th>Sparks</th><th>Score Badges</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+    <tr><td><div style="font-weight:600">Priya Nair</div><div style="font-size:10px;color:var(--muted)">Mumbai &#183; Beauty</div></td><td><span class="badge ba">Micro</span></td><td><svg class='ic'><use href='#ic-camera'/></svg> IG</td><td>85K</td><td><span class="badge bg">Approved</span></td><td>6</td><td>&#9733; 4.8</td><td>240 &#10022;</td><td><div style="display:flex;gap:3px;flex-wrap:wrap"><span class="badge bg" style="font-size:9px">Top Rated</span><span class="badge bp" style="font-size:9px">On Time</span><span class="badge bor" style="font-size:9px">Reliable</span></div></td><td><span class="badge bg">Active</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-p xs" onclick="openPanel('userDetail','priya')">View</button><button class="btn btn-g xs" onclick="openPanel('sparksAdmin','priya')">&#10022;</button></div></td></tr>
+    <tr><td><div style="font-weight:600">Ananya Singh</div><div style="font-size:10px;color:var(--muted)">Delhi &#183; Beauty</div></td><td><span class="badge ba">Micro</span></td><td><svg class='ic'><use href='#ic-camera'/></svg> IG &#43; <svg class='ic'><use href='#ic-play'/></svg> YT</td><td>62K / 12K</td><td><span class="badge ba">Review</span></td><td>5</td><td>&#9733; 4.6</td><td>185 &#10022;</td><td><div style="display:flex;gap:3px;flex-wrap:wrap"><span class="badge bp" style="font-size:9px">Rising Star</span><span class="badge bor" style="font-size:9px">Reliable</span></div></td><td><span class="badge bg">Active</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-p xs" onclick="openPanel('userDetail','ananya')">View</button><button class="btn btn-g xs" onclick="openPanel('sparksAdmin','ananya')">&#10022;</button></div></td></tr>
+    <tr><td><div style="font-weight:600">Divya Sharma</div><div style="font-size:10px;color:var(--muted)">Bangalore &#183; Lifestyle</div></td><td><span class="badge ba">Micro</span></td><td><svg class='ic'><use href='#ic-camera'/></svg> IG</td><td>41K</td><td><span class="badge ba">Review</span></td><td>0</td><td>&#8212;</td><td>95 &#10022;</td><td><span class="badge bgr" style="font-size:9px">No badges yet</span></td><td><span class="badge bg">Active</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-p xs" onclick="openPanel('userDetail','divya')">View</button><button class="btn btn-g xs" onclick="openPanel('sparksAdmin','divya')">&#10022;</button></div></td></tr>
+  </tbody>
+</table></div></div>
+</div>
+
+<div class="page" id="page-brands">
+<div class="sh"><div><div class="st">Brands</div><div class="ss">312 registered &#183; 198 payment verified &#183; 64 GST verified</div></div></div>
+<div class="sgrid c4" style="margin-bottom:16px">
+  <div class="scard"><div class="slbl">Total Registered</div><div class="sval">312</div><div class="sdelta up">&#8593; 11 this month</div></div>
+  <div class="scard"><div class="slbl">Payment Verified</div><div class="sval">198</div><div class="sdelta n">63% of registered</div></div>
+  <div class="scard"><div class="slbl">GST Verified</div><div class="sval">64</div><div class="sdelta up">&#8593; 3 this week</div></div>
+  <div class="scard"><div class="slbl">Active Campaigns</div><div class="sval">38</div><div class="sdelta up">&#8593; 4 this week</div></div>
+</div>
+<div class="al al-a" style="margin-bottom:12px"><div class="al-i"><svg class='ic'><use href='#ic-alert'/></svg></div><div class="al-c"><div class="al-t">1 brand flagged for consistently low creator ratings</div><div class="al-c">QuickLoans Promo &#8212; avg 1.8&#9733; from 3 reviews. Review account. <button class="btn btn-g xs" onclick="openPanel('userDetail','fake')" style="margin-left:6px">View &#8594;</button></div></div></div>
+<div class="card"><div class="tw"><table>
+  <thead><tr><th>Brand</th><th>Industry</th><th>Payment</th><th>GST</th><th>Campaigns</th><th>Total Spent</th><th>Avg Rating</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+    <tr><td><div style="font-weight:600">Mamaearth</div><div style="font-size:10px;color:var(--muted)">#1021</div></td><td>Beauty</td><td><span class="badge bg">Verified</span></td><td><span class="badge ba">Pending</span></td><td>6</td><td style="font-weight:700;color:var(--pa)">&#8377;1.4L</td><td>&#9733; 4.6 (8)</td><td><span class="badge bg">Active</span></td><td><button class="btn btn-p xs" onclick="openPanel('userDetail','mamaearth')">View</button></td></tr>
+    <tr><td><div style="font-weight:600">Nykaa</div><div style="font-size:10px;color:var(--muted)">#1089</div></td><td>Beauty</td><td><span class="badge bg">Verified</span></td><td><span class="badge ba">Pending</span></td><td>4</td><td style="font-weight:700;color:var(--pa)">&#8377;92K</td><td>&#9733; 4.2 (5)</td><td><span class="badge bg">Active</span></td><td><button class="btn btn-p xs" onclick="openPanel('userDetail','nykaa')">View</button></td></tr>
+  </tbody>
+</table></div></div>
+</div>
+<div class="page" id="page-transactions">
+<div class="sh"><div><div class="st">Transaction Log</div><div class="ss">All financial events &#183; Reverse chronological</div></div></div>
+<div class="sgrid c4" style="margin-bottom:16px">
+  <div class="scard acc"><div class="slbl">Total GMV</div><div class="sval">&#8377;24.8L</div></div>
+  <div class="scard"><div class="slbl">Platform Fees Collected</div><div class="sval">&#8377;2.48L</div><div class="sdelta n">10% of GMV</div></div>
+  <div class="scard"><div class="slbl">Creator Payouts Processed</div><div class="sval">&#8377;20.1L</div><div class="sdelta up">&#8593; 82% payout rate</div></div>
+  <div class="scard"><div class="slbl">Funds in Escrow</div><div class="sval">&#8377;3.2L</div><div class="sdelta am">&#8377;14K under dispute</div></div>
+</div>
+<div style="display:flex;gap:8px;margin-bottom:16px">
+  <select class="fi sm" style="width:auto"><option>All types</option><option>Escrow funded</option><option>Escrow released</option><option>Platform fee</option><option>Payout processed</option><option>Payout failed</option><option>Dispute hold</option></select>
+  <select class="fi sm" style="width:auto"><option>All statuses</option><option>Completed</option><option>Pending</option><option>Failed</option><option>On Hold</option></select>
+  <input class="fi sm" type="date" style="width:auto">
+  <input class="fi sm" type="date" style="width:auto">
+</div>
+<div class="card"><div class="tw"><table>
+  <thead><tr><th>Txn ID</th><th>Date</th><th>Type</th><th>Brand</th><th>Creator</th><th>Amount</th><th>Platform Fee</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+    <tr><td style="font-family:monospace;font-size:11px">#TXN-9421</td><td style="color:var(--muted)">Apr 17</td><td><span class="badge ba">Escrow Funded</span></td><td>Mamaearth</td><td>Priya Nair</td><td style="font-weight:700">&#8377;8,500</td><td style="color:var(--muted)">&#8377;850</td><td><span class="badge ba">In Escrow</span></td><td><button class="btn btn-g xs" onclick="openModal('holdPayout','9421')">Hold</button></td></tr>
+    <tr><td style="font-family:monospace;font-size:11px">#TXN-9390</td><td style="color:var(--muted)">Apr 16</td><td><span class="badge bg">Escrow Released</span></td><td>WOW Skin</td><td>Divya Sharma</td><td style="font-weight:700">&#8377;3,000</td><td style="color:var(--muted)">&#8377;300</td><td><span class="badge bg">Released</span></td><td><button class="btn btn-g xs" onclick="openPanel('invoiceAdmin','9390')">Invoice</button></td></tr>
+    <tr style="background:#F8E6E1"><td style="font-family:monospace;font-size:11px">#TXN-9350</td><td style="color:var(--muted)">Apr 15</td><td><span class="badge br">Payout Failed</span></td><td>Plum</td><td>Priya Nair</td><td style="font-weight:700;color:var(--red)">&#8377;2,500</td><td style="color:var(--muted)">&#8212;</td><td><span class="badge br">Failed</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-p xs" onclick="openPanel('payoutRetryAdmin','9350')">Retry</button><button class="btn btn-g xs">Notes</button></div></td></tr>
+    <tr style="background:var(--amber-bg)"><td style="font-family:monospace;font-size:11px">#TXN-9301</td><td style="color:var(--muted)">Apr 12</td><td><span class="badge br">Dispute Hold</span></td><td>WOW Skin</td><td>Rohit Kumar</td><td style="font-weight:700;color:var(--amber)">&#8377;6,500</td><td style="color:var(--muted)">&#8212;</td><td><span class="badge ba">On Hold</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-amber xs" onclick="openModal('releaseHold','9301')">Release Hold</button><button class="btn btn-g xs" onclick="openPanel('disputeDetail','8512')">Dispute</button></div></td></tr>
+    <tr><td style="font-family:monospace;font-size:11px">#TXN-9280</td><td style="color:var(--muted)">Apr 10</td><td><span class="badge bg">Escrow Released</span></td><td>Nykaa</td><td>Priya Nair</td><td style="font-weight:700">&#8377;6,200</td><td style="color:var(--muted)">&#8377;620</td><td><span class="badge bg">Released</span></td><td><button class="btn btn-g xs" onclick="openPanel('invoiceAdmin','9280')">Invoice</button></td></tr>
+  </tbody>
+</table></div></div>
+</div>
+<div class="page" id="page-sparks">
+<div class="sh"><div><div class="st">Sparks Administration</div><div class="ss">Economy health &#183; Manual adjustments</div></div><div style="display:flex;gap:8px"><button class="btn btn-g sm" onclick="openPanel('sparksCampaign')">&#10022; New Platform Campaign</button><button class="btn btn-p sm" onclick="openPanel('sparksAdmin','all')">+ / &#8722; Adjust Sparks</button></div></div>
+
+<div class="sgrid c4">
+  <div class="scard acc"><div class="slbl">Total in Circulation</div><div class="sval">4,82,150 &#10022;</div></div>
+  <div class="scard"><div class="slbl">Earned this month</div><div class="sval">12,480 &#10022;</div><div class="sdelta up">&#8593; 8% MoM</div></div>
+  <div class="scard"><div class="slbl">Spent this month</div><div class="sval">9,240 &#10022;</div><div class="sdelta n">Proposals submitted</div></div>
+  <div class="scard"><div class="slbl">Net Flow</div><div class="sval" style="color:var(--green)">+3,240 &#10022;</div><div class="sdelta up">Net positive</div></div>
+</div>
+
+<div class="g2">
+  <div class="card">
+    <div class="ch"><span class="ct">Top 10 Creators by Balance</span></div>
+    <div class="cb">
+      <div class="tw"><table>
+        <thead><tr><th>Creator</th><th>Balance</th><th>Earned total</th><th>Spent total</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Priya Nair</td><td style="font-weight:700;color:var(--pa)">240 &#10022;</td><td>318 &#10022;</td><td>78 &#10022;</td><td><button class="btn btn-g xs" onclick="openPanel('sparksAdmin','priya')">Manage</button></td></tr>
+          <tr><td>Ananya Singh</td><td style="font-weight:700;color:var(--pa)">185 &#10022;</td><td>220 &#10022;</td><td>35 &#10022;</td><td><button class="btn btn-g xs" onclick="openPanel('sparksAdmin','ananya')">Manage</button></td></tr>
+          <tr><td>Divya Sharma</td><td style="font-weight:700;color:var(--pa)">95 &#10022;</td><td>120 &#10022;</td><td>25 &#10022;</td><td><button class="btn btn-g xs" onclick="openPanel('sparksAdmin','divya')">Manage</button></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ct">Earn Event Values</span><button class="btn btn-g sm" onclick="showPage('config')">Edit in Config</button></div>
+    <div class="cb">
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:12px">
+        <div style="display:flex;justify-content:space-between;padding:8px;background:var(--surface);border-radius:7px"><span>Profile basics complete</span><strong>+50 &#10022;</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:8px;background:var(--surface);border-radius:7px"><span>Link Instagram</span><strong>+20 &#10022;</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:8px;background:var(--surface);border-radius:7px"><span>Link YouTube (OAuth)</span><strong>+20 &#10022;</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:8px;background:var(--surface);border-radius:7px"><span>Complete KYC</span><strong>+30 &#10022;</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:8px;background:var(--surface);border-radius:7px"><span>Brand saves profile</span><strong>+2 &#10022;</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:8px;background:var(--surface);border-radius:7px"><span>First collab completed</span><strong>+15 &#10022;</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="page" id="page-analytics">
+<div class="sh"><div><div class="st">Platform Analytics</div><div class="ss">Current month vs prior month &#183; View-only (no data export at MVP)</div></div></div>
+
+<div style="display:flex;gap:8px;margin-bottom:20px">
+  <span class="badge bp" style="padding:6px 12px;cursor:pointer">April 2025 vs March 2025</span>
+</div>
+
+<div class="sgrid c3" style="margin-bottom:18px">
+  <div class="scard"><div class="slbl">New Brands</div><div class="sval">11</div><div style="font-size:11px;color:var(--muted);margin-top:3px">vs 8 last month <span class="sdelta up">&#8593;38%</span></div></div>
+  <div class="scard"><div class="slbl">New Creators</div><div class="sval">42</div><div style="font-size:11px;color:var(--muted);margin-top:3px">vs 35 last month <span class="sdelta up">&#8593;20%</span></div></div>
+  <div class="scard"><div class="slbl">KYC Approved</div><div class="sval">18</div><div style="font-size:11px;color:var(--muted);margin-top:3px">vs 14 last month <span class="sdelta up">&#8593;29%</span></div></div>
+</div>
+<div class="sgrid c3" style="margin-bottom:18px">
+  <div class="scard"><div class="slbl">Campaigns Submitted</div><div class="sval">14</div><div style="font-size:11px;color:var(--muted);margin-top:3px">vs 11 last month &#183; 12 approved, 2 rejected</div></div>
+  <div class="scard"><div class="slbl">Collaborations Started</div><div class="sval">38</div><div style="font-size:11px;color:var(--muted);margin-top:3px">vs 29 last month <span class="sdelta up">&#8593;31%</span></div></div>
+  <div class="scard"><div class="slbl">Collabs Completed</div><div class="sval">22</div><div style="font-size:11px;color:var(--muted);margin-top:3px">vs 18 last month &#183; Avg 14d to go-live</div></div>
+</div>
+<div class="sgrid c4" style="margin-bottom:18px">
+  <div class="scard acc"><div class="slbl">GMV this month</div><div class="sval">&#8377;4.8L</div><div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:3px">vs &#8377;3.9L last month</div></div>
+  <div class="scard"><div class="slbl">Platform Fees</div><div class="sval">&#8377;48K</div><div class="sdelta up">&#8593; 23% MoM</div></div>
+  <div class="scard"><div class="slbl">Creator Payouts</div><div class="sval">&#8377;3.8L</div><div class="sdelta up">&#8593; 18% MoM</div></div>
+  <div class="scard"><div class="slbl">Dispute Rate</div><div class="sval">2.1%</div><div class="sdelta up">&#8595; 0.3pp MoM</div></div>
+</div>
+<div class="g2">
+  <div class="card">
+    <div class="ch"><span class="ct">KYC Operations</span></div>
+    <div class="cb">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px">
+        <div style="background:var(--surface);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;font-family:'Fraunces',serif;color:var(--pa)">5</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Currently Pending</div></div>
+        <div style="background:var(--surface);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;font-family:'Fraunces',serif;color:var(--green)">18</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Approved this month</div></div>
+        <div style="background:var(--surface);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;font-family:'Fraunces',serif;color:var(--red)">2</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Rejected this month</div></div>
+        <div style="background:var(--surface);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;font-family:'Fraunces',serif;color:var(--pa)">31h</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Avg turnaround</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ct">Dispute Analytics</span></div>
+    <div class="cb">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px">
+        <div style="background:var(--surface);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;font-family:'Fraunces',serif;color:var(--red)">2</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Open</div></div>
+        <div style="background:var(--surface);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;font-family:'Fraunces',serif;color:var(--green)">5</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Resolved this month</div></div>
+        <div style="background:var(--surface);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;font-family:'Fraunces',serif;color:var(--pa)">3.2d</div><div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Avg resolution time</div></div>
+        <div style="background:var(--green-bg);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;font-family:'Fraunces',serif;color:var(--green)">2.1%</div><div style="font-size:10px;color:var(--green);font-weight:600;margin-top:2px">Dispute rate</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="page" id="page-config">
+<div class="sh"><div><div class="st">Platform Configuration</div><div class="ss">All changes take effect immediately and are audit-logged</div></div><button class="btn btn-p sm">Save All Changes</button></div>
+
+<div class="al al-a" style="margin-bottom:20px"><div class="al-i"><svg class='ic'><use href='#ic-alert'/></svg></div><div class="al-c"><div class="al-t">Changes are immediate</div><div class="al-c">Every value change is recorded in the audit log with old value, new value, your admin ID, and timestamp. There is no staging or preview.</div></div></div>
+
+<div class="g2">
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div class="card">
+      <div class="ch"><span class="ct">Collaboration Timings</span></div>
+      <div class="cb">
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Content Review Window</div><div class="cfg-desc">Hours brand has to review a submitted draft before auto-approval</div></div><div class="cfg-val"><input class="fi" type="number" value="72" style="width:70px;text-align:center"> <span style="font-size:11px;color:var(--muted)">hours</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Go-Live Validation Window</div><div class="cfg-desc">Days brand has to validate go-live proof before auto-validation</div></div><div class="cfg-val"><input class="fi" type="number" value="7" style="width:70px;text-align:center"> <span style="font-size:11px;color:var(--muted)">days</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Post Go-Live Buffer Window</div><div class="cfg-desc">Days escrow is held after go-live validation before auto-release</div></div><div class="cfg-val"><input class="fi" type="number" value="30" style="width:70px;text-align:center"> <span style="font-size:11px;color:var(--muted)">days</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Offer Response Deadline</div><div class="cfg-desc">Days creator has to accept or decline an offer</div></div><div class="cfg-val"><input class="fi" type="number" value="7" style="width:70px;text-align:center"> <span style="font-size:11px;color:var(--muted)">days</span></div></div>
+        <div class="cfg-row" style="border:none"><div style="flex:1"><div class="cfg-name">Dispute Resolution SLA</div><div class="cfg-desc">Business days admin has to resolve a dispute</div></div><div class="cfg-val"><input class="fi" type="number" value="5" style="width:70px;text-align:center"> <span style="font-size:11px;color:var(--muted)">days</span></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ct">File &amp; Data Retention</span></div>
+      <div class="cb">
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Post-Campaign Review Window</div><div class="cfg-desc">Days both parties have to submit a review after collaboration completes (double-blind)</div></div><div class="cfg-val"><input class="fi" type="number" value="14" style="width:70px;text-align:center"> <span style="font-size:11px;color:var(--muted)">days</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Notification Retention</div><div class="cfg-desc">Days in-app notifications remain visible before archiving</div></div><div class="cfg-val"><input class="fi" type="number" value="90" style="width:70px;text-align:center"> <span style="font-size:11px;color:var(--muted)">days</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Draft File Retention</div><div class="cfg-desc">Submitted draft files retained for</div></div><div class="cfg-val"><input class="fi" type="number" value="12" style="width:70px;text-align:center"> <span style="font-size:11px;color:var(--muted)">months</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Go-Live Proof Retention</div><div class="cfg-desc">Go-live proof files and screenshots retained for</div></div><div class="cfg-val"><input class="fi" type="number" value="24" style="width:70px;text-align:center"> <span style="font-size:11px;color:var(--muted)">months</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Audit Log Retention</div><div class="cfg-desc">Audit log entries retained in live log before archiving</div></div><div class="cfg-val"><input class="fi" type="number" value="24" style="width:70px;text-align:center"> <span style="font-size:11px;color:var(--muted)">months</span></div></div>
+        <div class="cfg-row" style="border:none"><div style="flex:1"><div class="cfg-name">Chat File Size Limit</div><div class="cfg-desc">Maximum file size per attachment in messages</div></div><div class="cfg-val"><input class="fi" type="number" value="25" style="width:70px;text-align:center"> <span style="font-size:11px;color:var(--muted)">MB</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div class="card">
+      <div class="ch"><span class="ct">Best Match Algorithm Weights</span></div>
+      <div class="cb">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Weights must sum to 100. Changing these affects search ranking for all creators immediately.</div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Profile Completeness</div></div><div class="cfg-val"><input class="fi" type="number" value="20" style="width:60px;text-align:center"> <span style="font-size:11px;color:var(--muted)">%</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">KYC Verified Status</div></div><div class="cfg-val"><input class="fi" type="number" value="25" style="width:60px;text-align:center"> <span style="font-size:11px;color:var(--muted)">%</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Star Rating</div></div><div class="cfg-val"><input class="fi" type="number" value="30" style="width:60px;text-align:center"> <span style="font-size:11px;color:var(--muted)">%</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Completed Collaborations</div></div><div class="cfg-val"><input class="fi" type="number" value="15" style="width:60px;text-align:center"> <span style="font-size:11px;color:var(--muted)">%</span></div></div>
+        <div class="cfg-row" style="border:none"><div style="flex:1"><div class="cfg-name">Recency (Last Active)</div></div><div class="cfg-val"><input class="fi" type="number" value="10" style="width:60px;text-align:center"> <span style="font-size:11px;color:var(--muted)">%</span></div></div>
+        <div style="background:var(--pa10);border-radius:7px;padding:8px 12px;margin-top:8px;font-size:12px;color:var(--pa);font-weight:600">Total: 100% &#10003;</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ct">Sparks Earn Event Values</span></div>
+      <div class="cb">
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Profile basics complete</div></div><div class="cfg-val"><input class="fi" type="number" value="50" style="width:60px;text-align:center"> <span style="font-size:11px;color:var(--muted)">&#10022;</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Link Instagram</div></div><div class="cfg-val"><input class="fi" type="number" value="20" style="width:60px;text-align:center"> <span style="font-size:11px;color:var(--muted)">&#10022;</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Link YouTube (OAuth)</div></div><div class="cfg-val"><input class="fi" type="number" value="20" style="width:60px;text-align:center"> <span style="font-size:11px;color:var(--muted)">&#10022;</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Complete KYC</div></div><div class="cfg-val"><input class="fi" type="number" value="30" style="width:60px;text-align:center"> <span style="font-size:11px;color:var(--muted)">&#10022;</span></div></div>
+        <div class="cfg-row"><div style="flex:1"><div class="cfg-name">Brand saves profile</div></div><div class="cfg-val"><input class="fi" type="number" value="2" style="width:60px;text-align:center"> <span style="font-size:11px;color:var(--muted)">&#10022;</span></div></div>
+        <div class="cfg-row" style="border:none"><div style="flex:1"><div class="cfg-name">First collab completed</div></div><div class="cfg-val"><input class="fi" type="number" value="15" style="width:60px;text-align:center"> <span style="font-size:11px;color:var(--muted)">&#10022;</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="page" id="page-audit">
+<div class="sh"><div><div class="st">Audit Log</div><div class="ss">Immutable &#183; Read-only &#183; 2-year retention &#183; All admin actions</div></div></div>
+<div style="display:flex;gap:8px;margin-bottom:16px">
+  <select class="fi sm" style="width:auto"><option>All action types</option><option>Account suspended/reinstated</option><option>KYC approved/rejected</option><option>Campaign approved/rejected</option><option>Dispute resolved</option><option>Sparks credited/debited</option><option>Payout hold/release</option><option>Moderation action</option><option>Config changed</option><option>GST verified/rejected</option></select>
+  <select class="fi sm" style="width:auto"><option>All admins</option><option>Rahul Kapoor</option><option>Priya A.</option></select>
+  <input class="fi sm" type="date" style="width:auto">
+  <input class="fi sm" type="date" style="width:auto">
+</div>
+<div class="card"><div class="tw"><table>
+  <thead><tr><th>Timestamp</th><th>Admin</th><th>Action</th><th>Target</th><th>Details</th><th>User Notified</th></tr></thead>
+  <tbody>
+    <tr><td style="color:var(--muted);white-space:nowrap">Apr 17, 11:44</td><td>Rahul K.</td><td><span class="badge bp">Campaign Approved</span></td><td>Summer Skincare Glow #CAM-0441</td><td style="color:var(--muted);max-width:200px">First campaign &#8212; auto-approval path triggered</td><td><span class="badge bg">Email + In-app</span></td></tr>
+    <tr><td style="color:var(--muted);white-space:nowrap">Apr 17, 10:22</td><td>Rahul K.</td><td><span class="badge bg">KYC Approved</span></td><td>Priya Nair #4821</td><td style="color:var(--muted)">Documents verified. KYC badge awarded.</td><td><span class="badge bg">Email + In-app</span></td></tr>
+    <tr><td style="color:var(--muted);white-space:nowrap">Apr 17, 09:08</td><td>Rahul K.</td><td><span class="badge br">Account Suspended</span></td><td>FakeCreator99 #5190</td><td style="color:var(--muted)">Report #RPT-0441 &#8212; Fake profile confirmed. Reason sent.</td><td><span class="badge bg">Email</span></td></tr>
+    <tr><td style="color:var(--muted);white-space:nowrap">Apr 16, 16:55</td><td>Priya A.</td><td><span class="badge br">Campaign Rejected</span></td><td>QuickLoans Promo #CAM-0440</td><td style="color:var(--muted)">Prohibited category &#8212; financial product without proper disclosure</td><td><span class="badge bg">Email + In-app</span></td></tr>
+    <tr><td style="color:var(--muted);white-space:nowrap">Apr 16, 14:30</td><td>Rahul K.</td><td><span class="badge bg">Dispute Resolved</span></td><td>Collab #8841 &#8212; Creator favour</td><td style="color:var(--muted)">Brand unresponsive beyond 5 days. Escrow released to creator.</td><td><span class="badge bg">Email + In-app (both)</span></td></tr>
+    <tr><td style="color:var(--muted);white-space:nowrap">Apr 16, 11:05</td><td>Rahul K.</td><td><span class="badge ba">Config Changed</span></td><td>Content Review Window</td><td style="color:var(--muted)">72h &#8594; 72h (no change &#8212; confirmed intentional)</td><td><span class="badge bgr">None</span></td></tr>
+    <tr><td style="color:var(--muted);white-space:nowrap">Apr 15, 09:20</td><td>Rahul K.</td><td><span class="badge ba">Sparks Credited</span></td><td>Divya Sharma #5211</td><td style="color:var(--muted)">+50 &#10022; &#8212; Manual correction: KYC completion not auto-credited</td><td><span class="badge bgr">None</span></td></tr>
+  </tbody>
+</table></div></div>
+</div>
+  </div><!-- end .content -->
+</div><!-- end .main -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const TITLES={dashboard:"Dashboard",analytics:"Analytics","campaigns-q":"Campaign Review Queue","kyc-q":"KYC Review Queue","disputes-q":"Dispute Queue","moderation-q":"Moderation Queue","gst-q":"GST Verification Queue",users:"Users",creators:"Creators",brands:"Brands",transactions:"Transactions",sparks:"Sparks Admin",config:"Platform Configuration",audit:"Audit Log"};
+
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".s-item").forEach(n=>n.classList.remove("active"));
+  const p=document.getElementById("page-"+id);
+  if(p)p.classList.add("active");
+  const t=document.getElementById("topbar-title");
+  if(t)t.textContent=TITLES[id]||id;
+  document.querySelectorAll(".s-item").forEach(n=>{if(n.getAttribute("onclick")?.includes("'"+id+"'"))n.classList.add("active")});
+  document.querySelector(".content").scrollTop=0;
+  closePanel();
+  closeNav();
+}
+
+const PANELS={
+  campReview:(id)=>{
+    const data={summer:{name:"Summer Skincare Glow",brand:"Mamaearth",platform:"Instagram Reel",budget:"&#8377;6K&#8211;&#8377;10K",tiers:"Micro",brief:"We are launching our new Vitamin C serum and need authentic beauty creators for morning skincare GRWM content.",guidelines:"Use #GlowWithMamaearth. Product visible 3s. No competitors.",usage:"6 months",timeline:"1 month",revisions:"2",screening:["Have you promoted skincare before?","Audience age group?"],newAccount:true},festive:{name:"Festive Makeup Campaign",brand:"Nykaa",platform:"YouTube Video",budget:"&#8377;4K&#8211;&#8377;8K",tiers:"Micro",brief:"Festive season makeup tutorial.",guidelines:"Tag @nykaa. Use #NykaaFestive.",usage:"None",timeline:"2 weeks",revisions:"1",screening:["Share your YouTube link"],newAccount:false},monsoon:{name:"Monsoon Haircare Launch",brand:"Mamaearth",platform:"Instagram Reel",budget:"&#8377;4K&#8211;&#8377;8K",tiers:"Micro",brief:"Haircare routine for monsoon season.",guidelines:"Tag @mamaearth. Natural lighting.",usage:"None",timeline:"1 month",revisions:"2",screening:[],newAccount:false}};
+    const c=data[id]||data.summer;
+    return{title:`Review: ${c.name}`,actions:`<div style="display:flex;gap:8px"><button class="btn btn-r sm" onclick="openPanel('rejectCamp','${id}')">Reject</button><button class="btn btn-green sm" onclick="openModal('approveCamp','${id}')">&#10003; Approve</button></div>`,
+    body:`${c.newAccount?`<div class="al al-r" style="margin-bottom:16px"><div class="al-i"><svg class='ic'><use href='#ic-alert'/></svg></div><div class="al-c"><div class="al-t">New Account &#8212; First Campaign</div><div class="al-c">This brand has never had an approved campaign. Review with extra care.</div></div></div>`:""}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Brand</div><div style="font-size:13px;font-weight:600">${c.brand}</div></div>
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Platform</div><div style="font-size:13px;font-weight:600">${c.platform}</div></div>
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Budget</div><div style="font-size:13px;font-weight:700;color:var(--pa)">${c.budget}</div></div>
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Tiers Targeted</div><div style="font-size:13px;font-weight:600">${c.tiers}</div></div>
+    </div>
+    <div style="margin-bottom:14px"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Campaign Brief</div><div style="background:var(--surface);border-radius:8px;padding:12px;font-size:13px;line-height:1.6">${c.brief}</div></div>
+    <div style="margin-bottom:14px"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Content Guidelines</div><div style="background:var(--surface);border-radius:8px;padding:12px;font-size:13px;line-height:1.6">${c.guidelines}</div></div>
+    ${c.screening.length?`<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Screening Questions</div>${c.screening.map((q,i)=>`<div style="background:var(--surface);border-radius:8px;padding:10px;margin-bottom:6px;font-size:12px"><strong>Q${i+1}:</strong> ${q}</div>`).join("")}</div>`:""}
+    <div style="display:flex;gap:8px;padding-top:14px;border-top:1px solid var(--border)">
+      <button class="btn btn-r" style="flex:1;justify-content:center" onclick="openPanel('rejectCamp','${id}')">Reject Campaign</button>
+      <button class="btn btn-green" style="flex:2;justify-content:center" onclick="openModal('approveCamp','${id}')">&#10003; Approve &#8212; Go Live</button>
+    </div>`};
+  },
+  rejectCamp:(id)=>({title:"Reject Campaign",actions:"",
+    body:`<div class="al al-r" style="margin-bottom:16px"><div class="al-i"><svg class='ic'><use href='#ic-alert'/></svg></div><div class="al-c"><div class="al-t">Rejection reason will be sent to the brand verbatim</div><div class="al-c">The brand can edit and resubmit with no limit on resubmissions.</div></div></div>
+    <div class="fr s1"><div class="fg"><label>Rejection Reason *</label><select class="fi" id="campRejectReason"><option value="" disabled selected>Select reason...</option><option>Budget appears unrealistic or misleading</option><option>Content brief violates platform content policy</option><option>Campaign appears fraudulent or suspicious</option><option>Insufficient campaign detail for creators to evaluate</option><option>Prohibited category or product type</option><option>Other (explain below)</option></select></div></div>
+    <div class="fr s1"><div class="fg"><label>Notes for brand * (sent verbatim)</label><textarea class="fi" style="min-height:80px" placeholder="Be specific so the brand knows exactly what to fix on resubmission..."></textarea></div></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-g" style="flex:1;justify-content:center" onclick="closePanel()">Cancel</button><button class="btn btn-r" style="flex:2;justify-content:center" onclick="closePanel()">Send Rejection</button></div>`
+  }),
+  kycReview:(id)=>{
+    const names={priya:"Priya Nair",rohit:"Rohit Kumar",divya:"Divya Sharma",ananya:"Ananya Singh"};
+    const name=names[id]||"Creator";
+    return{title:`KYC Review &#8212; ${name}`,actions:`<div style="display:flex;gap:8px"><button class="btn btn-r sm" onclick="openPanel('rejectKYC','${id}')">Reject</button><button class="btn btn-green sm" onclick="openModal('approveKYC','${id}')">&#10003; Approve KYC</button></div>`,
+    body:`<div class="al al-p" style="margin-bottom:16px"><div class="al-i"><svg class='ic'><use href='#ic-doc'/></svg></div><div class="al-c"><div class="al-t">Verify: name on documents matches account name</div><div class="al-c">Account registered name: <strong>${name}</strong>. Check all 3 documents are legible, unaltered, and match.</div></div></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+      <div class="doc-panel">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Aadhaar &#8212; Front</div>
+        <div style="width:100%;height:120px;background:linear-gradient(135deg,#E9E2D5,#D9D2C5);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer"><svg class='ic'><use href='#ic-doc'/></svg></div>
+        <button class="btn btn-g xs" style="margin-top:6px">View full</button>
+      </div>
+      <div class="doc-panel">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Aadhaar &#8212; Back</div>
+        <div style="width:100%;height:120px;background:linear-gradient(135deg,#E9E2D5,#D9D2C5);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer"><svg class='ic'><use href='#ic-doc'/></svg></div>
+        <button class="btn btn-g xs" style="margin-top:6px">View full</button>
+      </div>
+      <div class="doc-panel">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">PAN Card</div>
+        <div style="width:100%;height:120px;background:linear-gradient(135deg,#E9E2D5,#D9D2C5);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer"><svg class='ic'><use href='#ic-doc'/></svg></div>
+        <button class="btn btn-g xs" style="margin-top:6px">View full</button>
+      </div>
+    </div>
+    <div style="background:var(--surface);border-radius:8px;padding:12px;margin-bottom:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:12px">
+      <div><div style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:10px;margin-bottom:3px">Account Name</div><div style="font-weight:600">${name}</div></div>
+      <div><div style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:10px;margin-bottom:3px">Aadhaar Name</div><div style="font-weight:600;color:var(--green)">${name} &#10003;</div></div>
+      <div><div style="color:var(--muted);font-weight:600;text-transform:uppercase;font-size:10px;margin-bottom:3px">PAN Name</div><div style="font-weight:600;color:var(--green)">${name.toUpperCase()} &#10003;</div></div>
+    </div>
+    <div style="display:flex;gap:8px;padding-top:14px;border-top:1px solid var(--border)">
+      <button class="btn btn-r" style="flex:1;justify-content:center" onclick="openPanel('rejectKYC','${id}')">Reject with Reason</button>
+      <button class="btn btn-green" style="flex:2;justify-content:center" onclick="openModal('approveKYC','${id}')">&#10003; Approve &#8212; Award KYC Badge</button>
+    </div>`};
+  },
+  rejectKYC:(id)=>({title:"Reject KYC Submission",actions:"",
+    body:`<div class="fr s1"><div class="fg"><label>Rejection Reason * (sent to creator verbatim)</label><select class="fi"><option value="" disabled selected>Select reason...</option><option>Document unreadable or low quality</option><option>Name on document does not match account name</option><option>Document appears altered or invalid</option><option>Wrong document type submitted</option><option>Other (explain below)</option></select></div></div>
+    <div class="fr s1"><div class="fg"><label>Additional notes for creator (optional)</label><textarea class="fi" style="min-height:60px" placeholder="e.g. The Aadhaar front image is blurry. Please upload a clearer photo."></textarea></div></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-g" style="flex:1;justify-content:center" onclick="closePanel()">Cancel</button><button class="btn btn-r" style="flex:2;justify-content:center" onclick="closePanel()">Send Rejection</button></div>`
+  }),
+  disputeDetail:(id)=>{
+    const data={"8512":{name:"Collab #8512 &#8212; WOW Skin vs Rohit Kumar",brand:"WOW Skin Science",creator:"Rohit Kumar",reason:"Content does not match approved draft",description:"Creator submitted a reel that does not use the product at all &#8212; it appears to be repurposed content from a previous collaboration.",raised:"Brand",escrow:"&#8377;6,500",days:6,sla:5},"8841":{name:"Collab #8841 &#8212; Nykaa vs Priya Nair",brand:"Nykaa",creator:"Priya Nair",reason:"Brand is unresponsive",description:"Brand has not responded to my draft submission for 5 days and the auto-approval window has passed. I need the escrow released.",raised:"Creator",escrow:"&#8377;8,500",days:3,sla:5}};
+    const d=data[id]||data["8512"];
+    return{title:d.name,actions:"",
+    body:`<div class="al ${d.days>=d.sla?"al-r":"al-a"}" style="margin-bottom:16px"><div class="al-i"><svg class='ic'><use href='#ic-clock'/></svg></div><div class="al-c"><div class="al-t">${d.days}/${d.sla} business days &#8212; ${d.days>=d.sla?"SLA BREACHED":"within SLA"}</div><div class="al-c">Escrow held: ${d.escrow}</div></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px">RAISED BY</div><div style="font-weight:600">${d.raised}: ${d.raised==="Brand"?d.brand:d.creator}</div></div>
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px">REASON</div><div style="font-size:12px;font-weight:500">${d.reason}</div></div>
+    </div>
+    <div style="background:var(--surface);border-radius:8px;padding:12px;margin-bottom:16px"><div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px">DISPUTE DESCRIPTION</div><div style="font-size:13px;line-height:1.6">${d.description}</div></div>
+    <div style="margin-bottom:16px"><div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px">EVIDENCE &amp; HISTORY</div><div style="display:flex;flex-direction:column;gap:6px"><button class="btn btn-g sm" style="justify-content:flex-start">View full Thread history</button><button class="btn btn-g sm" style="justify-content:flex-start">View all submitted drafts</button><button class="btn btn-g sm" style="justify-content:flex-start">View go-live proof</button><button class="btn btn-g sm" style="justify-content:flex-start">View download tracking log</button></div></div>
+    <div style="border-top:1px solid var(--border);padding-top:14px"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px">RESOLUTION</div>
+    <div class="fr s1"><div class="fg"><label>Outcome *</label><select class="fi"><option value="" disabled selected>Select outcome...</option><option>Resolved in creator&apos;s favour &#8212; escrow released to creator</option><option>Resolved in brand&apos;s favour &#8212; escrow refunded to brand</option><option>Partial resolution &#8212; split escrow</option><option>Escalated to senior review</option></select></div></div>
+    <div class="fr s1"><div class="fg"><label>Resolution Note * (visible to both parties)</label><textarea class="fi" style="min-height:80px" placeholder="Explain your decision. This note is sent to both brand and creator."></textarea></div></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-g" style="flex:1;justify-content:center" onclick="closePanel()">Cancel</button><button class="btn btn-p" style="flex:2;justify-content:center" onclick="closePanel()">Submit Resolution</button></div></div>`};
+  },
+  modReview:(id)=>({title:`Moderation Review &#8212; #RPT-0${id}`,actions:"",
+    body:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px">REPORTED BY</div><div style="font-weight:600">${id==="441"?"Nykaa (Brand)":"Priya Nair (Creator)"}</div></div>
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px">REPORT TYPE</div><div style="font-weight:600">${id==="441"?"Fake or misleading profile":"Abusive behaviour"}</div></div>
+    </div>
+    <div style="background:var(--surface);border-radius:8px;padding:12px;margin-bottom:16px"><div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px">REPORTED CONTENT IN CONTEXT</div><div style="font-size:13px;line-height:1.6;color:var(--ink)">${id==="441"?"Profile shows 500K followers on their public listing but the Instagram account appears to have only 2,400 followers. Profile photo is a stock image.":"Message content: [Content of reported message shown here in original context from thread]"}</div></div>
+    <div style="border-top:1px solid var(--border);padding-top:14px"><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px">MODERATION OUTCOME</div>
+    <div class="fr s1"><div class="fg"><label>Action *</label><select class="fi"><option value="" disabled selected>Select action...</option><option>No action &#8212; report reviewed, no violation found</option><option>Warning issued &#8212; in-app notification to user</option><option>Content removed</option><option>Account suspended</option></select></div></div>
+    <div class="fr s1"><div class="fg"><label>Internal Note (required for any action except No Action)</label><textarea class="fi" style="min-height:70px" placeholder="Record your reasoning. This note is internal and never shown to users."></textarea></div></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-g" style="flex:1;justify-content:center" onclick="closePanel()">Cancel</button><button class="btn btn-p" style="flex:2;justify-content:center" onclick="closePanel()">Submit Moderation Action</button></div></div>`
+  }),
+  rejectGST:(id)=>({title:"Reject GST Verification",actions:"",
+    body:`<div class="fr s1"><div class="fg"><label>Rejection Reason * (sent to brand verbatim)</label><select class="fi"><option value="" disabled selected>Select reason...</option><option>GSTIN not found or inactive on government portal</option><option>Business name does not match registered GSTIN</option><option>GSTIN format is invalid</option><option>Other (explain below)</option></select></div></div>
+    <div class="fr s1"><div class="fg"><label>Additional notes for brand</label><textarea class="fi" style="min-height:60px" placeholder="e.g. The business name declared is Honasa Consumer but GSTIN belongs to Emami Limited."></textarea></div></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-g" style="flex:1;justify-content:center" onclick="closePanel()">Cancel</button><button class="btn btn-r" style="flex:2;justify-content:center" onclick="closePanel()">Send Rejection</button></div>`
+  }),
+  userDetail:(id)=>{
+    const data={priya:{name:"Priya Nair",role:"Creator",email:"priya@gmail.com",phone:"+91 98765 12345",status:"Active",kyc:"Approved",joined:"Jan 12, 2025",collabs:6,sparks:240,strikes:0,badges:["Top Rated","On Time","Reliable"],suspended:false},ananya:{name:"Ananya Singh",role:"Creator",email:"ananya@gmail.com",phone:"+91 87654 32109",status:"Active",kyc:"Under Review",joined:"Feb 3, 2025",collabs:5,sparks:185,strikes:0,badges:["Rising Star","Reliable"],suspended:false},fake:{name:"FakeCreator99",role:"Creator",email:"fake@email.ru",phone:"Unknown",status:"Suspended",kyc:"Not submitted",joined:"Apr 10, 2025",collabs:0,sparks:0,suspended:true},mamaearth:{name:"Mamaearth",role:"Brand",email:"arjun@mamaearth.com",phone:"+91 98765 43210",status:"Active",kyc:"N/A",joined:"Dec 1, 2024",collabs:11,sparks:"N/A",suspended:false}};
+    const u=data[id]||data.priya;
+    return{title:`User: ${u.name}`,actions:`<div style="display:flex;gap:6px">${u.suspended?`<button class="btn btn-green sm" onclick="openModal('reinstateUser','${id}')">Reinstate</button>`:`<button class="btn btn-r sm" onclick="openModal('suspendUser','${id}')">Suspend</button>`}</div>`,
+    body:`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px">NAME / ROLE</div><div style="font-weight:600">${u.name} &#183; ${u.role}</div></div>
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px">STATUS</div><div style="font-weight:600;color:${u.suspended?"var(--red)":"var(--green)"}">${u.status}</div></div>
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px">EMAIL</div><div style="font-size:12px">${u.email}</div></div>
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px">PHONE</div><div style="font-size:12px">${u.phone}</div></div>
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px">KYC</div><div style="font-weight:600">${u.kyc}</div></div>
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px">JOINED</div><div style="font-size:12px">${u.joined}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+      <div style="background:var(--pa10);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:var(--pa);font-family:'Fraunces',serif">${u.collabs}</div><div style="font-size:10px;color:var(--muted)">Collaborations</div></div>
+      <div style="background:var(--pa10);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:var(--pa);font-family:'Fraunces',serif">${u.sparks}</div><div style="font-size:10px;color:var(--muted)">Sparks balance</div></div>
+      <div style="background:var(--pa10);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:var(--pa);font-family:'Fraunces',serif">0</div><div style="font-size:10px;color:var(--muted)">Reports received</div></div>
+      <div style="background:var(--red-bg);border-radius:8px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:var(--red);font-family:'Fraunces',serif">${u.strikes||0}</div><div style="font-size:10px;color:var(--muted)">Strikes</div></div>
+    </div>
+    ${u.role==="Creator"&&u.badges&&u.badges.length?`<div style="margin-bottom:14px"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Creator Score Badges</div><div style="display:flex;gap:6px;flex-wrap:wrap">${u.badges.map(b=>"<span class=\"badge bg\">" + b + "</span>").join("")}</div></div>`:""}
+    <div style="margin-bottom:16px"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Internal Notes</div>
+    <div style="background:var(--surface);border-radius:8px;padding:10px;margin-bottom:8px;font-size:12px;color:var(--muted);font-style:italic">No notes on this account.</div>
+    <div style="display:flex;gap:8px"><textarea class="fi" style="min-height:60px;flex:1" placeholder="Add an internal note (never visible to user)..."></textarea><button class="btn btn-p sm" style="align-self:flex-end" onclick="closePanel()">Add Note</button></div></div>
+    <div style="display:flex;gap:8px;padding-top:14px;border-top:1px solid var(--border)">
+      ${u.suspended?`<button class="btn btn-green" style="flex:1;justify-content:center" onclick="openModal('reinstateUser','${id}')">Reinstate Account</button>`:`<button class="btn btn-r" style="flex:1;justify-content:center" onclick="openModal('suspendUser','${id}')">Suspend Account</button>`}
+      <button class="btn btn-g" style="flex:1;justify-content:center" onclick="openModal('softDelete','${id}')">Soft Delete Account</button>
+    </div>`};
+  },
+  sparksAdmin:(id)=>{
+    const names={priya:"Priya Nair",ananya:"Ananya Singh",divya:"Divya Sharma",all:"All Creators"};
+    const name=names[id]||id;
+    return{title:`Sparks Admin &#8212; ${name}`,actions:"",
+    body:`<div class="fr s1"><div class="fg"><label>Action</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div style="border:2px solid var(--pa);border-radius:8px;padding:12px;text-align:center;cursor:pointer;background:var(--pa10)"><div style="font-size:16px;margin-bottom:4px">+</div><div style="font-size:12px;font-weight:600;color:var(--pa)">Credit Sparks</div></div><div style="border:1.5px solid var(--border);border-radius:8px;padding:12px;text-align:center;cursor:pointer"><div style="font-size:16px;margin-bottom:4px">&#8722;</div><div style="font-size:12px;font-weight:600;color:var(--muted)">Debit Sparks</div></div></div></div></div>
+    <div class="fr"><div class="fg"><label>Creator (if not pre-selected)</label><input class="fi" value="${name}" placeholder="Search creator..."></div><div class="fg"><label>Amount (&#10022;) *</label><input class="fi" type="number" placeholder="e.g. 50" min="1"></div></div>
+    <div class="fr s1"><div class="fg"><label>Reason * (required &#8212; recorded in audit log)</label><textarea class="fi" style="min-height:70px" placeholder="e.g. Manual correction: KYC completion Sparks not auto-credited due to system error on Apr 15."></textarea></div></div>
+    <div class="al al-a" style="margin-bottom:0"><div class="al-i"><svg class='ic'><use href='#ic-alert'/></svg></div><div class="al-c"><div class="al-c">Debit cannot reduce balance below zero. Manual Sparks changes are audit-logged and cannot be reversed &#8212; add a correction note instead.</div></div></div>
+    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-g" style="flex:1;justify-content:center" onclick="closePanel()">Cancel</button><button class="btn btn-p" style="flex:2;justify-content:center" onclick="closePanel()">Apply Sparks Adjustment</button></div>`};
+  },
+  featureCreator:()=>({title:"Featured Creators",actions:"",
+    body:`<div class="al al-p" style="margin-bottom:14px"><div class="al-i">&#10022;</div><div class="al-c"><div class="al-t">Featured row is shown above search results</div><div class="al-c">Up to 10 featured creators. Feature status is not revealed to creators. Hidden from search views where active filters exclude the featured creator.</div></div></div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--pa10);border-radius:8px;border:1.5px solid var(--pa20)"><div style="width:30px;height:30px;border-radius:50%;background:var(--pa10);color:var(--pa);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700">PN</div><div style="flex:1"><div style="font-size:13px;font-weight:600">Priya Nair</div><div style="font-size:11px;color:var(--muted)">Beauty &#183; 85K</div></div><div class="tog on"></div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--surface);border-radius:8px;border:1.5px solid var(--border)"><div style="width:30px;height:30px;border-radius:50%;background:var(--pa10);color:var(--pa);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700">AS</div><div style="flex:1"><div style="font-size:13px;font-weight:600">Ananya Singh</div><div style="font-size:11px;color:var(--muted)">Beauty &#183; 62K</div></div><div class="tog"></div></div>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px"><input class="fi" placeholder="Add creator by name or ID..." style="flex:1"><button class="btn btn-p sm" onclick="closePanel()">Save</button></div>`
+  }),
+};
+
+const MODALS={
+  approveCamp:(id)=>({icon:"&#10003;",cls:"ok",title:"Approve this campaign?",sub:"The campaign will go live on the job board immediately. Creators matching the criteria will receive a notification in the next daily batch.",
+    body:`<div class="macts"><button class="btn btn-g" onclick="closeModal()">Cancel</button><button class="btn btn-green" onclick="closeModal()">Approve &amp; Go Live</button></div>`}),
+  approveKYC:(id)=>({icon:"&#10003;",cls:"ok",title:"Approve KYC?",sub:"KYC Verified badge will be awarded immediately. The creator will be notified by email and in-app. Payouts are unlocked.",
+    body:`<div class="macts"><button class="btn btn-g" onclick="closeModal()">Cancel</button><button class="btn btn-green" onclick="closeModal()">Approve &#8212; Award KYC Badge</button></div>`}),
+  approveGST:(id)=>({icon:"&#10003;",cls:"ok",title:"Verify this GSTIN?",sub:"The Verified Brand badge will be awarded immediately. The brand will be notified. GST-compliant invoices will be enabled.",
+    body:`<div class="macts"><button class="btn btn-g" onclick="closeModal()">Cancel</button><button class="btn btn-green" onclick="closeModal()">Verify GSTIN</button></div>`}),
+  suspendUser:(id)=>({icon:"<svg class='ic'><use href='#ic-alert'/></svg>",cls:"danger",title:"Suspend this account?",sub:"All active sessions will be terminated immediately. The user will receive an email with the reason. Active collaborations continue unaffected.",
+    body:`<div class="fr s1" style="margin-top:10px"><div class="fg"><label>Suspension Reason * (sent to user by email)</label><textarea class="fi" style="min-height:70px" placeholder="Be clear and specific. This is sent to the user verbatim."></textarea></div></div><div class="macts"><button class="btn btn-g" onclick="closeModal()">Cancel</button><button class="btn btn-r" onclick="closeModal()">Suspend Account</button></div>`}),
+  reinstateUser:(id)=>({icon:"&#10003;",cls:"ok",title:"Reinstate this account?",sub:"The account will be restored to Active. The user can log in again and their profile will reappear on public surfaces.",
+    body:`<div class="fr s1" style="margin-top:10px"><div class="fg"><label>Reinstatement Note * (internal record)</label><textarea class="fi" style="min-height:60px" placeholder="Reason for reinstatement..."></textarea></div></div><div class="macts"><button class="btn btn-g" onclick="closeModal()">Cancel</button><button class="btn btn-green" onclick="closeModal()">Reinstate Account</button></div>`}),
+  softDelete:(id)=>({icon:"<svg class='ic'><use href='#ic-trash'/></svg>",cls:"danger",title:"Soft delete this account?",sub:"Profile removed from all public surfaces. All sessions terminated. Data retained for financial audit. Display name replaced with 'Deleted Account' in historical records. Hard delete is not available at MVP.",
+    body:`<div class="fr s1" style="margin-top:10px"><div class="fg"><label>Type "DELETE" to confirm</label><input class="fi" id="delInput" placeholder="DELETE" oninput="document.getElementById('delBtn').disabled=this.value!=='DELETE'"></div></div><div class="macts"><button class="btn btn-g" onclick="closeModal()">Cancel</button><button class="btn btn-r" id="delBtn" disabled onclick="closeModal()">Soft Delete</button></div>`}),
+  holdPayout:(txn)=>({icon:"<svg class='ic'><use href='#ic-lock'/></svg>",cls:"warn",title:"Place payout on hold?",sub:"The creator will be notified by email. The payout will not be processed until you manually release the hold.",
+    body:`<div class="fr s1" style="margin-top:10px"><div class="fg"><label>Reason for hold * (sent to creator by email)</label><textarea class="fi" style="min-height:70px" placeholder="e.g. Payout held pending dispute resolution on Collab #8512."></textarea></div></div><div class="macts"><button class="btn btn-g" onclick="closeModal()">Cancel</button><button class="btn btn-amber" onclick="closeModal()">Place Hold</button></div>`}),
+  silentReview:()=>({title:"Auto-Approved Campaigns &#8212; Silent Review (24hr window)",actions:"",
+    body:`<div class="al al-p" style="margin-bottom:16px"><div class="al-i"><svg class='ic'><use href='#ic-lock'/></svg></div><div class="al-c"><div class="al-t">These campaigns are already live on the job board</div><div class="al-c">Payment-verified first-campaign submissions auto-approve instantly. Admin has 24hrs to flag issues and take campaigns down. After 24hrs the silent review window closes and no admin action is needed.</div></div></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="qi warning"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px"><div><div style="font-size:14px;font-weight:700">Festive Makeup &#8212; Nykaa <span class="badge bp" style="font-size:10px">First campaign</span></div><div style="font-size:11px;color:var(--muted);margin-top:2px">Auto-approved 8h ago &#183; 16h remaining in review window</div></div><span class="sla-warn">16h / 24h</span></div><div style="display:flex;gap:8px"><button class="btn btn-p sm" onclick="openPanel('campReview','festive')">View Brief</button><button class="btn btn-r sm" onclick="openModal('forceTakedown','festive')"><svg class='ic'><use href='#ic-edit'/></svg> Take Down</button></div></div>
+      <div class="qi urgent"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px"><div><div style="font-size:14px;font-weight:700">Winter Haircare &#8212; Plum <span class="badge bp" style="font-size:10px">First campaign</span></div><div style="font-size:11px;color:var(--muted);margin-top:2px">Auto-approved 20h ago &#183; 4h remaining</div></div><span class="sla-breach">20h / 24h &#8212; URGENT</span></div><div style="display:flex;gap:8px"><button class="btn btn-p sm" onclick="openPanel('campReview','summer')">View Brief</button><button class="btn btn-r sm" onclick="openModal('forceTakedown','winter')"><svg class='ic'><use href='#ic-edit'/></svg> Take Down</button></div></div>
+    </div>`
+  }),
+  allCampaigns:()=>({title:"All Active Campaigns",actions:"",
+    body:`<div style="margin-bottom:12px;font-size:12px;color:var(--muted)">Admin can force-close any campaign regardless of state. Reason is audit-logged. Brand and affected creators are notified immediately.</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="border:1px solid var(--border);border-radius:9px;padding:12px"><div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:700">Summer Skincare Glow &#8212; Mamaearth</div><div style="font-size:11px;color:var(--muted)">Active &#183; 1/3 hired &#183; 14 proposals &#183; Under review</div></div><div style="display:flex;gap:5px"><button class="btn btn-g xs" onclick="openModal('flagCampaign','summer')"><svg class='ic'><use href='#ic-flag'/></svg> Flag</button><button class="btn btn-r xs" onclick="openModal('forceClose','summer')">Force-Close</button></div></div></div>
+      <div style="border:1px solid var(--border);border-radius:9px;padding:12px"><div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:700">Festive Makeup Campaign &#8212; Nykaa</div><div style="font-size:11px;color:var(--muted)">Active &#183; 0/2 hired &#183; 7 proposals</div></div><div style="display:flex;gap:5px"><button class="btn btn-g xs" onclick="openModal('flagCampaign','festive')"><svg class='ic'><use href='#ic-flag'/></svg> Flag</button><button class="btn btn-r xs" onclick="openModal('forceClose','festive')">Force-Close</button></div></div></div>
+      <div style="border:1px solid var(--border);border-radius:9px;padding:12px"><div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:700">Monsoon Haircare &#8212; Mamaearth</div><div style="font-size:11px;color:var(--muted)">Active &#183; 2/3 hired &#183; 8 proposals</div></div><div style="display:flex;gap:5px"><button class="btn btn-g xs" onclick="openModal('flagCampaign','monsoon')"><svg class='ic'><use href='#ic-flag'/></svg> Flag</button><button class="btn btn-r xs" onclick="openModal('forceClose','monsoon')">Force-Close</button></div></div></div>
+    </div>`
+  }),
+  overdueCollabs:()=>({title:"Overdue Collaborations",actions:"",
+    body:`<div class="al al-r" style="margin-bottom:14px"><div class="al-i"><svg class='ic'><use href='#ic-clock'/></svg></div><div class="al-c"><div class="al-t">1 grace period expired &#8212; action required</div><div class="al-c">Brand has been notified and prompted to raise a formal dispute. Monitor and escalate if no action.</div></div></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="qi urgent"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px"><div><div style="font-size:13px;font-weight:700">Collab #8899 &#8212; Rohit Kumar / Plum Skincare</div><div style="font-size:11px;color:var(--muted)">Deadline Apr 10 &#183; Grace period expired Apr 12 &#183; No submission ever made</div></div><span class="badge br">Grace expired</span></div><div style="font-size:12px;color:var(--muted);margin-bottom:8px">Brand notified and prompted to raise dispute. No dispute raised yet. Escalate if no action within 24hrs.</div><div style="display:flex;gap:6px"><button class="btn btn-p sm" onclick="openPanel('disputeDetail','8512')">View Collab</button><button class="btn btn-g sm" onclick="openPanel('userDetail','rohit')">Creator Profile</button></div></div>
+      <div class="qi warning"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px"><div><div style="font-size:13px;font-weight:700">Collab #8901 &#8212; Divya Sharma / WOW Skin</div><div style="font-size:11px;color:var(--muted)">Deadline Apr 15 &#183; Grace period active &#183; 22h left</div></div><span class="badge ba">In grace &#183; 22h left</span></div><div style="display:flex;gap:6px"><button class="btn btn-g sm">View Collab</button></div></div>
+      <div class="qi"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px"><div><div style="font-size:13px;font-weight:700">Collab #8905 &#8212; Ananya Singh / Nykaa</div><div style="font-size:11px;color:var(--muted)">Deadline Apr 17 &#183; Grace period active &#183; 46h left</div></div><span class="badge ba">In grace &#183; 46h left</span></div><div style="display:flex;gap:6px"><button class="btn btn-g sm">View Collab</button></div></div>
+    </div>`
+  }),
+  creatorStrikes:()=>({title:"Creator Strike Flags",actions:"",
+    body:`<div class="al al-a" style="margin-bottom:14px"><div class="al-i"><svg class='ic'><use href='#ic-alert'/></svg></div><div class="al-c"><div class="al-t">Creators at 3 strikes require account review</div><div class="al-c">Three strikes = flag for admin review. Strikes are recorded internally and are not shown to brands at MVP. Admin decides: warning, suspension, or no action.</div></div></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="qi urgent"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px"><div><div style="font-size:13px;font-weight:700">Rohit Kumar &#8212; Creator #5033</div><div style="font-size:11px;color:var(--muted)">3 strikes &#183; All: cancellations after escrow funded</div></div><span class="badge br">3/3 &#8212; Review required</span></div><div style="background:var(--surface);border-radius:8px;padding:10px;margin-bottom:10px;font-size:11px"><div style="display:flex;flex-direction:column;gap:3px"><div style="display:flex;justify-content:space-between"><span>Strike 1 &#8212; Cancelled Collab #8210 (Plum)</span><span style="color:var(--muted)">Feb 10</span></div><div style="display:flex;justify-content:space-between"><span>Strike 2 &#8212; Cancelled Collab #8401 (WOW Skin)</span><span style="color:var(--muted)">Mar 15</span></div><div style="display:flex;justify-content:space-between"><span>Strike 3 &#8212; Cancelled Collab #8803 (Nykaa)</span><span style="color:var(--muted)">Apr 12</span></div></div></div><div style="display:flex;gap:6px"><button class="btn btn-p sm" onclick="openPanel('userDetail','rohit')">View Full Profile</button><button class="btn btn-r sm" onclick="openModal('suspendUser','rohit')">Suspend Account</button><button class="btn btn-g sm" onclick="closePanel()">Issue Warning &#8212; No Action</button></div></div>
+      <div class="qi warning"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px"><div><div style="font-size:13px;font-weight:700">Divya Sharma &#8212; Creator #5211</div><div style="font-size:11px;color:var(--muted)">2 strikes &#183; Approaching threshold</div></div><span class="badge ba">2/3</span></div><div style="display:flex;gap:6px"><button class="btn btn-g sm" onclick="openPanel('userDetail','divya')">View Profile</button></div></div>
+    </div>`
+  }),
+  sparksCampaign:()=>({title:"Create Platform Sparks Campaign",actions:"",
+    body:`<div class="al al-p" style="margin-bottom:14px"><div class="al-i">&#10022;</div><div class="al-c"><div class="al-t">Platform Sparks campaigns appear on the creator job board</div><div class="al-c">GetSetCollab-run campaigns that reward creators in Sparks instead of INR. Used to incentivise specific behaviours and platform growth goals.</div></div></div>
+    <div class="fr s1"><div class="fg"><label>Campaign Title *</label><input class="fi" placeholder="e.g. Complete your KYC and earn 50 Sparks"></div></div>
+    <div class="fr"><div class="fg"><label>Sparks Reward per Creator *</label><input class="fi" type="number" placeholder="50" min="1"></div><div class="fg"><label>Max Creator Slots *</label><input class="fi" type="number" placeholder="100" min="1"></div></div>
+    <div class="fr s1"><div class="fg"><label>Campaign Description (shown to creators) *</label><textarea class="fi" placeholder="What creators need to do to earn the Sparks..."></textarea></div></div>
+    <div class="fr"><div class="fg"><label>Eligible Tiers</label><select class="fi"><option selected>All tiers</option><option>Nano only</option><option>Micro only</option><option>Nano &#43; Micro</option></select></div><div class="fg"><label>Auto-closes on date (optional)</label><input class="fi" type="date"></div></div>
+    <div style="background:var(--surface);border-radius:8px;padding:10px;margin-bottom:14px;font-size:12px"><div style="font-weight:700;margin-bottom:3px">Estimated circulation impact</div><div style="color:var(--muted)">Up to <strong>5,000 &#10022;</strong> distributed (100 creators &#215; 50 &#10022;) &#8212; 1.0% of current circulation (482,150 &#10022;)</div></div>
+    <div style="display:flex;gap:8px"><button class="btn btn-g" style="flex:1;justify-content:center" onclick="closePanel()">Cancel</button><button class="btn btn-p" style="flex:2;justify-content:center" onclick="closePanel()">Publish Sparks Campaign</button></div>`
+  }),
+
+  forceClose:(id)=>({icon:"<svg class='ic'><use href='#ic-edit'/></svg>",cls:"danger",title:"Force-close this campaign?",sub:"Active collaborations continue unaffected. All pending proposals expire. Brand and affected creators are notified. Reason is recorded in audit log.",
+    body:`<div class="fr s1" style="margin-top:10px"><div class="fg"><label>Force-Close Reason * (internal &#8212; audit log only)</label><textarea class="fi" style="min-height:70px" placeholder="e.g. Campaign brief violates content policy. Multiple creator fraud reports identified."></textarea></div></div><div class="macts"><button class="btn btn-g" onclick="closeModal()">Cancel</button><button class="btn btn-r" onclick="closeModal()">Force-Close Campaign</button></div>`}),
+  forceTakedown:(id)=>({icon:"<svg class='ic'><use href='#ic-edit'/></svg>",cls:"danger",title:"Take down auto-approved campaign?",sub:"This live campaign will be returned to Under Review immediately. Brand will be notified by email with your reason.",
+    body:`<div class="fr s1" style="margin-top:10px"><div class="fg"><label>Takedown Reason * (sent to brand)</label><textarea class="fi" style="min-height:70px" placeholder="e.g. Campaign brief contains prohibited claims. Please revise before the campaign can go live."></textarea></div></div><div class="macts"><button class="btn btn-g" onclick="closeModal()">Cancel</button><button class="btn btn-r" onclick="closeModal()">Take Down Campaign</button></div>`}),
+  flagCampaign:(id)=>({icon:"<svg class='ic'><use href='#ic-flag'/></svg>",cls:"warn",title:"Flag this campaign for review?",sub:"The campaign stays live but is added to the review queue with a flag visible to all admins.",
+    body:`<div class="fr s1" style="margin-top:10px"><div class="fg"><label>Flag Reason * (internal)</label><textarea class="fi" style="min-height:60px" placeholder="e.g. Multiple creator reports of misleading brief."></textarea></div></div><div class="macts"><button class="btn btn-g" onclick="closeModal()">Cancel</button><button class="btn btn-amber" onclick="closeModal()">Flag for Review</button></div>`}),
+  releaseHold:(txn)=>({icon:"&#10003;",cls:"ok",title:"Release this payout hold?",sub:"The payout will resume processing immediately. Creator will see the status update in their earnings dashboard.",
+    body:`<div class="fr s1" style="margin-top:10px"><div class="fg"><label>Release Note * (internal audit record)</label><textarea class="fi" style="min-height:60px" placeholder="e.g. Dispute resolved. Payout cleared to proceed."></textarea></div></div><div class="macts"><button class="btn btn-g" onclick="closeModal()">Cancel</button><button class="btn btn-green" onclick="closeModal()">Release Hold</button></div>`}),
+  payoutRetryAdmin:(txn)=>({title:"Retry Failed Payout &#8212; #TXN-"+txn,actions:"",
+    body:`<div class="al al-r" style="margin-bottom:14px"><div class="al-i"><svg class='ic'><use href='#ic-alert'/></svg></div><div class="al-c"><div class="al-t">Payout failed for Priya Nair &#8212; &#8377;2,500</div><div class="al-c">Original failure: Apr 15. Platform auto-retried once &#8212; failed again. Manual retry or creator must update payout details.</div></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px">CREATOR</div><div style="font-weight:600">Priya Nair</div></div>
+      <div style="background:var(--surface);border-radius:8px;padding:10px"><div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:3px">PAYOUT METHOD</div><div style="font-weight:600">UPI &#8212; priya@upi</div></div>
+    </div>
+    <div class="fr s1"><div class="fg"><label>Admin Note (internal)</label><textarea class="fi" style="min-height:60px" placeholder="e.g. Creator confirmed UPI ID is correct. Retrying manually."></textarea></div></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-g" style="flex:1;justify-content:center" onclick="closePanel()">Cancel</button><button class="btn btn-p" style="flex:2;justify-content:center" onclick="closePanel()">Retry Payout Now</button></div>`
+  }),
+  invoiceAdmin:(txn)=>({title:"Invoice &#8212; #TXN-"+txn,actions:'<button class="btn btn-g sm">&#8595; Download PDF</button>',
+    body:`<div style="background:var(--surface);border-radius:9px;padding:16px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)"><div><div style="font-family:'Fraunces',serif;font-size:16px;font-weight:700">GetSetCollab Invoice</div><div style="font-size:11px;color:var(--muted);margin-top:3px">#GSC-B-2025-00${txn}</div></div><span class="badge bg">Released</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;font-size:12px">
+      <div><div style="font-weight:700;color:var(--muted);font-size:10px;text-transform:uppercase;margin-bottom:3px">Brand</div><div>WOW Skin Science</div></div>
+      <div><div style="font-weight:700;color:var(--muted);font-size:10px;text-transform:uppercase;margin-bottom:3px">Creator</div><div>Divya Sharma</div></div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:12px;font-size:12px">
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>Instagram Reel (60s)</span><span>&#8377;3,000</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);color:var(--muted)"><span>Platform fee (10%)</span><span>&#8377;300</span></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;font-size:14px;font-weight:800"><span>Total</span><span style="color:var(--pa)">&#8377;3,300</span></div>
+    </div></div>`
+  }),
+
+
+};
+
+function labelTables(root){
+  (root||document).querySelectorAll(".tw table").forEach(function(tb){
+    var ths=tb.querySelectorAll("thead th");
+    if(!ths.length)return;
+    var labels=Array.prototype.map.call(ths,function(th){return th.textContent.trim();});
+    tb.querySelectorAll("tbody tr").forEach(function(tr){
+      Array.prototype.forEach.call(tr.children,function(td,i){
+        if(td.tagName==="TD"&&!td.hasAttribute("data-label"))td.setAttribute("data-label",labels[i]||"");
+      });
+    });
+  });
+}
+function openNav(){document.body.classList.add("nav-open");}
+function closeNav(){document.body.classList.remove("nav-open");}
+function openPanel(type,id){
+  const b=PANELS[type]||MODALS[type];if(!b)return;
+  const r=typeof b==="function"?b(id):b;
+  document.getElementById("ptitle").innerHTML=r.title||"";
+  document.getElementById("pactions").innerHTML=r.actions||"";
+  document.getElementById("pbody").innerHTML=r.body||"";
+  labelTables(document.getElementById("pbody"));
+  document.getElementById("spanel").classList.add("open");
+  document.getElementById("pov").classList.add("open");
+  document.querySelectorAll("#pbody .tog").forEach(t=>t.addEventListener("click",function(){this.classList.toggle("on")}));
+}
+function closePanel(){document.getElementById("spanel").classList.remove("open");document.getElementById("pov").classList.remove("open")}
+function openModal(type,id){
+  const b=MODALS[type];if(!b)return;
+  const r=typeof b==="function"?b(id):b;
+  document.getElementById("mico2").innerHTML=r.icon||"";
+  document.getElementById("mico2").className="mico2 "+(r.cls||"");
+  document.getElementById("mtitle2").innerHTML=r.title||"";
+  document.getElementById("msub2").innerHTML=r.sub||"";
+  document.getElementById("mbody2").innerHTML=r.body||"";
+  labelTables(document.getElementById("mbody2"));
+  document.getElementById("mov").classList.add("open");
+  document.querySelectorAll("#mbody2 .tog").forEach(t=>t.addEventListener("click",function(){this.classList.toggle("on")}));
+}
+function closeModal(){document.getElementById("mov").classList.remove("open")}
+function handleMov(e){if(e.target===document.getElementById("mov"))closeModal();}
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeModal();closePanel();closeNav();}});
+document.querySelectorAll(".tog").forEach(t=>t.addEventListener("click",function(){this.classList.toggle("on")}));
+labelTables(document);
+</script>
+</body>
+</html>

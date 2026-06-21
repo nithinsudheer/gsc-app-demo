@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en" data-view="brand">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GetSetCollab — Where brands and creators collaborate, safely</title>
+<meta name="description" content="India's self-serve influencer marketing marketplace. Post campaigns, compare proposals side by side, and pay creators through escrow — protected at every step.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* neutrals */
+  --canvas:#F6F3EC; --canvas-2:#FBF9F4; --surface:#FFFFFF;
+  --ink:#1B1611; --ink-soft:#4B443A; --muted:#938B7C;
+  --line:#E9E2D5; --line-soft:#F1ECE2;
+  /* accent — plum */
+  --accent:#5A3A86; --accent-2:#7B57AE; --accent-soft:#EFEAF6;
+  /* gold */
+  --gold:#A9802C; --gold-soft:#F6EFDD;
+  /* semantic */
+  --green:#0F6B53; --green-soft:#E2F0EA;
+  --amber:#9A6516; --amber-soft:#FBF0DC;
+  --red:#A6392B; --red-soft:#F8E6E1;
+  /* gradients */
+  --hero:linear-gradient(152deg,#241A33 0%,#3C2659 52%,#553684 100%);
+  /* radii */
+  --radius:15px; --radius-sm:11px;
+  /* elevation */
+  --shadow-soft:0 1px 2px rgba(40,30,15,.04);
+  --shadow-card:0 1px 2px rgba(40,30,15,.04), 0 18px 40px -22px rgba(60,40,90,.16);
+  --shadow-lift:0 1px 2px rgba(40,30,15,.05), 0 30px 60px -28px rgba(55,40,85,.32);
+  --shadow-hero:0 24px 60px -24px rgba(45,25,70,.55);
+  --maxw:1140px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(1100px 460px at 78% -8%, #FBEFE0 0%, transparent 58%),
+    var(--canvas);
+  color:var(--ink); font-family:"Hanken Grotesk",sans-serif; font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+::selection{background:var(--accent-soft);color:var(--accent)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+svg{display:block}
+.serif{font-family:"Fraunces",serif;letter-spacing:-.01em}
+.ic{width:1.1em;height:1.1em;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+
+/* audience swapping */
+[data-view="brand"] [data-aud="creator"]{display:none!important}
+[data-view="creator"] [data-aud="brand"]{display:none!important}
+
+/* ───────────────── buttons ───────────────── */
+.btn{font-family:inherit;font-weight:600;font-size:14px;border:0;border-radius:var(--radius-sm);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.16s;padding:11px 18px;white-space:nowrap}
+.btn .ic{width:17px;height:17px}
+.btn-primary{background:var(--ink);color:#fff;box-shadow:0 8px 18px -10px rgba(27,22,17,.8)}
+.btn-primary:hover{background:#000;transform:translateY(-1px)}
+.btn-accent{background:var(--accent);color:#fff;box-shadow:0 10px 22px -12px rgba(90,58,134,.85)}
+.btn-accent:hover{background:var(--accent-2);transform:translateY(-1px)}
+.btn-ghost{background:var(--surface);border:1px solid var(--line);color:var(--ink-soft)}
+.btn-ghost:hover{border-color:var(--ink-soft);color:var(--ink)}
+.btn-light{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;backdrop-filter:blur(6px)}
+.btn-light:hover{background:rgba(255,255,255,.24)}
+.btn-lg{padding:13px 22px;font-size:15px}
+.btn-link{background:none;border:0;color:var(--accent);font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:6px 2px}
+.btn-link .ic{width:16px;height:16px;transition:transform .16s}
+.btn-link:hover .ic{transform:translateX(3px)}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+/* ───────────────── nav ───────────────── */
+.nav{position:sticky;top:0;z-index:60;background:rgba(246,243,236,.72);backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:.2s}
+.nav.scrolled{background:rgba(246,243,236,.92);border-bottom-color:var(--line)}
+.nav-in{max-width:var(--maxw);margin:0 auto;height:66px;padding:0 28px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:11px;flex:none}
+.brand-mark{width:34px;height:34px;border-radius:10px;background:var(--hero);display:grid;place-items:center;color:#fff;box-shadow:0 6px 16px -6px rgba(85,54,132,.7)}
+.brand-mark .ic{width:18px;height:18px}
+.brand-name{font-family:"Fraunces",serif;font-weight:600;font-size:18px;letter-spacing:-.01em}
+.brand-tag{font-size:10.5px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:6px;letter-spacing:.02em}
+.nav-tag-brand,.nav-tag-creator{display:none}
+[data-view="brand"] .nav-tag-brand{display:inline-block}
+[data-view="creator"] .nav-tag-creator{display:inline-block}
+
+/* segmented audience switch */
+.seg{margin:0 auto;display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:3px;gap:2px;position:relative;box-shadow:var(--shadow-soft)}
+.seg-btn{font-family:inherit;font-weight:600;font-size:13.5px;color:var(--muted);background:none;border:0;cursor:pointer;padding:8px 16px;border-radius:9px;transition:color .16s;position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px}
+.seg-btn .ic{width:15px;height:15px}
+.seg-btn[aria-checked="true"]{color:#fff}
+.seg-thumb{position:absolute;top:3px;bottom:3px;border-radius:9px;background:var(--accent);box-shadow:0 6px 14px -8px rgba(90,58,134,.9);transition:left .26s cubic-bezier(.2,.7,.2,1),width .26s cubic-bezier(.2,.7,.2,1);z-index:0}
+.nav-cta{margin-left:auto;display:flex;align-items:center;gap:10px;flex:none}
+.nav-login{font-weight:600;font-size:14px;color:var(--ink-soft);padding:9px 6px}
+.nav-login:hover{color:var(--ink)}
+.nav-join-brand,.nav-join-creator{display:none}
+[data-view="brand"] .nav-join-brand{display:inline-flex}
+[data-view="creator"] .nav-join-creator{display:inline-flex}
+
+/* ───────────────── hero ───────────────── */
+.hero{padding:30px 0 12px}
+.hero-panel{position:relative;background:var(--hero);border-radius:24px;box-shadow:var(--shadow-hero);overflow:hidden;padding:62px 60px}
+.hero-panel::before{content:"";position:absolute;right:-120px;top:-140px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%);pointer-events:none}
+.hero-panel::after{content:"";position:absolute;left:-90px;bottom:-150px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(169,128,44,.16),transparent 70%);pointer-events:none}
+.hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1.04fr .96fr;gap:54px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E7DCF3;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:6px 12px;border-radius:20px}
+.eyebrow .ic{width:13px;height:13px;color:#D9B65C}
+.hero h1{font-family:"Fraunces",serif;font-weight:600;color:#fff;font-size:53px;line-height:1.04;letter-spacing:-.025em;margin:20px 0 0}
+.hero h1 em{font-style:italic;color:#D9B65C}
+.hero-sub{color:rgba(255,255,255,.8);font-size:17px;line-height:1.55;margin-top:18px;max-width:30em}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.hero-trust{display:flex;align-items:center;gap:9px;margin-top:24px;color:rgba(255,255,255,.72);font-size:13px}
+.hero-trust .ic{width:16px;height:16px;color:#9FE3CC}
+
+/* hero supporting visual — floating cards */
+.hero-vis{position:relative;min-height:340px}
+.vcard{position:absolute;background:var(--surface);border-radius:var(--radius);box-shadow:0 24px 60px -28px rgba(20,10,40,.7), 0 2px 6px rgba(20,10,40,.2);padding:18px}
+.vc-top{display:flex;align-items:center;gap:11px}
+.vc-av{width:40px;height:40px;border-radius:11px;flex:none;display:grid;place-items:center;font-family:"Fraunces",serif;font-weight:600;font-size:16px;overflow:hidden;position:relative}
+.vc-av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.vc-nm{font-weight:600;font-size:14px;display:flex;align-items:center;gap:5px;line-height:1.2}
+.vc-meta{font-size:12px;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+.chip .ic{width:12px;height:12px}
+.chip.green{background:var(--green-soft);color:var(--green)}
+.chip.plum{background:var(--accent-soft);color:var(--accent)}
+.chip.gold{background:var(--gold-soft);color:var(--gold)}
+.chip.amber{background:var(--amber-soft);color:var(--amber)}
+.vbadge{width:16px;height:16px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;flex:none}
+.vbadge .ic{width:11px;height:11px;stroke-width:2.4}
+
+/* brand hero visual */
+.hv-escrow{top:8px;left:0;width:262px}
+.hv-escrow .lab{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.hv-escrow .amt{font-family:"Fraunces",serif;font-weight:600;font-size:30px;letter-spacing:-.02em;margin-top:4px}
+.hv-escrow .bar{height:6px;border-radius:6px;background:var(--line);margin-top:14px;overflow:hidden}
+.hv-escrow .bar i{display:block;height:100%;width:68%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.hv-escrow .barlab{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:8px}
+.hv-props{bottom:6px;right:0;width:286px}
+.hv-props .ph{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.hv-props .ph .ic{width:13px;height:13px;color:var(--accent)}
+.prow{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line-soft)}
+.prow:first-of-type{border-top:0}
+.prow .pa{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;font-family:"Fraunces",serif;font-weight:600;font-size:12px;background:var(--accent-soft);color:var(--accent)}
+.prow .pn{font-weight:600;font-size:12.5px;line-height:1.2}
+.prow .pm{font-size:11px;color:var(--muted)}
+.prow .pq{margin-left:auto;font-family:"Fraunces",serif;font-weight:600;font-size:13px}
+
+/* creator hero visual */
+.hv-profile{top:0;left:6px;width:268px}
+.hv-profile .pf-top{display:flex;align-items:center;gap:13px}
+.hv-profile .pf-av{width:54px;height:54px;border-radius:50%;flex:none;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-family:"Fraunces",serif;font-weight:600;font-size:20px;overflow:hidden;position:relative}
+.hv-profile .pf-av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hv-profile .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.hv-stats{display:flex;gap:18px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.hv-stats b{font-family:"Fraunces",serif;font-weight:600;font-size:18px;display:block;line-height:1}
+.hv-stats span{font-size:11px;color:var(--muted)}
+.hv-payout{bottom:2px;right:0;width:242px}
+.hv-payout .lab{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.hv-payout .amt{font-family:"Fraunces",serif;font-weight:600;font-size:28px;letter-spacing:-.02em;margin:3px 0 2px}
+.hv-payout .note{font-size:11.5px;color:var(--green);display:flex;align-items:center;gap:6px;margin-top:8px}
+.hv-payout .note .ic{width:14px;height:14px}
+.hv-sparks{top:196px;left:-6px;width:150px;padding:14px}
+.hv-sparks .lab{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hv-sparks .amt{font-family:"Fraunces",serif;font-weight:600;font-size:22px;color:var(--gold);display:flex;align-items:center;gap:6px;margin-top:3px}
+.hv-sparks .amt .ic{width:18px;height:18px}
+
+/* ───────────────── trust strip ───────────────── */
+.strip{max-width:var(--maxw);margin:34px auto 0;padding:0 28px}
+.strip-in{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-card);overflow:hidden}
+.strip-cell{padding:24px 26px;border-left:1px solid var(--line-soft)}
+.strip-cell:first-child{border-left:0}
+.strip-cell b{font-family:"Fraunces",serif;font-weight:600;font-size:30px;letter-spacing:-.02em;display:block;line-height:1}
+.strip-cell span{font-size:12.5px;color:var(--muted);margin-top:6px;display:block}
+
+/* ───────────────── section scaffolding ───────────────── */
+section{scroll-margin-top:84px}
+.block{padding:78px 0 4px}
+.lede{max-width:620px}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.kicker .ic{width:14px;height:14px}
+.h2{font-family:"Fraunces",serif;font-weight:600;font-size:34px;line-height:1.12;letter-spacing:-.02em;margin-top:14px}
+.lede p{color:var(--ink-soft);font-size:16.5px;margin-top:14px}
+
+/* ───────────────── signature: flow rail ───────────────── */
+.flow{margin-top:42px}
+.flow-track{display:grid;grid-template-columns:repeat(5,1fr);gap:0;counter-reset:step;position:relative}
+.flow-line{position:absolute;top:25px;left:8%;right:8%;height:2px;background:repeating-linear-gradient(90deg,var(--line) 0 8px,transparent 8px 14px);z-index:0}
+.step{position:relative;z-index:1;padding:0 14px;text-align:center}
+.step-num{counter-increment:step;width:52px;height:52px;margin:0 auto;border-radius:50%;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;font-family:"Fraunces",serif;font-weight:600;font-size:18px;color:var(--accent);box-shadow:var(--shadow-soft);position:relative}
+.step-num::before{content:"0" counter(step)}
+.step.key .step-num{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 12px 24px -12px rgba(90,58,134,.9)}
+.step h3{font-size:14.5px;font-weight:600;margin-top:16px}
+.step p{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5}
+.flow-foot{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+.flow-foot .ic{width:16px;height:16px;color:var(--green)}
+.flow-foot span{font-size:14px;color:var(--ink-soft)}
+.flow-foot b{color:var(--ink);font-weight:600}
+
+/* ───────────────── feature trio ───────────────── */
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:42px}
+.fcard{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:26px 24px;transition:transform .18s,box-shadow .18s}
+.fcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift)}
+.fc-ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.fc-ico .ic{width:22px;height:22px}
+.fc-ico.gold{background:var(--gold-soft);color:var(--gold)}
+.fc-ico.green{background:var(--green-soft);color:var(--green)}
+.fcard h3{font-family:"Fraunces",serif;font-weight:600;font-size:20px;letter-spacing:-.01em;margin-top:20px}
+.fcard p{color:var(--ink-soft);font-size:14.5px;margin-top:10px;line-height:1.55}
+
+/* ───────────────── differentiator split ───────────────── */
+.split{margin-top:42px;background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-card);overflow:hidden;display:grid;grid-template-columns:1.1fr 1fr}
+.split-l{padding:46px 44px}
+.split-l .h3{font-family:"Fraunces",serif;font-weight:600;font-size:26px;letter-spacing:-.02em;line-height:1.16}
+.split-l>p{color:var(--ink-soft);font-size:15.5px;margin-top:14px;max-width:34em}
+.checks{margin-top:24px;display:flex;flex-direction:column;gap:16px}
+.check{display:flex;gap:13px}
+.check-ico{width:30px;height:30px;border-radius:9px;flex:none;background:var(--green-soft);color:var(--green);display:grid;place-items:center}
+.check-ico .ic{width:16px;height:16px;stroke-width:2.1}
+.check b{font-weight:600;font-size:14.5px;display:block}
+.check span{font-size:13.5px;color:var(--muted);display:block;margin-top:3px;line-height:1.5}
+.split-r{position:relative;background:var(--canvas-2);border-left:1px solid var(--line-soft);padding:40px;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.compare-h{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.crow{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius-sm);padding:13px 15px;box-shadow:var(--shadow-soft)}
+.crow.win{border-color:rgba(90,58,134,.3);box-shadow:0 12px 26px -16px rgba(90,58,134,.45)}
+.crow .pa{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;font-family:"Fraunces",serif;font-weight:600;font-size:13px;background:var(--accent-soft);color:var(--accent);overflow:hidden;position:relative}
+.crow .pa img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.crow .info b{font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:5px}
+.crow .info span{font-size:11.5px;color:var(--muted)}
+.crow .metric{margin-left:auto;text-align:right}
+.crow .metric b{font-family:"Fraunces",serif;font-weight:600;font-size:15px;display:block;line-height:1}
+.crow .metric span{font-size:11px;color:var(--muted)}
+
+/* ───────────────── creator: score / badges ───────────────── */
+.badgewall{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:42px}
+.bcard{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:22px 18px;text-align:center}
+.bcard .bi{width:46px;height:46px;border-radius:50%;margin:0 auto;display:grid;place-items:center;background:var(--gold-soft);color:var(--gold)}
+.bcard .bi .ic{width:22px;height:22px}
+.bcard.plum .bi{background:var(--accent-soft);color:var(--accent)}
+.bcard.green .bi{background:var(--green-soft);color:var(--green)}
+.bcard h4{font-family:"Fraunces",serif;font-weight:600;font-size:16px;margin-top:14px}
+.bcard p{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+
+/* ───────────────── browse creators teaser (brand) ───────────────── */
+.dirgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:42px}
+.dcard{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:20px;transition:transform .18s,box-shadow .18s}
+.dcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift)}
+.dcard .da{width:60px;height:60px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-family:"Fraunces",serif;font-weight:600;font-size:22px;overflow:hidden;position:relative}
+.dcard .da img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dcard .dn{font-weight:600;font-size:15px;margin-top:14px;display:flex;align-items:center;gap:5px}
+.dcard .dr{font-size:12.5px;color:var(--muted);margin-top:3px}
+.dcard .dtags{display:flex;gap:7px;margin-top:14px;flex-wrap:wrap}
+.dcard .dfoot{display:flex;align-items:center;gap:6px;margin-top:16px;font-size:13px}
+.dcard .dfoot .ic{width:15px;height:15px;color:var(--gold)}
+.dcard .dfoot b{font-family:"Fraunces",serif;font-weight:600}
+.dcard .dfoot .rev{color:var(--muted);font-weight:400}
+
+/* ───────────────── final cta ───────────────── */
+.finalcta{margin:80px auto 0;max-width:var(--maxw);padding:0 28px}
+.finalcta-in{position:relative;background:var(--surface);border:1px solid var(--line-soft);border-radius:24px;box-shadow:var(--shadow-card);padding:54px 56px;display:flex;align-items:center;gap:40px;flex-wrap:wrap;overflow:hidden}
+.finalcta-in::after{content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--accent-soft),transparent 70%);pointer-events:none}
+.finalcta .fc-txt{flex:1;min-width:280px;position:relative;z-index:1}
+.finalcta h2{font-family:"Fraunces",serif;font-weight:600;font-size:32px;letter-spacing:-.02em;line-height:1.12}
+.finalcta p{color:var(--ink-soft);font-size:16px;margin-top:12px;max-width:36em}
+.finalcta .fc-act{display:flex;gap:12px;flex-wrap:wrap;position:relative;z-index:1}
+
+/* ───────────────── footer ───────────────── */
+footer{margin-top:74px;border-top:1px solid var(--line);background:var(--canvas-2)}
+.foot-in{max-width:var(--maxw);margin:0 auto;padding:46px 28px 30px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+.foot-brand .brand{margin-bottom:14px}
+.foot-brand p{color:var(--muted);font-size:13.5px;max-width:26em;line-height:1.6}
+.foot-col h5{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.foot-col a{display:block;color:var(--ink-soft);font-size:14px;padding:5px 0;transition:color .15s}
+.foot-col a:hover{color:var(--accent)}
+.foot-bot{max-width:var(--maxw);margin:0 auto;padding:18px 28px 30px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+.foot-bot .sp{flex:1}
+.foot-bot .seal{display:inline-flex;align-items:center;gap:7px;color:var(--ink-soft);font-weight:500}
+.foot-bot .seal .ic{width:15px;height:15px;color:var(--green)}
+
+/* ───────────────── entrance motion ───────────────── */
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.rise{animation:up .6s cubic-bezier(.2,.7,.2,1) both}
+.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.16s}.d4{animation-delay:.22s}
+
+/* ───────────────── responsive ───────────────── */
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:36px}
+  .hero h1{font-size:42px}
+  .hero-vis{min-height:380px;max-width:420px}
+  .strip-in{grid-template-columns:1fr 1fr}
+  .strip-cell:nth-child(3){border-left:0}
+  .strip-cell:nth-child(n+3){border-top:1px solid var(--line-soft)}
+  .flow-track{grid-template-columns:1fr 1fr;gap:28px 14px}
+  .flow-line{display:none}
+  .trio{grid-template-columns:1fr}
+  .split{grid-template-columns:1fr}
+  .split-r{border-left:0;border-top:1px solid var(--line-soft)}
+  .badgewall{grid-template-columns:1fr 1fr 1fr}
+  .dirgrid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:680px){
+  .wrap,.nav-in,.strip,.finalcta{padding-left:18px;padding-right:18px}
+  .nav-in{gap:8px;height:58px}
+  .brand-name{display:none}
+  .brand-tag{display:none!important}
+  .seg{margin:0 auto;padding:2px}
+  .seg-btn{padding:7px 10px;font-size:12.5px;gap:5px}
+  .nav-cta .btn{padding:9px 13px;font-size:13px}
+  .nav-login{display:none}
+  .hero-panel{padding:42px 26px 48px}
+  .hero h1{font-size:35px}
+  .hero-sub{font-size:16px}
+  .strip-in{grid-template-columns:1fr 1fr}
+  .flow-track{grid-template-columns:1fr}
+  .badgewall{grid-template-columns:1fr 1fr}
+  .dirgrid{grid-template-columns:1fr}
+  .split-l,.split-r{padding:30px 24px}
+  .finalcta-in{padding:36px 28px}
+  .foot-in{grid-template-columns:1fr 1fr}
+  .hero-vis{margin:0 auto}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .seg-thumb{transition:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ───────────── icon sprite ───────────── -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5L12 3Z"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 6.2L20 11l-6.2 1.8L12 19l-1.8-6.2L4 11l6.2-1.8z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><path d="M16 8a4 4 0 1 0-8 0M3 21v-2a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v2"/></symbol>
+<symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M5 21h14"/><path d="M7 7 3 14h8L7 7ZM17 7l-4 7h8l-4-7ZM7 3.5 17 6"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+<symbol id="i-msg" viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5Z"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-chevR" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 15h2"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.3-9.3-8.5C1 8 2.8 5 6 5c2 0 3.2 1.3 4 2.5C10.8 6.3 12 5 14 5c3.2 0 5 3 3.3 6.5C19 15.7 12 20 12 20Z"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4l-6 16-3-7-7-1Z"/></symbol>
+<symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 8-8 8 8 0 0 1 7 4"/><path d="M19 4v4h-4"/><path d="M20 12a8 8 0 0 1-8 8 8 8 0 0 1-7-4"/><path d="M5 20v-4h4"/></symbol>
+<symbol id="i-ribbon" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M9 14.5 7 22l5-3 5 3-2-7.5"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s6-5.3 6-10a6 6 0 0 0-12 0c0 4.7 6 10 6 10z"/><circle cx="12" cy="11" r="2.3"/></symbol>
+<symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-yt" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="3.5"/><path d="M10.5 9.2l4.5 2.8-4.5 2.8z" fill="currentColor" stroke="none"/></symbol>
+</svg>
+
+<!-- ───────────── nav ───────────── -->
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="GetSetCollab home">
+      <span class="brand-mark"><svg class="ic"><use href="#i-bolt"/></svg></span>
+      <span class="brand-name serif">GetSetCollab</span>
+      <span class="brand-tag nav-tag-brand">For Brands</span>
+      <span class="brand-tag nav-tag-creator">For Creators</span>
+    </a>
+
+    <div class="seg" role="radiogroup" aria-label="Choose your view">
+      <span class="seg-thumb" id="segThumb"></span>
+      <button class="seg-btn" id="segBrand" role="radio" aria-checked="true" tabindex="0" onclick="setView('brand')">
+        <svg class="ic"><use href="#i-flag"/></svg> For Brands
+      </button>
+      <button class="seg-btn" id="segCreator" role="radio" aria-checked="false" tabindex="-1" onclick="setView('creator')">
+        <svg class="ic"><use href="#i-star"/></svg> For Creators
+      </button>
+    </div>
+
+    <div class="nav-cta">
+      <a class="nav-login" href="getsetcollab_brand_v14_final.html">Log in</a>
+      <a class="btn btn-primary nav-join-brand" href="getsetcollab_brand_v14_final.html">Start a campaign</a>
+      <a class="btn btn-primary nav-join-creator" href="getsetcollab_creator_premium.html">Join as creator</a>
+    </div>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ───────────── hero ───────────── -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-panel">
+      <div class="hero-grid">
+
+        <!-- copy -->
+        <div class="hero-copy">
+          <!-- BRAND -->
+          <div data-aud="brand">
+            <span class="eyebrow"><svg class="ic"><use href="#i-shield"/></svg> Escrow-protected · India</span>
+            <h1 class="rise">Run influencer campaigns <em>without the guesswork</em>.</h1>
+            <p class="hero-sub rise d1">Post a brief, compare real proposals side by side, and pay only when content goes live and checks out. Every rupee sits in escrow until then.</p>
+            <div class="hero-actions rise d2">
+              <a class="btn btn-light btn-lg" href="getsetcollab_brand_v14_final.html"><svg class="ic"><use href="#i-arrow"/></svg> Post a campaign</a>
+              <a class="btn btn-ghost btn-lg" href="getsetcollab_creator_public.html" style="color:#fff;background:transparent;border-color:rgba(255,255,255,.35)"><svg class="ic"><use href="#i-users"/></svg> Browse creators</a>
+            </div>
+            <div class="hero-trust rise d3"><svg class="ic"><use href="#i-check"/></svg> No setup fee · self-serve · pay per collaboration</div>
+          </div>
+          <!-- CREATOR -->
+          <div data-aud="creator">
+            <span class="eyebrow"><svg class="ic"><use href="#i-spark"/></svg> Get paid · protected · India</span>
+            <h1 class="rise">Find brand work that <em>actually pays</em>.</h1>
+            <p class="hero-sub rise d1">Browse open campaigns, apply with Sparks, and deliver from one place. Your fee is locked in escrow the moment you're hired — so you always get paid for live, approved content.</p>
+            <div class="hero-actions rise d2">
+              <a class="btn btn-light btn-lg" href="getsetcollab_creator_premium.html"><svg class="ic"><use href="#i-arrow"/></svg> Browse campaigns</a>
+              <a class="btn btn-ghost btn-lg" href="getsetcollab_creator_public.html" style="color:#fff;background:transparent;border-color:rgba(255,255,255,.35)"><svg class="ic"><use href="#i-eye"/></svg> See a profile</a>
+            </div>
+            <div class="hero-trust rise d3"><svg class="ic"><use href="#i-check"/></svg> Free to join · Instagram &amp; YouTube · payout in your bank or UPI</div>
+          </div>
+        </div>
+
+        <!-- supporting visual -->
+        <div class="hero-vis rise d2">
+          <!-- BRAND visual: escrow + side-by-side proposals -->
+          <div data-aud="brand" style="position:absolute;inset:0">
+            <div class="vcard hv-escrow">
+              <div class="lab">In escrow · Summer Glow</div>
+              <div class="amt serif">₹84,000</div>
+              <div class="chip green" style="margin-top:10px"><svg class="ic"><use href="#i-lock"/></svg> Held until go-live</div>
+              <div class="bar"><i></i></div>
+              <div class="barlab"><span>3 of 5 creators hired</span><span>68%</span></div>
+            </div>
+            <div class="vcard hv-props">
+              <div class="ph"><svg class="ic"><use href="#i-scale"/></svg> Compare proposals</div>
+              <div class="prow"><div class="pa">PN</div><div><div class="pn">Priya N. <span class="chip gold" style="padding:1px 6px"><svg class="ic"><use href="#i-ribbon"/></svg> Top Rated</span></div><div class="pm">85K · 3.8% eng</div></div><div class="pq">₹6,500</div></div>
+              <div class="prow"><div class="pa">KR</div><div><div class="pn">Kabir R.</div><div class="pm">120K · YouTube</div></div><div class="pq">₹9,000</div></div>
+              <div class="prow"><div class="pa">DS</div><div><div class="pn">Divya S. <span class="chip plum" style="padding:1px 6px"><svg class="ic"><use href="#i-spark"/></svg> Boosted</span></div><div class="pm">41K · new</div></div><div class="pq">₹3,200</div></div>
+            </div>
+          </div>
+          <!-- CREATOR visual: profile + badges + sparks + payout -->
+          <div data-aud="creator" style="position:absolute;inset:0">
+            <div class="vcard hv-profile">
+              <div class="pf-top">
+                <div class="pf-av">PN<img src="https://i.pravatar.cc/120?img=5" onerror="this.remove()" alt=""></div>
+                <div>
+                  <div class="vc-nm">Priya Nair <span class="vbadge" title="KYC verified"><svg class="ic"><use href="#i-check"/></svg></span></div>
+                  <div class="vc-meta">Beauty &amp; Lifestyle · Mumbai</div>
+                </div>
+              </div>
+              <div class="badges">
+                <span class="chip gold"><svg class="ic"><use href="#i-ribbon"/></svg> Top Rated</span>
+                <span class="chip green"><svg class="ic"><use href="#i-clock"/></svg> On Time</span>
+                <span class="chip plum"><svg class="ic"><use href="#i-star"/></svg> Rising Star</span>
+              </div>
+              <div class="hv-stats">
+                <div><b class="serif">4.8</b><span>Rating</span></div>
+                <div><b class="serif">12</b><span>Collabs</span></div>
+                <div><b class="serif">&lt;2h</b><span>Reply</span></div>
+              </div>
+            </div>
+            <div class="vcard hv-sparks">
+              <div class="lab">Sparks balance</div>
+              <div class="amt serif"><svg class="ic"><use href="#i-spark"/></svg> 240</div>
+            </div>
+            <div class="vcard hv-payout">
+              <div class="lab">Next payout</div>
+              <div class="amt serif">₹6,500</div>
+              <div class="chip green"><svg class="ic"><use href="#i-lock"/></svg> Secured in escrow</div>
+              <div class="note"><svg class="ic"><use href="#i-check"/></svg> Releases after go-live buffer</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── trust strip ───────────── -->
+<div class="strip">
+  <!-- BRAND -->
+  <div class="strip-in" data-aud="brand">
+    <div class="strip-cell"><b class="serif">4,200+</b><span>Verified creators on Instagram &amp; YouTube</span></div>
+    <div class="strip-cell"><b class="serif">100%</b><span>Of payments held in escrow until go-live</span></div>
+    <div class="strip-cell"><b class="serif">5 tiers</b><span>Nano to Mega — filter by reach and niche</span></div>
+    <div class="strip-cell"><b class="serif">0</b><span>Sales calls — launch a campaign yourself today</span></div>
+  </div>
+  <!-- CREATOR -->
+  <div class="strip-in" data-aud="creator">
+    <div class="strip-cell"><b class="serif">Escrow</b><span>Your fee is locked in before you start work</span></div>
+    <div class="strip-cell"><b class="serif">5 badges</b><span>Earn Creator Score badges as you deliver</span></div>
+    <div class="strip-cell"><b class="serif">UPI</b><span>Payouts to your bank or UPI after go-live</span></div>
+    <div class="strip-cell"><b class="serif">Free</b><span>Join free — you only spend Sparks to apply</span></div>
+  </div>
+</div>
+
+<!-- ───────────── signature: the flow ───────────── -->
+<section class="block" id="how">
+  <div class="wrap">
+    <!-- BRAND -->
+    <div data-aud="brand">
+      <div class="lede">
+        <span class="kicker"><svg class="ic"><use href="#i-shield"/></svg> How it works</span>
+        <h2 class="h2">One protected path from brief to payout.</h2>
+        <p>Every collaboration moves through the same checked steps. Money only moves when work is done and verified.</p>
+      </div>
+      <div class="flow">
+        <div class="flow-track">
+          <div class="flow-line" aria-hidden="true"></div>
+          <div class="step"><div class="step-num"></div><h3>Post your brief</h3><p>Set deliverables, creator tiers and budget. It's live in minutes.</p></div>
+          <div class="step"><div class="step-num"></div><h3>Compare proposals</h3><p>Review applicants side by side and shortlist the right fit.</p></div>
+          <div class="step key"><div class="step-num"></div><h3>Fund escrow</h3><p>Send an offer and fund the agreed fee. It's held, not paid out.</p></div>
+          <div class="step"><div class="step-num"></div><h3>Review content</h3><p>Approve the draft or request revisions before anything posts.</p></div>
+          <div class="step"><div class="step-num"></div><h3>Validate &amp; release</h3><p>Confirm it's live. Escrow auto-releases after the buffer window.</p></div>
+        </div>
+        <div class="flow-foot"><svg class="ic"><use href="#i-shield"/></svg><span><b>A 30-day buffer</b> protects you against deleted or tampered posts — escrow stays held until it clears.</span></div>
+      </div>
+    </div>
+    <!-- CREATOR -->
+    <div data-aud="creator">
+      <div class="lede">
+        <span class="kicker"><svg class="ic"><use href="#i-spark"/></svg> How it works</span>
+        <h2 class="h2">Apply, deliver, get paid — protected.</h2>
+        <p>The same protected path works for you. From the moment you're hired, your fee is secured before you create a thing.</p>
+      </div>
+      <div class="flow">
+        <div class="flow-track">
+          <div class="flow-line" aria-hidden="true"></div>
+          <div class="step"><div class="step-num"></div><h3>Find a campaign</h3><p>Browse the job board and pick briefs that match your niche.</p></div>
+          <div class="step"><div class="step-num"></div><h3>Apply with Sparks</h3><p>Send a proposal and quote your rate. Spending Sparks keeps it spam-free.</p></div>
+          <div class="step key"><div class="step-num"></div><h3>Get hired</h3><p>Accept the offer and set the payment deadline. Escrow is funded.</p></div>
+          <div class="step"><div class="step-num"></div><h3>Create &amp; publish</h3><p>Submit your draft, action any notes, then post and share proof.</p></div>
+          <div class="step"><div class="step-num"></div><h3>Get paid</h3><p>Once go-live is validated and the buffer clears, escrow is yours.</p></div>
+        </div>
+        <div class="flow-foot"><svg class="ic"><use href="#i-lock"/></svg><span><b>No more chasing invoices.</b> The fee is locked in escrow before you start — you're never working on a promise.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── feature trio ───────────── -->
+<section class="block">
+  <div class="wrap">
+    <!-- BRAND -->
+    <div data-aud="brand">
+      <div class="lede">
+        <span class="kicker"><svg class="ic"><use href="#i-bolt"/></svg> Built for brands</span>
+        <h2 class="h2">Hire with confidence, not crossed fingers.</h2>
+      </div>
+      <div class="trio">
+        <div class="fcard"><div class="fc-ico"><svg class="ic"><use href="#i-scale"/></svg></div><h3>Side-by-side proposals</h3><p>Line up applicants and compare reach, rate, engagement and Creator Score in one view — the comparison tool no other Indian marketplace offers.</p></div>
+        <div class="fcard"><div class="fc-ico green"><svg class="ic"><use href="#i-shield"/></svg></div><h3>Escrow on every deal</h3><p>Funds are held the moment you hire and released only after content is live and validated. Report a deleted post and the funds stay put.</p></div>
+        <div class="fcard"><div class="fc-ico gold"><svg class="ic"><use href="#i-users"/></svg></div><h3>Verified, scored creators</h3><p>Every creator is KYC-verified and carries badges earned from real delivery — reliability, ratings and on-time history, visible upfront.</p></div>
+      </div>
+    </div>
+    <!-- CREATOR -->
+    <div data-aud="creator">
+      <div class="lede">
+        <span class="kicker"><svg class="ic"><use href="#i-star"/></svg> Built for creators</span>
+        <h2 class="h2">Your profile does the pitching.</h2>
+      </div>
+      <div class="trio">
+        <div class="fcard"><div class="fc-ico gold"><svg class="ic"><use href="#i-ribbon"/></svg></div><h3>A profile that earns trust</h3><p>Showcase your services, portfolio and reviews on a public page. Earn Creator Score badges that put you ahead in a brand's shortlist.</p></div>
+        <div class="fcard"><div class="fc-ico"><svg class="ic"><use href="#i-spark"/></svg></div><h3>Apply with Sparks</h3><p>Spend Sparks to send a proposal, or add a few more to rank higher. Genuine intent in, spam out — so brands actually read your pitch.</p></div>
+        <div class="fcard"><div class="fc-ico green"><svg class="ic"><use href="#i-wallet"/></svg></div><h3>Guaranteed payout</h3><p>Get hired directly or through campaigns. Either way your fee is in escrow before you start, and lands in your bank or UPI once content is live.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── differentiator split ───────────── -->
+<section class="block">
+  <div class="wrap">
+    <!-- BRAND: the compare advantage -->
+    <div data-aud="brand">
+      <div class="split">
+        <div class="split-l">
+          <div class="h3 serif">Stop reading proposals one tab at a time.</div>
+          <p>Most platforms make you open each applicant separately. GetSetCollab lays them out together so the right choice is obvious — then protects the money behind it.</p>
+          <div class="checks">
+            <div class="check"><span class="check-ico"><svg class="ic"><use href="#i-check"/></svg></span><div><b>Rank by what matters</b><span>Reach, engagement, quoted rate and Creator Score in one row.</span></div></div>
+            <div class="check"><span class="check-ico"><svg class="ic"><use href="#i-check"/></svg></span><div><b>Content reviewed before it posts</b><span>Approve the draft or request revisions — nothing goes live unseen.</span></div></div>
+            <div class="check"><span class="check-ico"><svg class="ic"><use href="#i-check"/></svg></span><div><b>A full audit trail</b><span>Every offer, message and status change is logged for both sides.</span></div></div>
+          </div>
+        </div>
+        <div class="split-r">
+          <div class="compare-h">Summer Glow · 3 proposals</div>
+          <div class="crow win"><div class="pa"><img src="https://i.pravatar.cc/80?img=5" onerror="this.remove()" alt="">PN</div><div class="info"><b>Priya Nair <span class="chip gold" style="padding:1px 6px"><svg class="ic"><use href="#i-ribbon"/></svg></span></b><span>85K · 3.8% engagement</span></div><div class="metric"><b class="serif">₹6,500</b><span>quoted</span></div></div>
+          <div class="crow"><div class="pa">KR</div><div class="info"><b>Kabir Roy</b><span>120K · YouTube</span></div><div class="metric"><b class="serif">₹9,000</b><span>quoted</span></div></div>
+          <div class="crow"><div class="pa">DS</div><div class="info"><b>Divya Sharma</b><span>41K · Micro</span></div><div class="metric"><b class="serif">₹3,200</b><span>quoted</span></div></div>
+        </div>
+      </div>
+    </div>
+    <!-- CREATOR: creator score badges -->
+    <div data-aud="creator">
+      <div class="lede">
+        <span class="kicker"><svg class="ic"><use href="#i-ribbon"/></svg> Creator Score</span>
+        <h2 class="h2">Deliver well, get recognised for it.</h2>
+        <p>Badges are earned automatically from your real track record — completion rate, ratings and on-time delivery. Brands see them before they ever message you.</p>
+      </div>
+      <div class="badgewall">
+        <div class="bcard plum"><div class="bi"><svg class="ic"><use href="#i-star"/></svg></div><h4>Rising Star</h4><p>Your first three collaborations, done.</p></div>
+        <div class="bcard green"><div class="bi"><svg class="ic"><use href="#i-shield"/></svg></div><h4>Reliable</h4><p>90%+ completion across five or more deals.</p></div>
+        <div class="bcard"><div class="bi"><svg class="ic"><use href="#i-ribbon"/></svg></div><h4>Top Rated</h4><p>A 4.5+ average across five reviews.</p></div>
+        <div class="bcard green"><div class="bi"><svg class="ic"><use href="#i-clock"/></svg></div><h4>On Time</h4><p>Delivered on deadline 80% of the time.</p></div>
+        <div class="bcard plum"><div class="bi"><svg class="ic"><use href="#i-repeat"/></svg></div><h4>Repeat Hire</h4><p>A brand booked you more than once.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── browse creators teaser (brand only) ───────────── -->
+<section class="block" data-aud="brand">
+  <div class="wrap">
+    <div class="lede" style="display:flex;justify-content:space-between;align-items:flex-end;max-width:none;gap:20px;flex-wrap:wrap">
+      <div style="max-width:560px">
+        <span class="kicker"><svg class="ic"><use href="#i-users"/></svg> The directory</span>
+        <h2 class="h2">Browse creators before you spend a thing.</h2>
+        <p>Full profiles — stats, packages, portfolio and reviews — open to everyone. No login until you're ready to act.</p>
+      </div>
+      <a class="btn btn-ghost btn-lg" href="getsetcollab_creator_public.html">Open the directory <svg class="ic"><use href="#i-chevR"/></svg></a>
+    </div>
+    <div class="dirgrid">
+      <a class="dcard" href="getsetcollab_creator_public.html">
+        <div class="da">PN<img src="https://i.pravatar.cc/120?img=5" onerror="this.remove()" alt=""></div>
+        <div class="dn">Priya Nair <span class="vbadge" title="KYC verified"><svg class="ic"><use href="#i-check"/></svg></span></div>
+        <div class="dr">Beauty · Mumbai</div>
+        <div class="dtags"><span class="chip plum"><svg class="ic"><use href="#i-ig"/></svg> 85K</span><span class="chip gold"><svg class="ic"><use href="#i-ribbon"/></svg> Top Rated</span></div>
+        <div class="dfoot"><svg class="ic"><use href="#i-star"/></svg> <b>4.8</b> <span class="rev">· 12 collabs</span></div>
+      </a>
+      <a class="dcard" href="getsetcollab_creator_public.html">
+        <div class="da">KR</div>
+        <div class="dn">Kabir Roy <span class="vbadge" title="KYC verified"><svg class="ic"><use href="#i-check"/></svg></span></div>
+        <div class="dr">Tech · Bengaluru</div>
+        <div class="dtags"><span class="chip plum"><svg class="ic"><use href="#i-yt"/></svg> 120K</span><span class="chip green"><svg class="ic"><use href="#i-clock"/></svg> On Time</span></div>
+        <div class="dfoot"><svg class="ic"><use href="#i-star"/></svg> <b>4.6</b> <span class="rev">· 9 collabs</span></div>
+      </a>
+      <a class="dcard" href="getsetcollab_creator_public.html">
+        <div class="da">AM</div>
+        <div class="dn">Aisha M. <span class="vbadge" title="KYC verified"><svg class="ic"><use href="#i-check"/></svg></span></div>
+        <div class="dr">Food · Delhi</div>
+        <div class="dtags"><span class="chip plum"><svg class="ic"><use href="#i-ig"/></svg> 38K</span><span class="chip plum"><svg class="ic"><use href="#i-star"/></svg> Rising</span></div>
+        <div class="dfoot"><svg class="ic"><use href="#i-star"/></svg> <b>4.9</b> <span class="rev">· 5 collabs</span></div>
+      </a>
+      <a class="dcard" href="getsetcollab_creator_public.html">
+        <div class="da">RV</div>
+        <div class="dn">Rohan V. <span class="vbadge" title="KYC verified"><svg class="ic"><use href="#i-check"/></svg></span></div>
+        <div class="dr">Fitness · Pune</div>
+        <div class="dtags"><span class="chip plum"><svg class="ic"><use href="#i-yt"/></svg> 210K</span><span class="chip green"><svg class="ic"><use href="#i-repeat"/></svg> Repeat</span></div>
+        <div class="dfoot"><svg class="ic"><use href="#i-star"/></svg> <b>4.7</b> <span class="rev">· 16 collabs</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── creator: direct booking note ───────────── -->
+<section class="block" data-aud="creator">
+  <div class="wrap">
+    <div class="split">
+      <div class="split-l">
+        <div class="h3 serif">Campaigns find you, too.</div>
+        <p>A complete, verified profile doesn't just win proposals — it opens the door to direct bookings, where brands invite you straight to a paid collaboration with no Sparks spent.</p>
+        <div class="checks">
+          <div class="check"><span class="check-ico"><svg class="ic"><use href="#i-check"/></svg></span><div><b>Direct booking invites</b><span>Brands hire you straight from your profile — escrow funded, no application needed.</span></div></div>
+          <div class="check"><span class="check-ico"><svg class="ic"><use href="#i-check"/></svg></span><div><b>One inbox for everything</b><span>Messages, drafts, revisions and proof all live in a single thread per deal.</span></div></div>
+          <div class="check"><span class="check-ico"><svg class="ic"><use href="#i-check"/></svg></span><div><b>Reviews build your score</b><span>Every completed collaboration can add a public review and lift your badges.</span></div></div>
+        </div>
+      </div>
+      <div class="split-r">
+        <div class="compare-h">Direct booking · Mamaearth</div>
+        <div class="crow win"><div class="pa"><svg class="ic" style="color:var(--accent)"><use href="#i-send"/></svg></div><div class="info"><b>Invite received</b><span>1 Reel + 1 Story · Instagram</span></div><div class="metric"><b class="serif">₹7,000</b><span>offered</span></div></div>
+        <div class="crow"><div class="pa" style="background:var(--green-soft);color:var(--green)"><svg class="ic"><use href="#i-lock"/></svg></div><div class="info"><b>Escrow funded</b><span>Held until go-live validated</span></div><div class="metric"><span class="chip green"><svg class="ic"><use href="#i-check"/></svg> Secured</span></div></div>
+        <div class="crow"><div class="pa" style="background:var(--gold-soft);color:var(--gold)"><svg class="ic"><use href="#i-spark"/></svg></div><div class="info"><b>Sparks spent</b><span>Direct bookings cost nothing</span></div><div class="metric"><b class="serif">0</b><span>sparks</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── final cta ───────────── -->
+<div class="finalcta">
+  <div class="finalcta-in">
+    <!-- BRAND -->
+    <div data-aud="brand" style="display:contents">
+      <div class="fc-txt">
+        <h2 class="serif">Your next campaign is a few minutes away.</h2>
+        <p>Post a brief, meet verified creators, and keep your budget protected from offer to go-live. No sales call required.</p>
+      </div>
+      <div class="fc-act">
+        <a class="btn btn-accent btn-lg" href="getsetcollab_brand_v14_final.html"><svg class="ic"><use href="#i-arrow"/></svg> Start a campaign</a>
+        <a class="btn btn-ghost btn-lg" href="getsetcollab_creator_public.html">Browse creators first</a>
+      </div>
+    </div>
+    <!-- CREATOR -->
+    <div data-aud="creator" style="display:contents">
+      <div class="fc-txt">
+        <h2 class="serif">Turn your audience into paid work.</h2>
+        <p>Build a profile, apply to live campaigns, and get paid for content that performs — with your fee protected from day one.</p>
+      </div>
+      <div class="fc-act">
+        <a class="btn btn-accent btn-lg" href="getsetcollab_creator_premium.html"><svg class="ic"><use href="#i-arrow"/></svg> Join as creator</a>
+        <a class="btn btn-ghost btn-lg" href="getsetcollab_creator_public.html">See a sample profile</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ───────────── footer ───────────── -->
+<footer>
+  <div class="foot-in">
+    <div class="foot-brand">
+      <a class="brand" href="#top">
+        <span class="brand-mark"><svg class="ic"><use href="#i-bolt"/></svg></span>
+        <span class="brand-name serif">GetSetCollab</span>
+      </a>
+      <p>India's self-serve influencer marketing marketplace. Brands and creators collaborate on Instagram and YouTube — with every payment protected by escrow.</p>
+    </div>
+    <div class="foot-col">
+      <h5>For Brands</h5>
+      <a href="getsetcollab_brand_v14_final.html">Start a campaign</a>
+      <a href="getsetcollab_creator_public.html">Browse creators</a>
+      <a href="#how" onclick="setView('brand')">How it works</a>
+      <a href="getsetcollab_brand_v14_final.html">Log in</a>
+    </div>
+    <div class="foot-col">
+      <h5>For Creators</h5>
+      <a href="getsetcollab_creator_premium.html">Join as creator</a>
+      <a href="#how" onclick="setView('creator')">How it works</a>
+      <a href="getsetcollab_creator_public.html">Example profile</a>
+      <a href="getsetcollab_creator_premium.html">Log in</a>
+    </div>
+    <div class="foot-col">
+      <h5>Platform</h5>
+      <a href="#how">Escrow &amp; trust</a>
+      <a href="#how">Creator Score</a>
+      <a href="getsetcollab_creator_public.html">Sparks</a>
+      <a href="#top">Contact</a>
+    </div>
+  </div>
+  <div class="foot-bot">
+    <span>© 2026 GetSetCollab. Made in India.</span>
+    <span class="sp"></span>
+    <span class="seal"><svg class="ic"><use href="#i-shield"/></svg> Escrow secured</span>
+    <span class="seal"><svg class="ic"><use href="#i-lock"/></svg> KYC verified</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  // session-scoped choice, held in memory only
+  var view = "brand";
+  var html = document.documentElement;
+  var segBrand = document.getElementById("segBrand");
+  var segCreator = document.getElementById("segCreator");
+  var thumb = document.getElementById("segThumb");
+
+  function positionThumb(){
+    var active = (view === "brand") ? segBrand : segCreator;
+    thumb.style.left = active.offsetLeft + "px";
+    thumb.style.width = active.offsetWidth + "px";
+  }
+
+  window.setView = function(next){
+    if(next !== "brand" && next !== "creator") return;
+    view = next;
+    html.setAttribute("data-view", view);
+    var isBrand = view === "brand";
+    segBrand.setAttribute("aria-checked", isBrand ? "true" : "false");
+    segCreator.setAttribute("aria-checked", isBrand ? "false" : "true");
+    segBrand.tabIndex = isBrand ? 0 : -1;
+    segCreator.tabIndex = isBrand ? -1 : 0;
+    positionThumb();
+  };
+
+  // keyboard support for the radiogroup
+  function onKey(e){
+    var k = e.key;
+    if(k === "ArrowRight" || k === "ArrowDown"){ e.preventDefault(); setView("creator"); segCreator.focus(); }
+    else if(k === "ArrowLeft" || k === "ArrowUp"){ e.preventDefault(); setView("brand"); segBrand.focus(); }
+    else if(k === "Home"){ e.preventDefault(); setView("brand"); segBrand.focus(); }
+    else if(k === "End"){ e.preventDefault(); setView("creator"); segCreator.focus(); }
+  }
+  segBrand.addEventListener("keydown", onKey);
+  segCreator.addEventListener("keydown", onKey);
+
+  // nav shadow on scroll
+  var nav = document.getElementById("nav");
+  function onScroll(){ nav.classList.toggle("scrolled", window.scrollY > 8); }
+  window.addEventListener("scroll", onScroll, {passive:true});
+  onScroll();
+
+  // keep thumb aligned on resize / font load
+  window.addEventListener("resize", positionThumb);
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(positionThumb); }
+  positionThumb();
+})();
+</script>
+</body>
+</html>
